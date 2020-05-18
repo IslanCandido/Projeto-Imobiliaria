@@ -1,7 +1,7 @@
 package view;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 
 public class FrmFuncionarios extends javax.swing.JFrame {
 
@@ -22,20 +22,21 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtPIS = new javax.swing.JTextField();
         txtNCartTrabalho = new javax.swing.JTextField();
         txtNcontrato = new javax.swing.JTextField();
         cbxPessoas = new javax.swing.JComboBox<>();
         cbxCargos = new javax.swing.JComboBox<>();
         btnAdicionarPessoa = new javax.swing.JButton();
         btnAdicionarCargo = new javax.swing.JButton();
-        btnAdicionarPerfil = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPerfis = new javax.swing.JTable();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        txtPis = new javax.swing.JFormattedTextField();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -46,17 +47,17 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText(" PIS");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(420, 10, 30, 20);
+        jLabel1.setBounds(440, 10, 30, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText(" N° cart. trabalho");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(270, 10, 100, 14);
+        jLabel2.setBounds(300, 10, 100, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText(" Nº contrato");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(270, 70, 80, 20);
+        jLabel3.setBounds(300, 60, 80, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Pessoa");
@@ -66,21 +67,19 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText("Cargo");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(20, 70, 40, 20);
-        getContentPane().add(txtPIS);
-        txtPIS.setBounds(420, 30, 110, 28);
+        jLabel5.setBounds(20, 60, 40, 20);
         getContentPane().add(txtNCartTrabalho);
-        txtNCartTrabalho.setBounds(270, 30, 120, 28);
+        txtNCartTrabalho.setBounds(300, 30, 110, 28);
         getContentPane().add(txtNcontrato);
-        txtNcontrato.setBounds(270, 90, 120, 28);
+        txtNcontrato.setBounds(300, 80, 110, 28);
 
         cbxPessoas.setToolTipText("");
         getContentPane().add(cbxPessoas);
-        cbxPessoas.setBounds(20, 30, 180, 28);
+        cbxPessoas.setBounds(20, 30, 210, 28);
 
         cbxCargos.setToolTipText("");
         getContentPane().add(cbxCargos);
-        cbxCargos.setBounds(20, 90, 180, 28);
+        cbxCargos.setBounds(20, 80, 210, 28);
 
         btnAdicionarPessoa.setText("+");
         btnAdicionarPessoa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -90,7 +89,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarPessoa);
-        btnAdicionarPessoa.setBounds(200, 30, 41, 28);
+        btnAdicionarPessoa.setBounds(230, 30, 41, 28);
 
         btnAdicionarCargo.setText("+");
         btnAdicionarCargo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -100,54 +99,63 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCargo);
-        btnAdicionarCargo.setBounds(200, 90, 41, 28);
-
-        btnAdicionarPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_perfil.png"))); // NOI18N
-        btnAdicionarPerfil.setToolTipText("Cadastrar novo perfil");
-        btnAdicionarPerfil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarPerfilActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnAdicionarPerfil);
-        btnAdicionarPerfil.setBounds(440, 70, 70, 50);
+        btnAdicionarCargo.setBounds(230, 80, 41, 28);
 
         tblPerfis.setModel(modelo);
         tblPerfis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jScrollPane2.setViewportView(tblPerfis);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 140, 530, 190);
+        jScrollPane2.setBounds(10, 120, 550, 190);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(250, 340, 55, 41);
+        btnSalvar.setBounds(250, 320, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(320, 340, 55, 41);
-
-        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
-        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btnEditar);
-        btnEditar.setBounds(390, 340, 55, 41);
+        btnExcluir.setBounds(320, 320, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(460, 340, 55, 41);
+        btnLimpar.setBounds(460, 320, 55, 41);
+
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        getContentPane().add(btnEditar);
+        btnEditar.setBounds(390, 320, 55, 41);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setText(" Senha de acesso");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(440, 60, 110, 20);
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(440, 80, 110, 28);
+
+        try {
+            txtPis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtPis.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPisKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtPis);
+        txtPis.setBounds(440, 30, 110, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 570, 420);
+        teladeFundo.setBounds(0, 0, 580, 400);
 
-        setSize(new java.awt.Dimension(557, 425));
+        setSize(new java.awt.Dimension(578, 398));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    FrmPerfis telaPerfis;
     FrmCargos telaCargos;
     FrmPessoas telaPessoas;
     
@@ -171,15 +179,17 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAdicionarCargoActionPerformed
 
-    private void btnAdicionarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPerfilActionPerformed
-        if (telaPerfis == null) {
-            telaPerfis = new FrmPerfis();
-            telaPerfis.setVisible(true);
-        } else {
-            telaPerfis.setVisible(true);
-            telaPerfis.setResizable(false);
+    private void txtPisKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPisKeyTyped
+        char validar = evt.getKeyChar();
+
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+
+            evt.consume();
+
+            JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnAdicionarPerfilActionPerformed
+    }//GEN-LAST:event_txtPisKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -215,7 +225,6 @@ public class FrmFuncionarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionarCargo;
-    private javax.swing.JButton btnAdicionarPerfil;
     private javax.swing.JButton btnAdicionarPessoa;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
@@ -228,11 +237,13 @@ public class FrmFuncionarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblPerfis;
     private javax.swing.JLabel teladeFundo;
     private javax.swing.JTextField txtNCartTrabalho;
     private javax.swing.JTextField txtNcontrato;
-    private javax.swing.JTextField txtPIS;
+    private javax.swing.JFormattedTextField txtPis;
     // End of variables declaration//GEN-END:variables
 }
