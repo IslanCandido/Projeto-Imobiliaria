@@ -40,7 +40,7 @@ public class FrmCargos extends javax.swing.JFrame {
             for (int i = 0; i < lista.size(); i++) {
                 modelo.addRow(new Object[]{
                     lista.get(i).getCodigo(),
-                    lista.get(i).getNome(),
+                    lista.get(i).getDescricao(),
                     lista.get(i).getSalario()
                 });
             }
@@ -51,7 +51,7 @@ public class FrmCargos extends javax.swing.JFrame {
     
     private void preencheCampos(int id) {
         cargo = cargoBll.consultaPorId(id);
-        txtCargo.setText(cargo.getNome());
+        txtCargo.setText(cargo.getDescricao());
         txtSalario.setText(String.valueOf(cargo.getSalario()));
     }
     
@@ -176,7 +176,7 @@ public class FrmCargos extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
-            cargo.setNome(txtCargo.getText());
+            cargo.setDescricao(txtCargo.getText());
             cargo.setSalario(Float.parseFloat(txtSalario.getText()));
 
             if(txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()){
@@ -186,9 +186,14 @@ public class FrmCargos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                cargoBll.salvar(cargo);
-                consultar();
-                limparCampos();
+                if(!cargoBll.verificarCargosIguais(txtCargo.getText())){
+                    cargoBll.salvar(cargo);
+                    consultar();
+                    limparCampos();
+                } else{
+                    JOptionPane.showMessageDialog(rootPane, "CARGO JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                }
+                
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -211,7 +216,7 @@ public class FrmCargos extends javax.swing.JFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
-            cargo.setNome(txtCargo.getText());
+            cargo.setDescricao(txtCargo.getText());
             cargo.setSalario(Float.parseFloat(txtSalario.getText()));
 
             if(txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()){
@@ -221,9 +226,14 @@ public class FrmCargos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             }
             else{
+                if(cargoBll.verificarCargosIguais(txtCargo.getText())){
+                    JOptionPane.showMessageDialog(rootPane, "CARGO IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                }
                 cargoBll.editar(cargo);
                 consultar();
                 limparCampos();
+                
+                
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);

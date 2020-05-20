@@ -41,4 +41,20 @@ public class FuncionarioBLL {
     public Vector<Cargo> listarCargos(){
         return dal.listarCargos();
     }
+    
+    public boolean verificarFuncionariosIguais(int idPessoa){
+        return dal.verificarPessoasIguais(idPessoa);
+    }
+    
+    public boolean verificarPisIgual(String pis){
+        return dal.verificarPisIgual(pis);
+    }
+    
+    public boolean verificarNCarteiraIguail(String nCarteiraTrabalho){
+        return dal.verificarNCarteiraIgual(nCarteiraTrabalho);
+    }
+    
+    public boolean autenticarLogin(String usuario, String senha){
+        return dal.autenticarUsuario(usuario, senha);
+    }
 }

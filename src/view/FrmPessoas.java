@@ -485,7 +485,7 @@ public class FrmPessoas extends javax.swing.JFrame {
                     limparCampos();
                 } else {
                     if(pessoaBll.verificarCPFsIguais(txtCpf.getText())){
-                        JOptionPane.showMessageDialog(rootPane, "CPF JÁ CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
                     if (!isEmail(txtEmail.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
@@ -528,6 +528,9 @@ public class FrmPessoas extends javax.swing.JFrame {
             pessoa.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
 
             if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())) {
+                    if(pessoaBll.verificarCPFsIguais(txtCpf.getText())){
+                        JOptionPane.showMessageDialog(rootPane, "CPFs IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                    }
                     pessoaBll.editar(pessoa);
                     consultar();
                     limparCampos();

@@ -3,6 +3,7 @@ package dal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,5 +85,20 @@ public class CategoriaDAL {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
         }
         return categoria;
+    }
+    
+    public boolean verificarCategoriaIgual(String categoria) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM categorias WHERE nome = ?");
+            preparedStatement.setString(1, categoria);
+            ResultSet rs = preparedStatement.executeQuery();            
+            
+            resultado = rs.next();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR CATEGORIAS!");
+        }
+
+        return resultado;
     }
 }

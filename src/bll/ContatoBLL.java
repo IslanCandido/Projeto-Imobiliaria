@@ -33,8 +33,7 @@ public class ContatoBLL {
         return dal.consultaPorId(id);
     }
     
-    public Vector<Pessoa> listarPessoas
-        (){
+    public Vector<Pessoa> listarPessoas(){
         return dal.listarPessoas();
     }
     

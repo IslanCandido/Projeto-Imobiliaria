@@ -15,6 +15,8 @@ public class FrmMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        usuario = new javax.swing.JLabel();
         TeladeFundo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -33,6 +35,14 @@ public class FrmMenu extends javax.swing.JFrame {
         setTitle("Menu Principal");
         setResizable(false);
         getContentPane().setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Usuário:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(10, 430, 50, 15);
+        getContentPane().add(usuario);
+        usuario.setBounds(70, 430, 460, 20);
 
         TeladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_Menu.jpg"))); // NOI18N
         getContentPane().add(TeladeFundo);
@@ -201,6 +211,7 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem MenuItemImovel;
     private javax.swing.JMenuItem MenuItemPessoa;
     private javax.swing.JLabel TeladeFundo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -210,5 +221,6 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JLabel usuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,6 +3,7 @@ package dal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,8 @@ public class CargoDAL {
     public void adicionar(Cargo cargo) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("INSERT INTO Cargos (nome, salario) VALUES (?, ?)");
-            ps.setString(1, cargo.getNome());
+            ("INSERT INTO Cargos (descricao, salario) VALUES (?, ?)");
+            ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -43,8 +44,8 @@ public class CargoDAL {
     public void alterar(Cargo cargo) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("UPDATE Cargos SET nome = ?, salario = ? WHERE id_car = ?");
-            ps.setString(1, cargo.getNome());
+            ("UPDATE Cargos SET descricao = ?, salario = ? WHERE id_car = ?");
+            ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
             ps.setInt(3, cargo.getCodigo());
             ps.executeUpdate();
@@ -61,7 +62,7 @@ public class CargoDAL {
             while (rs.next()){
                 Cargo cargo = new Cargo();
                 cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setNome(rs.getString("nome"));
+                cargo.setDescricao(rs.getString("descricao"));
                 cargo.setSalario(rs.getFloat("salario"));
                 cargos.add(cargo);
             }
@@ -81,12 +82,27 @@ public class CargoDAL {
 
             if (rs.next()){
                 cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setNome(rs.getString("nome"));
+                cargo.setDescricao(rs.getString("descricao"));
                 cargo.setSalario(rs.getFloat("salario"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
         }
         return cargo;
+    }
+    
+    public boolean verificarCargoIgual(String cargo) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM cargos WHERE descricao = ?");
+            preparedStatement.setString(1, cargo);
+            ResultSet rs = preparedStatement.executeQuery();            
+            
+            resultado = rs.next();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR CARGOS!");
+        }
+
+        return resultado;
     }
 }

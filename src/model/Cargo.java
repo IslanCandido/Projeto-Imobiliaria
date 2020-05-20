@@ -2,7 +2,7 @@ package model;
 
 public class Cargo {
     private int codigo;
-    private String nome;
+    private String descricao;
     private float salario;
 
     public Cargo() {
@@ -10,12 +10,12 @@ public class Cargo {
 
     public Cargo(int codigo, String nome, float salario) {
         this.codigo = codigo;
-        this.nome = nome;
+        this.descricao = nome;
         this.salario = salario;
     }
 
     public String toString() {
-        return getNome();
+        return getDescricao();
     }
 
     public int getCodigo() {
@@ -26,12 +26,12 @@ public class Cargo {
         this.codigo = codigo;
     }
 
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public float getSalario() {

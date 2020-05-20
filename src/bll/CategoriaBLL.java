@@ -30,4 +30,8 @@ public class CategoriaBLL {
     public Categoria consultaPorId(int id){
         return dal.consultarPorId(id);
     }
+    
+    public boolean verificarCategoriasIguais(String categoria){
+        return dal.verificarCategoriaIgual(categoria);
+    }
 }

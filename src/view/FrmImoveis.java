@@ -46,6 +46,9 @@ public class FrmImoveis extends javax.swing.JFrame {
         btnLimpar = new javax.swing.JButton();
         btnAdicionarCategoria = new javax.swing.JButton();
         btnAdicionarEnderecos = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        txtPreco = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -84,7 +87,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDataBaixa);
-        txtDataBaixa.setBounds(160, 150, 140, 28);
+        txtDataBaixa.setBounds(300, 150, 120, 28);
 
         getContentPane().add(cbxCategorias);
         cbxCategorias.setBounds(140, 30, 140, 28);
@@ -118,7 +121,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         getContentPane().add(jLabel7);
         jLabel7.setBounds(220, 70, 60, 20);
         getContentPane().add(txtMotivo);
-        txtMotivo.setBounds(330, 150, 360, 28);
+        txtMotivo.setBounds(450, 150, 240, 28);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText("Situação");
@@ -128,12 +131,12 @@ public class FrmImoveis extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel9.setText("Data da baixa");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(160, 130, 100, 20);
+        jLabel9.setBounds(300, 130, 100, 20);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setText("Motivo");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(330, 130, 60, 14);
+        jLabel10.setBounds(450, 130, 60, 14);
 
         try {
             txtDataInscrição.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -213,6 +216,18 @@ public class FrmImoveis extends javax.swing.JFrame {
         });
         getContentPane().add(btnAdicionarEnderecos);
         btnAdicionarEnderecos.setBounds(550, 30, 41, 28);
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel11.setText("Preço");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(160, 130, 32, 20);
+        getContentPane().add(txtPreco);
+        txtPreco.setBounds(160, 150, 90, 28);
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel12.setText(" R$");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(250, 150, 20, 30);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
@@ -305,6 +320,8 @@ public class FrmImoveis extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxEnderecos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -325,5 +342,6 @@ public class FrmImoveis extends javax.swing.JFrame {
     private javax.swing.JTextField txtMotivo;
     private javax.swing.JTextField txtNumeroQuartos;
     private javax.swing.JTextField txtNumeroSuites;
+    private javax.swing.JTextField txtPreco;
     // End of variables declaration//GEN-END:variables
 }

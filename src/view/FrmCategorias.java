@@ -13,30 +13,30 @@ public class FrmCategorias extends javax.swing.JFrame {
     DefaultTableModel modelo = new DefaultTableModel();
     CategoriaBLL categoriaBll = new CategoriaBLL();
     Categoria categoria = new Categoria();
-    
+
     public FrmCategorias() {
         criarTabela();
         consultar();
         initComponents();
     }
 
-    private void criarTabela(){
+    private void criarTabela() {
         tblCategorias = new JTable(modelo);
         modelo.addColumn("Código");
         modelo.addColumn("Categoria");
-        
+
         tblCategorias.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblCategorias.getColumnModel().getColumn(1).setPreferredWidth(30);
-        
+
     }
-    
-    private void consultar(){
+
+    private void consultar() {
         modelo.setNumRows(0);
         List<Categoria> lista = new ArrayList<Categoria>();
-        
+
         lista = categoriaBll.consultar();
-        
-        if (lista.size() > 0){
+
+        if (lista.size() > 0) {
             for (int i = 0; i < lista.size(); i++) {
                 modelo.addRow(new Object[]{
                     lista.get(i).getCodigo(),
@@ -52,12 +52,12 @@ public class FrmCategorias extends javax.swing.JFrame {
         categoria = categoriaBll.consultaPorId(id);
         txtCategoria.setText(categoria.getNome());
     }
-    
-    private void limparCampos(){
+
+    private void limparCampos() {
         txtCategoria.setText("");
         btnSalvar.setEnabled(true);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -154,23 +154,28 @@ public class FrmCategorias extends javax.swing.JFrame {
         try {
             categoria.setNome(txtCategoria.getText());
 
-            if(txtCategoria.getText().isEmpty()){
+            if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
-                categoriaBll.salvar(categoria);
-                consultar();
-                limparCampos();
+            } else {
+                if (!categoriaBll.verificarCategoriasIguais(txtCategoria.getText())) {
+                    categoriaBll.salvar(categoria);
+                    consultar();
+                    limparCampos();
+                } else{
+                    JOptionPane.showMessageDialog(rootPane, "CATEGORIA JÁ FOI CADASTRADA!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        } 
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         try {
-            if(txtCategoria.getText().isEmpty()){
+            if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
+            } else {
                 categoriaBll.remover(categoriaBll.consultaPorId(categoria.getCodigo()));
             }
         } catch (Exception e) {
@@ -184,16 +189,20 @@ public class FrmCategorias extends javax.swing.JFrame {
         try {
             categoria.setNome(txtCategoria.getText());
 
-            if(txtCategoria.getText().isEmpty()){
+            if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
+            } else {
+                if (categoriaBll.verificarCategoriasIguais(txtCategoria.getText())) {
+                    JOptionPane.showMessageDialog(rootPane, "CATEGORIAS IGUAIS FORAM CADASTRADAS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                }
+                
                 categoriaBll.editar(categoria);
                 consultar();
                 limparCampos();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        } 
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
@@ -214,7 +223,7 @@ public class FrmCategorias extends javax.swing.JFrame {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 30 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         char validar = evt.getKeyChar();
         if (Character.isDigit(validar)) {
             getToolkit().beep();

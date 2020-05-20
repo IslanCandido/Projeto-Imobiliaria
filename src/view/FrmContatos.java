@@ -29,9 +29,9 @@ public class FrmContatos extends javax.swing.JFrame {
     private void criarTabela() {
         tblContatos = new JTable(modelo);
         modelo.addColumn("Código");
-        modelo.addColumn("Tipo");
-        modelo.addColumn("Numero");
         modelo.addColumn("Pessoa");
+        modelo.addColumn("Numero");
+        modelo.addColumn("Tipo");
 
         tblContatos.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblContatos.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -49,9 +49,9 @@ public class FrmContatos extends javax.swing.JFrame {
             for (int i = 0; i < lista.size(); i++) {
                 modelo.addRow(new Object[]{
                     lista.get(i).getCodigo(),
-                    lista.get(i).getTipo(),
+                    lista.get(i).getIdPessoa().getNome(),
                     lista.get(i).getNumero(),
-                    lista.get(i).getIdPessoa().getNome()
+                    lista.get(i).getTipo()
                 });
             }
         } else {
@@ -67,7 +67,7 @@ public class FrmContatos extends javax.swing.JFrame {
     }
 
     private void limparCampos() {
-        txtTelefone.setText("");
+        txtTelefone.setValue("");
         cbxTipoTelefone.setSelectedIndex(0);
         cbxPessoas.setSelectedIndex(0);
         btnSalvar.setEnabled(true);
@@ -246,9 +246,7 @@ public class FrmContatos extends javax.swing.JFrame {
                     consultar();
                     limparCampos();
                 } else {
-                    if (contatoBll.verificarNumerosIguais(txtTelefone.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "NUMERO JÁ CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                    }
+                    JOptionPane.showMessageDialog(rootPane, "NUMERO JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -280,6 +278,10 @@ public class FrmContatos extends javax.swing.JFrame {
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
+                if (contatoBll.verificarNumerosIguais(txtTelefone.getText())) {
+                    JOptionPane.showMessageDialog(rootPane, "NUMEROS IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                }
+
                 contatoBll.editar(contato);
                 consultar();
                 limparCampos();

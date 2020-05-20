@@ -69,8 +69,9 @@ public class FuncionarioDAL {
         List<Funcionario> funcionarios = new ArrayList<>();
         try {
             Statement ps = conexao.createStatement();
-            ResultSet rs = ps.executeQuery("select * from pessoas p \n"
-                    + "inner join endereços e on p.fk_end = e.id_end");
+            ResultSet rs = ps.executeQuery("select * from funcionarios f \n"
+                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
+                    + "inner join cargos c on f.fk_car = c.id_car");
 
             while (rs.next()) {
                 Funcionario funcionario = new Funcionario();
@@ -90,7 +91,7 @@ public class FuncionarioDAL {
 
                 Cargo cargo = new Cargo();
                 cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setNome(rs.getString("nome"));
+                cargo.setDescricao(rs.getString("descricao"));
                 cargo.setSalario(rs.getFloat("salario"));
 
                 funcionario.setIdPessoa(pessoa);
@@ -132,7 +133,7 @@ public class FuncionarioDAL {
 
                 Cargo cargo = new Cargo();
                 cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setNome(rs.getString("nome"));
+                cargo.setDescricao(rs.getString("descricao"));
                 cargo.setSalario(rs.getFloat("salario"));
 
                 funcionario.setIdPessoa(pessoa);
@@ -143,7 +144,7 @@ public class FuncionarioDAL {
         }
         return funcionario;
     }
-    
+
     public Vector<Pessoa> listarPessoas() {
         Vector<Pessoa> pessoas = new Vector<Pessoa>();
         try {
@@ -158,7 +159,7 @@ public class FuncionarioDAL {
                 pessoa.setDataNascimento(rs.getDate("dt_nascimento"));
                 pessoa.setNome(rs.getString("nome"));
                 pessoa.getIdEndereco();
-                
+
                 pessoas.add(pessoa);
             }
 
@@ -167,8 +168,8 @@ public class FuncionarioDAL {
         }
         return pessoas;
     }
-    
-    public Vector<Cargo> listarCargos(){
+
+    public Vector<Cargo> listarCargos() {
         Vector<Cargo> cargos = new Vector<Cargo>();
         try {
             PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM cargos");
@@ -177,14 +178,80 @@ public class FuncionarioDAL {
             while (rs.next()) {
                 Cargo cargo = new Cargo();
                 cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setNome(rs.getString("nome"));
+                cargo.setDescricao(rs.getString("descricao"));
                 cargo.setSalario(rs.getFloat("salario"));
-                
+
                 cargos.add(cargo);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR CARGOS! ");
         }
         return cargos;
+    }
+
+    public boolean verificarPessoasIguais(int idPessoa) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE fk_pes = ?");
+            preparedStatement.setInt(1, idPessoa);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            resultado = rs.next();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR PESSOAS! ");
+        }
+
+        return resultado;
+    }
+
+    public boolean verificarPisIgual(String pis) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE pis = ?");
+            preparedStatement.setString(1, pis);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            resultado = rs.next();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR PIS! ");
+        }
+
+        return resultado;
+    }
+
+    public boolean verificarNCarteiraIgual(String nCarteiraTrabalho) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE cat_trabalho = ?");
+            preparedStatement.setString(1, nCarteiraTrabalho);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            resultado = rs.next();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR NUMEROS DA CARTEIRA DE TRABALHO!");
+        }
+
+        return resultado;
+    }
+
+    public boolean autenticarUsuario(String usuario, String senha) {
+        boolean resultado = false;
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("select * from funcionarios f \n"
+                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
+                    + "inner join cargos c on f.fk_car = c.id_car \n"
+                    + "WHERE p.cpf = ? AND f.senha = ?");
+
+            preparedStatement.setString(1, usuario);
+            preparedStatement.setString(2, senha);
+
+            preparedStatement.execute();
+            ResultSet rs = preparedStatement.getResultSet();
+            resultado = rs.next();
+
+        } catch (SQLException erro) {
+            erro.printStackTrace();
+        }
+        return resultado;
     }
 }
