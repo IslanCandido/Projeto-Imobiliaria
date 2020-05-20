@@ -32,7 +32,6 @@ public class FrmVendas extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
-        btnAdicionarFuncionario = new javax.swing.JButton();
         btnAdicionarCliente = new javax.swing.JButton();
         btnAdicionarImovel = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -44,24 +43,24 @@ public class FrmVendas extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Comissão");
+        jLabel1.setText("Percentual da Comissão");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(410, 10, 70, 20);
+        jLabel1.setBounds(470, 10, 160, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Valor");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(280, 10, 40, 20);
+        jLabel2.setBounds(330, 10, 40, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Cliente");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(20, 70, 50, 20);
+        jLabel3.setBounds(20, 60, 50, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Imóvel");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(280, 70, 50, 20);
+        jLabel4.setBounds(330, 60, 50, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText("Funcionário");
@@ -69,54 +68,44 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel5.setBounds(20, 10, 80, 20);
 
         getContentPane().add(cbxFuncionarios);
-        cbxFuncionarios.setBounds(20, 30, 190, 28);
+        cbxFuncionarios.setBounds(20, 30, 280, 28);
 
         getContentPane().add(cbxClientes);
-        cbxClientes.setBounds(20, 90, 190, 28);
+        cbxClientes.setBounds(20, 80, 240, 28);
 
         getContentPane().add(cbxImoveis);
-        cbxImoveis.setBounds(280, 90, 180, 28);
+        cbxImoveis.setBounds(330, 80, 240, 28);
         getContentPane().add(txtValor);
-        txtValor.setBounds(280, 30, 90, 28);
+        txtValor.setBounds(330, 30, 100, 28);
         getContentPane().add(txtComissao);
-        txtComissao.setBounds(410, 30, 90, 28);
+        txtComissao.setBounds(470, 30, 140, 28);
 
         tblVendas.setModel(modelo);
         tblVendas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jScrollPane2.setViewportView(tblVendas);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 140, 500, 170);
+        jScrollPane2.setBounds(10, 120, 620, 170);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(210, 320, 55, 41);
+        btnSalvar.setBounds(310, 300, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(280, 320, 55, 41);
+        btnExcluir.setBounds(380, 300, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(350, 320, 55, 41);
+        btnEditar.setBounds(450, 300, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(420, 320, 55, 41);
-
-        btnAdicionarFuncionario.setText("+");
-        btnAdicionarFuncionario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAdicionarFuncionario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarFuncionarioActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnAdicionarFuncionario);
-        btnAdicionarFuncionario.setBounds(210, 30, 41, 28);
+        btnLimpar.setBounds(520, 300, 55, 41);
 
         btnAdicionarCliente.setText("+");
         btnAdicionarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -126,7 +115,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCliente);
-        btnAdicionarCliente.setBounds(210, 90, 41, 28);
+        btnAdicionarCliente.setBounds(260, 80, 41, 28);
 
         btnAdicionarImovel.setText("+");
         btnAdicionarImovel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -136,18 +125,18 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarImovel);
-        btnAdicionarImovel.setBounds(460, 90, 41, 28);
+        btnAdicionarImovel.setBounds(570, 80, 41, 28);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("R$");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(370, 30, 20, 30);
+        jLabel6.setBounds(430, 30, 20, 30);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 570, 390);
+        teladeFundo.setBounds(-10, 0, 760, 400);
 
-        setSize(new java.awt.Dimension(525, 401));
+        setSize(new java.awt.Dimension(646, 379));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -155,16 +144,6 @@ public class FrmVendas extends javax.swing.JFrame {
     FrmPessoas telaPessoas;
     FrmImoveis telaImoveis;
     
-    private void btnAdicionarFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarFuncionarioActionPerformed
-        if (telaFuncionarios == null) {
-            telaFuncionarios = new FrmFuncionarios();
-            telaFuncionarios.setVisible(true);
-        } else {
-            telaFuncionarios.setVisible(true);
-            telaFuncionarios.setResizable(false);
-        }
-    }//GEN-LAST:event_btnAdicionarFuncionarioActionPerformed
-
     private void btnAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarClienteActionPerformed
         if (telaPessoas == null) {
             telaPessoas = new FrmPessoas();
@@ -219,7 +198,6 @@ public class FrmVendas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionarCliente;
-    private javax.swing.JButton btnAdicionarFuncionario;
     private javax.swing.JButton btnAdicionarImovel;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;

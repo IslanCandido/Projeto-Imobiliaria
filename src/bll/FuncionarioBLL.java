@@ -57,4 +57,12 @@ public class FuncionarioBLL {
     public boolean autenticarLogin(String usuario, String senha){
         return dal.autenticarUsuario(usuario, senha);
     }
+    
+    public String pegarNome(String cpf){
+        return dal.pegarNomeUsuario(cpf);
+    }
+    
+    public String pegarCargo(String cpf){
+        return dal.pegarCargoUsuario(cpf);
+    }
 }

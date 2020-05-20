@@ -76,6 +76,11 @@ public class FrmLogin extends javax.swing.JFrame {
         btnEsqueceuSenha.setToolTipText("");
         btnEsqueceuSenha.setContentAreaFilled(false);
         btnEsqueceuSenha.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEsqueceuSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEsqueceuSenhaActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEsqueceuSenha);
         btnEsqueceuSenha.setBounds(110, 220, 150, 23);
 
@@ -119,21 +124,21 @@ public class FrmLogin extends javax.swing.JFrame {
         txtUsuario.setText("");
     }
 
-    private void abrirMenu() {
-        menu = new FrmMenu();
-        menu.setVisible(true);
-        dispose();
-    }
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if (txtUsuario.getText().isEmpty() || txtSenha.getText().isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "TODOS OS CAMPOS SÃO OBRIGATORIOS!", "Atenção!", JOptionPane.WARNING_MESSAGE);
         } else {
             if (!funcionarioBLL.autenticarLogin(txtUsuario.getText(), txtSenha.getText())) {
-                JOptionPane.showMessageDialog(rootPane, "USUARIO OU SENHA INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "USUÁRIO OU SENHA INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 limparCampos();
             } else {
-                abrirMenu();
+                String nome = funcionarioBLL.pegarNome(txtUsuario.getText());
+                String cargo = funcionarioBLL.pegarCargo(txtUsuario.getText());
+
+                menu = new FrmMenu(nome, cargo);
+                menu.setVisible(true);
+                dispose();
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
@@ -170,12 +175,18 @@ public class FrmLogin extends javax.swing.JFrame {
         String senhaDigitada = new String(txtSenha.getPassword());
 
         if ("admin".equals(senhaDigitada)) {
-            abrirMenu();
+            menu = new FrmMenu("Administrador", "Administrador");
+            menu.setVisible(true);
+            dispose();
         } else {
             JOptionPane.showMessageDialog(rootPane, "SENHA INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             txtSenha.setText("");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnEsqueceuSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsqueceuSenhaActionPerformed
+
+    }//GEN-LAST:event_btnEsqueceuSenhaActionPerformed
 
     /**
      * @param args the command line arguments

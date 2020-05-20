@@ -15,24 +15,24 @@ public class FrmEnderecos extends javax.swing.JFrame {
     DefaultTableModel modelo = new DefaultTableModel();
     EnderecoBLL enderecoBll = new EnderecoBLL();
     Endereco endereco = new Endereco();
-    
+
     public FrmEnderecos() {
-        
+
         criarTabela();
         consultar();
         initComponents();
         iniciar();
     }
-    
-    private void iniciar(){
+
+    private void iniciar() {
         btnEditar.setEnabled(false);
         btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(false);
         btnSalvar.setEnabled(false);
         txtLogradouro.setEnabled(false);
     }
-    
-    private void liberar(){
+
+    private void liberar() {
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);
         btnLimpar.setEnabled(true);
@@ -78,7 +78,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             modelo.setNumRows(0);
         }
     }
-    
+
     private void preencheCampos(int id) {
         endereco = enderecoBll.consultaPorId(id);
         txtCep.setText(endereco.getCep());
@@ -87,8 +87,8 @@ public class FrmEnderecos extends javax.swing.JFrame {
         txtCidade.setText(endereco.getCidade());
         txtUf.setText(endereco.getUf());
     }
-    
-    private void limparCampos(){
+
+    private void limparCampos() {
         txtCep.setValue("");
         txtLogradouro.setText("");
         txtBairro.setText("");
@@ -96,7 +96,6 @@ public class FrmEnderecos extends javax.swing.JFrame {
         txtUf.setText("");
         iniciar();
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -265,7 +264,6 @@ public class FrmEnderecos extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         ViaCEP cep = new ViaCEP();
-
         try {
             cep.buscar(txtCep.getText());
 
@@ -273,11 +271,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
             txtCidade.setText(cep.getLocalidade());
             txtUf.setText(cep.getUf());
             txtLogradouro.setText(cep.getLogradouro());
-            
+
             liberar();
         } catch (ViaCEPException ex) {
             JOptionPane.showMessageDialog(rootPane, "CEP NÃO ENCONTRADO!");
         }
+
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
@@ -288,29 +287,29 @@ public class FrmEnderecos extends javax.swing.JFrame {
             endereco.setCidade(txtCidade.getText());
             endereco.setUf(txtUf.getText());
 
-            if(txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty() ||
-               txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()){
+            if (txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty()
+                    || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
-                if(!enderecoBll.verificarCEPsIguais(txtCep.getText())){
+            } else {
+                if (!enderecoBll.verificarCEPsIguais(txtCep.getText())) {
                     enderecoBll.salvar(endereco);
                     consultar();
                     limparCampos();
-                } else{
+                } else {
                     JOptionPane.showMessageDialog(rootPane, "CEP JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }                    
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        } 
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         try {
-            if(txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty() ||
-               txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()){
+            if (txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty()
+                    || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
+            } else {
                 enderecoBll.remover(enderecoBll.consultaPorId(endereco.getCodigo()));
             }
         } catch (Exception e) {
@@ -328,11 +327,11 @@ public class FrmEnderecos extends javax.swing.JFrame {
             endereco.setCidade(txtCidade.getText());
             endereco.setUf(txtUf.getText());
 
-            if(txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty() ||
-               txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()){
+            if (txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty()
+                    || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
-                if(enderecoBll.verificarCEPsIguais(txtCep.getText())){
+            } else {
+                if (enderecoBll.verificarCEPsIguais(txtCep.getText())) {
                     JOptionPane.showMessageDialog(rootPane, "CEPs IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                 }
                 enderecoBll.editar(endereco);
@@ -341,12 +340,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        } 
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         limparCampos();
-        
+
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void tblEnderecosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEnderecosMouseClicked
@@ -375,7 +374,6 @@ public class FrmEnderecos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtCepKeyTyped
 
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

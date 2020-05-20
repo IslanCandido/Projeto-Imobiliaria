@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Cargo;
 import model.Funcionario;
@@ -237,21 +239,65 @@ public class FuncionarioDAL {
     public boolean autenticarUsuario(String usuario, String senha) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("select * from funcionarios f \n"
+            PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f \n"
                     + "inner join pessoas p on f.fk_pes = p.id_pes \n"
                     + "inner join cargos c on f.fk_car = c.id_car \n"
                     + "WHERE p.cpf = ? AND f.senha = ?");
 
-            preparedStatement.setString(1, usuario);
-            preparedStatement.setString(2, senha);
+            ps.setString(1, usuario);
+            ps.setString(2, senha);
 
-            preparedStatement.execute();
-            ResultSet rs = preparedStatement.getResultSet();
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
             resultado = rs.next();
 
-        } catch (SQLException erro) {
-            erro.printStackTrace();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO AUTENTICAR FUNCIONÁRIO NO BANCO!");
         }
         return resultado;
+    }
+    
+    public String pegarNomeUsuario(String cpf){
+        String result = "";
+        try {
+            PreparedStatement ps = conexao.prepareStatement("select p.nome \n"
+                    + "from funcionarios f \n"
+                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
+                    + "inner join cargos c on f.fk_car = c.id_car \n"
+                    + "WHERE p.cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+            rs.first();
+            
+            result = rs.getString("nome");
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO PEGAR NOME DO FUNCIONÁRIO NO BANCO!");
+        }
+        
+        return result;
+    }
+    
+    public String pegarCargoUsuario(String cpf){
+        String result = "";
+        try {
+            PreparedStatement ps = conexao.prepareStatement("select c.descricao \n"
+                    + "from funcionarios f \n"
+                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
+                    + "inner join cargos c on f.fk_car = c.id_car \n"
+                    + "WHERE p.cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+            rs.first();
+            
+            result = rs.getString("descricao");
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO PEGAR CARGO DO FUNCIONÁRIO NO BANCO!");
+        }
+        
+        return result;
     }
 }

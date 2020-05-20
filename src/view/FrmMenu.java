@@ -1,5 +1,7 @@
 package view;
 
+import javax.swing.JOptionPane;
+
 public class FrmMenu extends javax.swing.JFrame {
 
     FrmPessoas telaPessoas;
@@ -7,8 +9,13 @@ public class FrmMenu extends javax.swing.JFrame {
     FrmImoveis telaImoveis;
     FrmVendas telaVendas;
 
-    public FrmMenu() {
+    public FrmMenu(String nome, String cargo) {
         initComponents();
+        lblusuario.setText(nome);
+        lblcargo.setText(cargo);
+    }
+
+    private FrmMenu() {
     }
 
     @SuppressWarnings("unchecked")
@@ -16,7 +23,9 @@ public class FrmMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        usuario = new javax.swing.JLabel();
+        lblusuario = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblcargo = new javax.swing.JLabel();
         TeladeFundo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -25,11 +34,11 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         MenuItemImovel = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        MenuItemVenda = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        MenuItemRelatorios = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        MenuItemEstatistixas = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Principal");
@@ -40,9 +49,23 @@ public class FrmMenu extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Usuário:");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(10, 430, 50, 15);
-        getContentPane().add(usuario);
-        usuario.setBounds(70, 430, 460, 20);
+        jLabel1.setBounds(10, 390, 50, 30);
+
+        lblusuario.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblusuario.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblusuario);
+        lblusuario.setBounds(70, 390, 460, 30);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Cargo: ");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(10, 420, 50, 30);
+
+        lblcargo.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblcargo.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblcargo);
+        lblcargo.setBounds(70, 420, 340, 30);
 
         TeladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_Menu.jpg"))); // NOI18N
         getContentPane().add(TeladeFundo);
@@ -94,15 +117,15 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenu3.setText("   ");
         jMenu3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda.png"))); // NOI18N
-        jMenuItem1.setText("Gerenciar Vendas");
-        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemVenda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda.png"))); // NOI18N
+        MenuItemVenda.setText("Gerenciar Vendas");
+        MenuItemVenda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuItemVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                MenuItemVendaActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem1);
+        jMenu3.add(MenuItemVenda);
 
         jMenuBar1.add(jMenu3);
 
@@ -110,20 +133,20 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenu4.setText("    ");
         jMenu4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_relatorios.png"))); // NOI18N
-        jMenuItem2.setText("Relatórios");
-        jMenuItem2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenu4.add(jMenuItem2);
+        MenuItemRelatorios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_relatorios.png"))); // NOI18N
+        MenuItemRelatorios.setText("Relatórios");
+        MenuItemRelatorios.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenu4.add(MenuItemRelatorios);
 
         jMenuBar1.add(jMenu4);
 
         jMenu5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/cadastrar_estatisticas.png"))); // NOI18N
         jMenu5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_estatisticas.png"))); // NOI18N
-        jMenuItem3.setText("Estátisticas");
-        jMenuItem3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenu5.add(jMenuItem3);
+        MenuItemEstatistixas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_estatisticas.png"))); // NOI18N
+        MenuItemEstatistixas.setText("Estátisticas");
+        MenuItemEstatistixas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenu5.add(MenuItemEstatistixas);
 
         jMenuBar1.add(jMenu5);
 
@@ -134,44 +157,64 @@ public class FrmMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void MenuItemPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemPessoaActionPerformed
-        if (telaPessoas == null) {
-            telaPessoas = new FrmPessoas();
-            telaPessoas.setVisible(true);
+        if (lblcargo.getText().equals("Corretor") || lblcargo.getText().equals("Administrador")) {
+            if (telaPessoas == null) {
+                telaPessoas = new FrmPessoas();
+                telaPessoas.setVisible(true);
+            } else {
+                telaPessoas.setVisible(true);
+                telaPessoas.setResizable(false);
+            }
         } else {
-            telaPessoas.setVisible(true);
-            telaPessoas.setResizable(false);
+            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
+
     }//GEN-LAST:event_MenuItemPessoaActionPerformed
 
     private void MenuItemFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFuncionarioActionPerformed
-        if (telaFuncionarios == null) {
-            telaFuncionarios = new FrmFuncionarios();
-            telaFuncionarios.setVisible(true);
+        if (lblcargo.getText().equals("Administrador")) {
+            if (telaFuncionarios == null) {
+                telaFuncionarios = new FrmFuncionarios();
+                telaFuncionarios.setVisible(true);
+            } else {
+                telaFuncionarios.setVisible(true);
+                telaFuncionarios.setResizable(false);
+            }
         } else {
-            telaFuncionarios.setVisible(true);
-            telaFuncionarios.setResizable(false);
+            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
+
     }//GEN-LAST:event_MenuItemFuncionarioActionPerformed
 
     private void MenuItemImovelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemImovelActionPerformed
-        if (telaImoveis == null) {
-            telaImoveis = new FrmImoveis();
-            telaImoveis.setVisible(true);
+        if (lblcargo.getText().equals("Corretor")) {
+            if (telaImoveis == null) {
+                telaImoveis = new FrmImoveis();
+                telaImoveis.setVisible(true);
+            } else {
+                telaImoveis.setVisible(true);
+                telaImoveis.setResizable(false);
+            }
         } else {
-            telaImoveis.setVisible(true);
-            telaImoveis.setResizable(false);
+            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
+        
     }//GEN-LAST:event_MenuItemImovelActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if (telaVendas == null) {
-            telaVendas = new FrmVendas();
-            telaVendas.setVisible(true);
+    private void MenuItemVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemVendaActionPerformed
+        if (lblcargo.getText().equals("Corretor")) {
+            if (telaVendas == null) {
+                telaVendas = new FrmVendas();
+                telaVendas.setVisible(true);
+            } else {
+                telaVendas.setVisible(true);
+                telaVendas.setResizable(false);
+            }
         } else {
-            telaVendas.setVisible(true);
-            telaVendas.setResizable(false);
+            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    }//GEN-LAST:event_MenuItemVendaActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -207,20 +250,22 @@ public class FrmMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MenuItemEstatistixas;
     private javax.swing.JMenuItem MenuItemFuncionario;
     private javax.swing.JMenuItem MenuItemImovel;
     private javax.swing.JMenuItem MenuItemPessoa;
+    private javax.swing.JMenuItem MenuItemRelatorios;
+    private javax.swing.JMenuItem MenuItemVenda;
     private javax.swing.JLabel TeladeFundo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JLabel usuario;
+    private javax.swing.JLabel lblcargo;
+    private javax.swing.JLabel lblusuario;
     // End of variables declaration//GEN-END:variables
 }
