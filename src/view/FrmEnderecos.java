@@ -29,15 +29,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
         btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(false);
         btnSalvar.setEnabled(false);
-        txtLogradouro.setEnabled(false);
     }
 
     private void liberar() {
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);
         btnLimpar.setEnabled(true);
-        btnSalvar.setEnabled(true);
-        txtLogradouro.setEnabled(true);
     }
 
     private void criarTabela() {
@@ -48,6 +45,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         modelo.addColumn("Bairro");
         modelo.addColumn("Cidade");
         modelo.addColumn("UF");
+        modelo.addColumn("Complemento");
 
         tblEnderecos.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblEnderecos.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -55,6 +53,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         tblEnderecos.getColumnModel().getColumn(3).setPreferredWidth(50);
         tblEnderecos.getColumnModel().getColumn(4).setPreferredWidth(50);
         tblEnderecos.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tblEnderecos.getColumnModel().getColumn(6).setPreferredWidth(50);
     }
 
     private void consultar() {
@@ -71,7 +70,8 @@ public class FrmEnderecos extends javax.swing.JFrame {
                     lista.get(i).getLogradouro(),
                     lista.get(i).getBairro(),
                     lista.get(i).getCidade(),
-                    lista.get(i).getUf()
+                    lista.get(i).getUf(),
+                    lista.get(i).getComplemento()
                 });
             }
         } else {
@@ -86,6 +86,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         txtBairro.setText(endereco.getBairro());
         txtCidade.setText(endereco.getCidade());
         txtUf.setText(endereco.getUf());
+        txtComplemento.setText(endereco.getComplemento());
     }
 
     private void limparCampos() {
@@ -94,6 +95,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         txtBairro.setText("");
         txtCidade.setText("");
         txtUf.setText("");
+        txtComplemento.setText("");
         iniciar();
     }
 
@@ -118,6 +120,8 @@ public class FrmEnderecos extends javax.swing.JFrame {
         txtLogradouro = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        txtComplemento = new javax.swing.JTextField();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -135,7 +139,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblEnderecos);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 140, 540, 160);
+        jScrollPane2.setBounds(10, 140, 610, 160);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -145,7 +149,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(240, 310, 55, 41);
+        btnSalvar.setBounds(280, 310, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -155,7 +159,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(310, 310, 55, 41);
+        btnExcluir.setBounds(350, 310, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -165,7 +169,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(380, 310, 55, 41);
+        btnEditar.setBounds(420, 310, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -175,7 +179,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(450, 310, 55, 41);
+        btnLimpar.setBounds(490, 310, 55, 41);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("CEP");
@@ -202,7 +206,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
 
         txtCidade.setEnabled(false);
         getContentPane().add(txtCidade);
-        txtCidade.setBounds(270, 30, 180, 28);
+        txtCidade.setBounds(270, 30, 190, 28);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Cidade");
@@ -210,13 +214,13 @@ public class FrmEnderecos extends javax.swing.JFrame {
         jLabel4.setBounds(270, 10, 38, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel5.setText("UF");
+        jLabel5.setText(" UF");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(470, 10, 40, 20);
+        jLabel5.setBounds(490, 10, 40, 20);
 
         txtUf.setEnabled(false);
         getContentPane().add(txtUf);
-        txtUf.setBounds(470, 30, 60, 28);
+        txtUf.setBounds(490, 30, 110, 28);
 
         txtBairro.setEnabled(false);
         getContentPane().add(txtBairro);
@@ -227,13 +231,14 @@ public class FrmEnderecos extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(30, 70, 34, 20);
 
+        txtLogradouro.setEnabled(false);
         txtLogradouro.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtLogradouroKeyTyped(evt);
             }
         });
         getContentPane().add(txtLogradouro);
-        txtLogradouro.setBounds(270, 90, 260, 28);
+        txtLogradouro.setBounds(270, 90, 190, 28);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Logradouro");
@@ -250,11 +255,29 @@ public class FrmEnderecos extends javax.swing.JFrame {
         getContentPane().add(btnBuscar);
         btnBuscar.setBounds(170, 30, 70, 30);
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setText("Complemento");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(490, 70, 90, 14);
+
+        txtComplemento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtComplementoActionPerformed(evt);
+            }
+        });
+        txtComplemento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtComplementoKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtComplemento);
+        txtComplemento.setBounds(490, 90, 110, 28);
+
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 580, 390);
+        teladeFundo.setBounds(-10, 0, 710, 390);
 
-        setSize(new java.awt.Dimension(564, 393));
+        setSize(new java.awt.Dimension(639, 393));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -271,8 +294,10 @@ public class FrmEnderecos extends javax.swing.JFrame {
             txtCidade.setText(cep.getLocalidade());
             txtUf.setText(cep.getUf());
             txtLogradouro.setText(cep.getLogradouro());
+            txtComplemento.setText(cep.getComplemento());
 
             liberar();
+            btnSalvar.setEnabled(true);
         } catch (ViaCEPException ex) {
             JOptionPane.showMessageDialog(rootPane, "CEP NÃO ENCONTRADO!");
         }
@@ -286,6 +311,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             endereco.setBairro(txtBairro.getText());
             endereco.setCidade(txtCidade.getText());
             endereco.setUf(txtUf.getText());
+            endereco.setComplemento(txtComplemento.getText());
 
             if (txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty()
                     || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
@@ -326,14 +352,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
             endereco.setBairro(txtBairro.getText());
             endereco.setCidade(txtCidade.getText());
             endereco.setUf(txtUf.getText());
+            endereco.setComplemento(txtComplemento.getText());
 
             if (txtCep.getText().isEmpty() || txtLogradouro.getText().isEmpty() || txtBairro.getText().isEmpty()
                     || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                if (enderecoBll.verificarCEPsIguais(txtCep.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "CEPs IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
                 enderecoBll.editar(endereco);
                 consultar();
                 limparCampos();
@@ -345,12 +369,11 @@ public class FrmEnderecos extends javax.swing.JFrame {
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         limparCampos();
-
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void tblEnderecosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEnderecosMouseClicked
-        liberar();
         btnSalvar.setEnabled(false);
+        liberar();
         int linha = tblEnderecos.getSelectedRow();
         Integer codigo = (Integer) tblEnderecos.getValueAt(linha, 0);
         preencheCampos((int) codigo);
@@ -373,6 +396,19 @@ public class FrmEnderecos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtCepKeyTyped
+
+    private void txtComplementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtComplementoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtComplementoActionPerformed
+
+    private void txtComplementoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtComplementoKeyTyped
+        Character ch = evt.getKeyChar();
+        int comprimentoDeCampo = txtLogradouro.getText().length();
+        if (comprimentoDeCampo >= 20) {
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 20 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtComplementoKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -418,12 +454,14 @@ public class FrmEnderecos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblEnderecos;
     private javax.swing.JLabel teladeFundo;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JFormattedTextField txtCep;
     private javax.swing.JTextField txtCidade;
+    private javax.swing.JTextField txtComplemento;
     private javax.swing.JTextField txtLogradouro;
     private javax.swing.JTextField txtUf;
     // End of variables declaration//GEN-END:variables

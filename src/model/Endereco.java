@@ -8,17 +8,19 @@ public class Endereco {
     private String bairro;
     private String cidade;
     private String uf;
+    private String complemento;
 
     public Endereco() {
     }
 
-    public Endereco(int codigo, String cep, String logradouro, String bairro, String cidade, String uf) {
+    public Endereco(int codigo, String cep, String logradouro, String bairro, String cidade, String uf, String complemento) {
         this.codigo = codigo;
         this.cep = cep;
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.cidade = cidade;
         this.uf = uf;
+        this.complemento = complemento;
     }
 
     @Override
@@ -74,7 +76,13 @@ public class Endereco {
         this.uf = uf;
     }
 
-    
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
     
 
 }

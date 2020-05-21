@@ -21,13 +21,14 @@ public class EnderecoDAL {
 
     public void adicionar(Endereco endereco) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("INSERT INTO endereços (logradouro, cep, cidade, uf, bairro) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement ps = conexao.prepareStatement("INSERT INTO endereços (logradouro, cep, cidade, uf, bairro, complemento) VALUES (?, ?, ?, ?, ?, ?)");
 
             ps.setString(1, endereco.getLogradouro());
             ps.setString(2, endereco.getCep());
             ps.setString(3, endereco.getCidade());
             ps.setString(4, endereco.getUf());
             ps.setString(5, endereco.getBairro());
+            ps.setString(6, endereco.getComplemento());
             ps.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n"+ e);
@@ -46,14 +47,15 @@ public class EnderecoDAL {
 
     public void alterar(Endereco endereco) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("UPDATE Endereços SET logradouro = ?, cep = ?, cidade = ?, uf = ?, bairro = ? WHERE id_end = ?");
+            PreparedStatement ps = conexao.prepareStatement("UPDATE Endereços SET logradouro = ?, cep = ?, cidade = ?, uf = ?, bairro = ?, complemento = ? WHERE id_end = ?");
 
             ps.setString(1, endereco.getLogradouro());
             ps.setString(2, endereco.getCep());
             ps.setString(3, endereco.getCidade());
             ps.setString(4, endereco.getUf());
             ps.setString(5, endereco.getBairro());
-            ps.setInt(6, endereco.getCodigo());
+            ps.setString(6, endereco.getComplemento());
+            ps.setInt(7, endereco.getCodigo());
             ps.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
@@ -74,6 +76,7 @@ public class EnderecoDAL {
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setUf(rs.getString("uf"));
                 endereco.setBairro(rs.getString("bairro"));
+                endereco.setComplemento(rs.getString("complemento"));
 
                 enderecos.add(endereco);
             }
@@ -98,6 +101,7 @@ public class EnderecoDAL {
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setUf(rs.getString("uf"));
                 endereco.setBairro(rs.getString("bairro"));
+                endereco.setComplemento(rs.getString("complemento"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");

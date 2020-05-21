@@ -125,7 +125,7 @@ public class FrmPessoas extends javax.swing.JFrame {
             Matcher matcher = pattern.matcher(email);
             if (matcher.matches()) {
                 return true;
-            } else{
+            } else {
                 return false;
             }
         }
@@ -204,7 +204,6 @@ public class FrmPessoas extends javax.swing.JFrame {
             return (false);
         }
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -484,7 +483,7 @@ public class FrmPessoas extends javax.swing.JFrame {
                     consultar();
                     limparCampos();
                 } else {
-                    if(pessoaBll.verificarCPFsIguais(txtCpf.getText())){
+                    if (pessoaBll.verificarCPFsIguais(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
                     if (!isEmail(txtEmail.getText())) {
@@ -527,24 +526,15 @@ public class FrmPessoas extends javax.swing.JFrame {
             pessoa.setDataNascimento(CriarNovaData(txtDataNascimento.getText()));
             pessoa.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
 
-            if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())) {
-                    if(pessoaBll.verificarCPFsIguais(txtCpf.getText())){
-                        JOptionPane.showMessageDialog(rootPane, "CPFs IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    pessoaBll.editar(pessoa);
-                    consultar();
-                    limparCampos();
-                } else {
-                    if (!isEmail(txtEmail.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (!isCPF(txtCpf.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (!isData(txtDataNascimento.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
+                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                pessoaBll.editar(pessoa);
+                consultar();
+                limparCampos();
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }

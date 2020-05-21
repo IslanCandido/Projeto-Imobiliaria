@@ -88,7 +88,7 @@ public class FrmCategorias extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtCategoria);
-        txtCategoria.setBounds(30, 30, 220, 28);
+        txtCategoria.setBounds(30, 30, 240, 28);
 
         tblCategorias.setModel(modelo);
         tblCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -100,7 +100,7 @@ public class FrmCategorias extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblCategorias);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 70, 260, 110);
+        jScrollPane2.setBounds(10, 70, 270, 110);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -146,7 +146,7 @@ public class FrmCategorias extends javax.swing.JFrame {
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 350, 290);
 
-        setSize(new java.awt.Dimension(285, 267));
+        setSize(new java.awt.Dimension(298, 267));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

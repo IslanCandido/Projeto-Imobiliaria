@@ -19,9 +19,9 @@ public class FrmContatos extends javax.swing.JFrame {
 
     Vector<Pessoa> vetorPessoas;
 
-    public FrmContatos() {
+    public FrmContatos() {        
         criarTabela();
-        consultar();
+        consultar();        
         initComponents();
         preencherCbxEnderecos();
     }
@@ -63,7 +63,7 @@ public class FrmContatos extends javax.swing.JFrame {
         contato = contatoBll.consultaPorId(id);
         txtTelefone.setText(contato.getNumero());
         cbxTipoTelefone.setSelectedItem(contato.getTipo());
-        cbxPessoas.setSelectedItem(contato.getIdPessoa());
+        cbxPessoas.setSelectedItem(contato.getIdPessoa().getCodigo());
     }
 
     private void limparCampos() {
@@ -278,10 +278,6 @@ public class FrmContatos extends javax.swing.JFrame {
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                if (contatoBll.verificarNumerosIguais(txtTelefone.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "NUMEROS IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
-
                 contatoBll.editar(contato);
                 consultar();
                 limparCampos();

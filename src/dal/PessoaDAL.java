@@ -84,6 +84,7 @@ public class PessoaDAL {
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setUf(rs.getString("uf"));
                 endereco.setBairro(rs.getString("bairro"));
+                endereco.setComplemento(rs.getString("complemento"));
 
                 pessoa.setIdEndereco(endereco);
 
@@ -119,6 +120,7 @@ public class PessoaDAL {
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setUf(rs.getString("uf"));
                 endereco.setBairro(rs.getString("bairro"));
+                endereco.setComplemento(rs.getString("complemento"));
 
                 pessoa.setIdEndereco(endereco);
             }
@@ -142,6 +144,7 @@ public class PessoaDAL {
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setUf(rs.getString("uf"));
                 endereco.setBairro(rs.getString("bairro"));
+                endereco.setComplemento(rs.getString("complemento"));
                 
                 enderecos.add(endereco);
             }

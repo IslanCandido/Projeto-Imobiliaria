@@ -415,16 +415,6 @@ public class FrmFuncionarios extends javax.swing.JFrame {
                     || txtNcontrato.getText().isEmpty() || txtSenhaAcesso.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                if (funcionarioBll.verificarFuncionariosIguais(funcionario.getIdPessoa().getCodigo())) {
-                    JOptionPane.showMessageDialog(rootPane, "PESSOAS IGUAIS FORAM CADASTRADAS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
-                if (funcionarioBll.verificarPisIgual(txtPis.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "PIS IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
-                if (funcionarioBll.verificarNCarteiraIguail(txtNCartTrabalho.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "Nº CARTEIRA DE TRABALHO IGUAIS FORAM CADASTRADAS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
-
                 funcionarioBll.editar(funcionario);
                 consultar();
                 limparCampos();
