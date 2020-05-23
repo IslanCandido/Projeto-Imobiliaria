@@ -139,7 +139,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblEnderecos);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 140, 610, 160);
+        jScrollPane2.setBounds(10, 120, 610, 160);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -149,7 +149,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(280, 310, 55, 41);
+        btnSalvar.setBounds(300, 290, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -159,7 +159,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(350, 310, 55, 41);
+        btnExcluir.setBounds(370, 290, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -169,7 +169,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(420, 310, 55, 41);
+        btnEditar.setBounds(440, 290, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -179,7 +179,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(490, 310, 55, 41);
+        btnLimpar.setBounds(510, 290, 55, 41);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("CEP");
@@ -224,12 +224,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
 
         txtBairro.setEnabled(false);
         getContentPane().add(txtBairro);
-        txtBairro.setBounds(30, 90, 210, 28);
+        txtBairro.setBounds(30, 80, 210, 28);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Bairro");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(30, 70, 34, 20);
+        jLabel3.setBounds(30, 60, 34, 20);
 
         txtLogradouro.setEnabled(false);
         txtLogradouro.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -238,12 +238,12 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtLogradouro);
-        txtLogradouro.setBounds(270, 90, 190, 28);
+        txtLogradouro.setBounds(270, 80, 190, 28);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Logradouro");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(270, 70, 65, 20);
+        jLabel2.setBounds(270, 60, 65, 20);
 
         btnBuscar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnBuscar.setText("Buscar");
@@ -258,7 +258,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Complemento");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(490, 70, 90, 14);
+        jLabel6.setBounds(490, 60, 90, 20);
 
         txtComplemento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,13 +271,13 @@ public class FrmEnderecos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtComplemento);
-        txtComplemento.setBounds(490, 90, 110, 28);
+        txtComplemento.setBounds(490, 80, 110, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(-10, 0, 710, 390);
 
-        setSize(new java.awt.Dimension(639, 393));
+        setSize(new java.awt.Dimension(636, 369));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

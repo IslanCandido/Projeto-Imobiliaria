@@ -21,7 +21,7 @@ public class CategoriaDAL {
     public void adicionar(Categoria categoria) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("INSERT INTO Categorias (nome) VALUES (?)");
+            ("INSERT INTO categorias (cat_nome) VALUES (?)");
             ps.setString(1, categoria.getNome());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class CategoriaDAL {
     public void excluir(int id) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("DELETE FROM Categorias WHERE id_cat = ?");
+            ("DELETE FROM categorias WHERE cat_id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class CategoriaDAL {
     public void alterar(Categoria categoria) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("UPDATE Categorias SET nome = ? WHERE id_cat = ?");
+            ("UPDATE Categorias SET cat_nome = ? WHERE cat_id = ?");
             ps.setString(1, categoria.getNome());
             ps.setInt(2, categoria.getCodigo());
             ps.executeUpdate();
@@ -56,11 +56,11 @@ public class CategoriaDAL {
         List<Categoria> categorias = new ArrayList<>();
         try {
             Statement ps = conexao.createStatement();
-            ResultSet rs = ps.executeQuery("SELECT * FROM Categorias");
+            ResultSet rs = ps.executeQuery("SELECT * FROM categorias");
             while (rs.next()){
                 Categoria categoria = new Categoria();
-                categoria.setCodigo(rs.getInt("id_cat"));
-                categoria.setNome(rs.getString("nome"));
+                categoria.setCodigo(rs.getInt("cat_id"));
+                categoria.setNome(rs.getString("cat_nome"));
                 categorias.add(categoria);
             }
         } catch (Exception e) {
@@ -73,13 +73,13 @@ public class CategoriaDAL {
         Categoria categoria = new Categoria();
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("SELECT * FROM Categorias WHERE id_cat = ?");
+            ("SELECT * FROM categorias WHERE cat_id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()){
-                categoria.setCodigo(rs.getInt("id_cat"));
-                categoria.setNome(rs.getString("nome"));
+                categoria.setCodigo(rs.getInt("cat_id"));
+                categoria.setNome(rs.getString("cat_nome"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
@@ -90,7 +90,7 @@ public class CategoriaDAL {
     public boolean verificarCategoriaIgual(String categoria) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM categorias WHERE nome = ?");
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM categorias WHERE cat_nome = ?");
             preparedStatement.setString(1, categoria);
             ResultSet rs = preparedStatement.executeQuery();            
             

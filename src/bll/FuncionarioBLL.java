@@ -5,15 +5,17 @@ import java.util.List;
 import java.util.Vector;
 import model.Cargo;
 import model.Funcionario;
-import model.Pessoa;
+import model.Contato;
+import model.Endereco;
 
 public class FuncionarioBLL {
+
     FuncionarioDAL dal;
-    
+
     public FuncionarioBLL() {
         dal = new FuncionarioDAL();
     }
-    
+
     public void salvar(Funcionario funcionario) throws Exception {
         dal.adicionar(funcionario);
     }
@@ -33,27 +35,27 @@ public class FuncionarioBLL {
     public Funcionario consultaPorId(int id) {
         return dal.consultaPorId(id);
     }
-    
-    public Vector<Pessoa> listarPessoas(){
-        return dal.listarPessoas();
+
+    public Vector<Endereco> listarEnderecos() {
+        return dal.listarEnderecos();
     }
-    
-    public Vector<Cargo> listarCargos(){
+
+    public Vector<Contato> listarContatos() {
+        return dal.listarContatos();
+    }
+
+    public Vector<Cargo> listarCargos() {
         return dal.listarCargos();
     }
-    
-    public boolean verificarFuncionariosIguais(int idPessoa){
-        return dal.verificarPessoasIguais(idPessoa);
-    }
-    
-    public boolean verificarPisIgual(String pis){
+
+    public boolean verificarPisIgual(String pis) {
         return dal.verificarPisIgual(pis);
     }
-    
-    public boolean verificarNCarteiraIguail(String nCarteiraTrabalho){
-        return dal.verificarNCarteiraIgual(nCarteiraTrabalho);
+
+    public boolean verificarCpfIgual(String cpf) {
+        return dal.verificarCpfIgual(cpf);
     }
-    
+
     public boolean autenticarLogin(String usuario, String senha){
         return dal.autenticarUsuario(usuario, senha);
     }
@@ -62,7 +64,7 @@ public class FuncionarioBLL {
         return dal.pegarNomeUsuario(cpf);
     }
     
-    public String pegarCargo(String cpf){
-        return dal.pegarCargoUsuario(cpf);
+    public String pegarCargo(String cargo){
+        return dal.pegarCargoUsuario(cargo);
     }
 }

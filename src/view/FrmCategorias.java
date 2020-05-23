@@ -146,7 +146,7 @@ public class FrmCategorias extends javax.swing.JFrame {
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 350, 290);
 
-        setSize(new java.awt.Dimension(298, 267));
+        setSize(new java.awt.Dimension(305, 268));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -161,7 +161,7 @@ public class FrmCategorias extends javax.swing.JFrame {
                     categoriaBll.salvar(categoria);
                     consultar();
                     limparCampos();
-                } else{
+                } else {
                     JOptionPane.showMessageDialog(rootPane, "CATEGORIA JÁ FOI CADASTRADA!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -192,10 +192,6 @@ public class FrmCategorias extends javax.swing.JFrame {
             if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                if (categoriaBll.verificarCategoriasIguais(txtCategoria.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "CATEGORIAS IGUAIS FORAM CADASTRADAS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
-                
                 categoriaBll.editar(categoria);
                 consultar();
                 limparCampos();

@@ -8,12 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Cargo;
 import model.Funcionario;
-import model.Pessoa;
+import model.Contato;
+import model.Endereco;
 import util.Conexao;
 
 public class FuncionarioDAL {
@@ -26,14 +25,17 @@ public class FuncionarioDAL {
 
     public void adicionar(Funcionario funcionario) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("INSERT INTO funcionarios (pis, cat_trabalho, n_contrato, senha, fk_pes, fk_car) VALUES (?, ?, ?, ?, ?, ?)");
-
-            ps.setString(1, funcionario.getPis());
-            ps.setString(2, funcionario.getnCarteiraTrabalho());
-            ps.setString(3, funcionario.getnContrato());
-            ps.setString(4, funcionario.getSenha());
-            ps.setInt(5, funcionario.getIdPessoa().getCodigo());
-            ps.setInt(6, funcionario.getIdCargo().getCodigo());
+            PreparedStatement ps = conexao.prepareStatement("INSERT INTO funcionarios (fun_nome, fun_cpf, fun_email, fun_dt_nascimento, fun_pis, fun_n_contrato, fun_senha, fun_fk_end, fun_fk_con, fun_fk_car) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, funcionario.getNome());
+            ps.setString(2, funcionario.getCpf());
+            ps.setString(3, funcionario.getEmail());
+            ps.setDate(4, new java.sql.Date(funcionario.getDataNascimento().getTime()));
+            ps.setString(5, funcionario.getPis());
+            ps.setString(6, funcionario.getnContrato());
+            ps.setString(7, funcionario.getSenha());
+            ps.setInt(8, funcionario.getIdEndereco().getCodigo());
+            ps.setInt(9, funcionario.getIdContato().getCodigo());
+            ps.setInt(10, funcionario.getIdCargo().getCodigo());
             ps.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n" + e);
@@ -42,7 +44,7 @@ public class FuncionarioDAL {
 
     public void excluir(int id) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("DELETE FROM funcionarios WHERE id_fun = ?");
+            PreparedStatement ps = conexao.prepareStatement("DELETE FROM funcionarios WHERE fun_id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -52,15 +54,19 @@ public class FuncionarioDAL {
 
     public void alterar(Funcionario funcionario) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("UPDATE funcionarios SET pis = ?, cat_trabalho = ?, n_contrato = ?, senha = ?, fk_pes = ?, fk_car = ? WHERE id_fun = ?");
+            PreparedStatement ps = conexao.prepareStatement("UPDATE funcionarios SET fun_nome = ?, fun_cpf = ?, fun_email = ?, fun_dt_nascimento = ?, fun_pis = ?, fun_n_contrato = ?, fun_senha = ?, fun_fk_end = ?, fun_fk_con = ?, fun_fk_car = ? WHERE fun_id = ?");
 
-            ps.setString(1, funcionario.getPis());
-            ps.setString(2, funcionario.getnCarteiraTrabalho());
-            ps.setString(3, funcionario.getnContrato());
-            ps.setString(4, funcionario.getSenha());
-            ps.setInt(5, funcionario.getIdPessoa().getCodigo());
-            ps.setInt(6, funcionario.getIdCargo().getCodigo());
-            ps.setInt(7, funcionario.getCodigo());
+            ps.setString(1, funcionario.getNome());
+            ps.setString(2, funcionario.getCpf());
+            ps.setString(3, funcionario.getEmail());
+            ps.setDate(4, new java.sql.Date(funcionario.getDataNascimento().getTime()));
+            ps.setString(5, funcionario.getPis());
+            ps.setString(6, funcionario.getnContrato());
+            ps.setString(7, funcionario.getSenha());
+            ps.setInt(8, funcionario.getIdEndereco().getCodigo());
+            ps.setInt(9, funcionario.getIdContato().getCodigo());
+            ps.setInt(10, funcionario.getIdCargo().getCodigo());
+            ps.setInt(11, funcionario.getCodigo());
             ps.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
@@ -71,32 +77,43 @@ public class FuncionarioDAL {
         List<Funcionario> funcionarios = new ArrayList<>();
         try {
             Statement ps = conexao.createStatement();
-            ResultSet rs = ps.executeQuery("select * from funcionarios f \n"
-                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
-                    + "inner join cargos c on f.fk_car = c.id_car");
+            ResultSet rs = ps.executeQuery("select * from funcionarios f\n"
+                    + "inner join enderecos e on f.fun_fk_end = e.end_id \n"
+                    + "inner join contatos c on f.fun_fk_con = c.con_id \n"
+                    + "inner join cargos cr on f.fun_fk_car = cr.car_id ");
 
             while (rs.next()) {
                 Funcionario funcionario = new Funcionario();
-                funcionario.setCodigo(rs.getInt("id_fun"));
-                funcionario.setPis(rs.getString("pis"));
-                funcionario.setnCarteiraTrabalho(rs.getString("cat_trabalho"));
-                funcionario.setnContrato(rs.getString("n_contrato"));
-                funcionario.setSenha(rs.getString("senha"));
+                funcionario.setCodigo(rs.getInt("fun_id"));
+                funcionario.setNome(rs.getString("fun_nome"));
+                funcionario.setCpf(rs.getString("fun_cpf"));
+                funcionario.setEmail(rs.getString("fun_email"));
+                funcionario.setDataNascimento(rs.getDate("fun_dt_nascimento"));
+                funcionario.setPis(rs.getString("fun_pis"));
+                funcionario.setnContrato(rs.getString("fun_n_contrato"));
+                funcionario.setSenha(rs.getString("fun_senha"));
 
-                Pessoa pessoa = new Pessoa();
-                pessoa.setCodigo(rs.getInt("id_pes"));
-                pessoa.setCpf(rs.getString("cpf"));
-                pessoa.setEmail(rs.getString("email"));
-                pessoa.setDataNascimento(rs.getDate("dt_nascimento"));
-                pessoa.setNome(rs.getString("nome"));
-                pessoa.getIdEndereco();
+                Endereco endereco = new Endereco();
+                endereco.setCodigo(rs.getInt("end_id"));
+                endereco.setLogradouro(rs.getString("end_logradouro"));
+                endereco.setCep(rs.getString("end_cep"));
+                endereco.setCidade(rs.getString("end_cidade"));
+                endereco.setUf(rs.getString("end_uf"));
+                endereco.setBairro(rs.getString("end_bairro"));
+                endereco.setComplemento(rs.getString("end_complemento"));
+
+                Contato contato = new Contato();
+                contato.setCodigo(rs.getInt("con_id"));
+                contato.setTipo(rs.getString("con_tipo"));
+                contato.setNumero(rs.getString("con_numero"));
 
                 Cargo cargo = new Cargo();
-                cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setDescricao(rs.getString("descricao"));
-                cargo.setSalario(rs.getFloat("salario"));
+                cargo.setCodigo(rs.getInt("car_id"));
+                cargo.setDescricao(rs.getString("car_descricao"));
+                cargo.setSalario(rs.getFloat("car_salario"));
 
-                funcionario.setIdPessoa(pessoa);
+                funcionario.setIdEndereco(endereco);
+                funcionario.setIdContato(contato);
                 funcionario.setIdCargo(cargo);
 
                 funcionarios.add(funcionario);
@@ -110,36 +127,48 @@ public class FuncionarioDAL {
     public Funcionario consultaPorId(int id) {
         Funcionario funcionario = new Funcionario();
         try {
-            PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f \n"
-                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
-                    + "inner join cargos c on f.fk_car = c.id_car \n"
-                    + "where f.id_fun = ?");
+            PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f\n"
+                    + "inner join enderecos e on f.fun_fk_end = e.end_id \n"
+                    + "inner join contatos c on f.fun_fk_con = c.con_id \n"
+                    + "inner join cargos cr on f.fun_fk_car = cr.car_id \n"
+                    + "where f.fun_id = ?");
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                funcionario.setCodigo(rs.getInt("id_fun"));
-                funcionario.setPis(rs.getString("pis"));
-                funcionario.setnCarteiraTrabalho(rs.getString("cat_trabalho"));
-                funcionario.setnContrato(rs.getString("n_contrato"));
-                funcionario.setSenha(rs.getString("senha"));
+                funcionario.setCodigo(rs.getInt("fun_id"));
+                funcionario.setNome(rs.getString("fun_nome"));
+                funcionario.setCpf(rs.getString("fun_cpf"));
+                funcionario.setEmail(rs.getString("fun_email"));
+                funcionario.setDataNascimento(rs.getDate("fun_dt_nascimento"));
+                funcionario.setPis(rs.getString("fun_pis"));
+                funcionario.setnContrato(rs.getString("fun_n_contrato"));
+                funcionario.setSenha(rs.getString("fun_senha"));
 
-                Pessoa pessoa = new Pessoa();
-                pessoa.setCodigo(rs.getInt("id_pes"));
-                pessoa.setCpf(rs.getString("cpf"));
-                pessoa.setEmail(rs.getString("email"));
-                pessoa.setDataNascimento(rs.getDate("dt_nascimento"));
-                pessoa.setNome(rs.getString("nome"));
-                pessoa.getIdEndereco();
+                Endereco endereco = new Endereco();
+                endereco.setCodigo(rs.getInt("end_id"));
+                endereco.setLogradouro(rs.getString("end_logradouro"));
+                endereco.setCep(rs.getString("end_cep"));
+                endereco.setCidade(rs.getString("end_cidade"));
+                endereco.setUf(rs.getString("end_uf"));
+                endereco.setBairro(rs.getString("end_bairro"));
+                endereco.setComplemento(rs.getString("end_complemento"));
+
+                Contato contato = new Contato();
+                contato.setCodigo(rs.getInt("con_id"));
+                contato.setTipo(rs.getString("con_tipo"));
+                contato.setNumero(rs.getString("con_numero"));
 
                 Cargo cargo = new Cargo();
-                cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setDescricao(rs.getString("descricao"));
-                cargo.setSalario(rs.getFloat("salario"));
+                cargo.setCodigo(rs.getInt("car_id"));
+                cargo.setDescricao(rs.getString("car_descricao"));
+                cargo.setSalario(rs.getFloat("car_salario"));
 
-                funcionario.setIdPessoa(pessoa);
+                funcionario.setIdEndereco(endereco);
+                funcionario.setIdContato(contato);
                 funcionario.setIdCargo(cargo);
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
@@ -147,28 +176,49 @@ public class FuncionarioDAL {
         return funcionario;
     }
 
-    public Vector<Pessoa> listarPessoas() {
-        Vector<Pessoa> pessoas = new Vector<Pessoa>();
+    public Vector<Endereco> listarEnderecos() {
+        Vector<Endereco> enderecos = new Vector<Endereco>();
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM pessoas");
-            ResultSet rs = preparedStatement.executeQuery();
+            PreparedStatement ps = conexao.prepareStatement("SELECT * FROM enderecos");
+            ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Pessoa pessoa = new Pessoa();
-                pessoa.setCodigo(rs.getInt("id_pes"));
-                pessoa.setCpf(rs.getString("cpf"));
-                pessoa.setEmail(rs.getString("email"));
-                pessoa.setDataNascimento(rs.getDate("dt_nascimento"));
-                pessoa.setNome(rs.getString("nome"));
-                pessoa.getIdEndereco();
+                Endereco endereco = new Endereco();
+                endereco.setCodigo(rs.getInt("end_id"));
+                endereco.setLogradouro(rs.getString("end_logradouro"));
+                endereco.setCep(rs.getString("end_cep"));
+                endereco.setCidade(rs.getString("end_cidade"));
+                endereco.setUf(rs.getString("end_uf"));
+                endereco.setBairro(rs.getString("end_bairro"));
+                endereco.setComplemento(rs.getString("end_complemento"));
 
-                pessoas.add(pessoa);
+                enderecos.add(endereco);
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR PESSOAS! ");
+            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR ENDEREÇOS! ");
         }
-        return pessoas;
+        return enderecos;
+    }
+
+    public Vector<Contato> listarContatos() {
+        Vector<Contato> contatos = new Vector<Contato>();
+        try {
+            PreparedStatement ps = conexao.prepareStatement("SELECT * FROM contatos");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Contato contato = new Contato();
+                contato.setCodigo(rs.getInt("con_id"));
+                contato.setTipo(rs.getString("con_tipo"));
+                contato.setNumero(rs.getString("con_numero"));
+
+                contatos.add(contato);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR CONTATOS!");
+        }
+        return contatos;
     }
 
     public Vector<Cargo> listarCargos() {
@@ -179,9 +229,9 @@ public class FuncionarioDAL {
 
             while (rs.next()) {
                 Cargo cargo = new Cargo();
-                cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setDescricao(rs.getString("descricao"));
-                cargo.setSalario(rs.getFloat("salario"));
+                cargo.setCodigo(rs.getInt("car_id"));
+                cargo.setDescricao(rs.getString("car_descricao"));
+                cargo.setSalario(rs.getFloat("car_salario"));
 
                 cargos.add(cargo);
             }
@@ -191,25 +241,10 @@ public class FuncionarioDAL {
         return cargos;
     }
 
-    public boolean verificarPessoasIguais(int idPessoa) {
-        boolean resultado = false;
-        try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE fk_pes = ?");
-            preparedStatement.setInt(1, idPessoa);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            resultado = rs.next();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR PESSOAS! ");
-        }
-
-        return resultado;
-    }
-
     public boolean verificarPisIgual(String pis) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE pis = ?");
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE fun_pis = ?");
             preparedStatement.setString(1, pis);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -221,16 +256,16 @@ public class FuncionarioDAL {
         return resultado;
     }
 
-    public boolean verificarNCarteiraIgual(String nCarteiraTrabalho) {
+    public boolean verificarCpfIgual(String cpf) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE cat_trabalho = ?");
-            preparedStatement.setString(1, nCarteiraTrabalho);
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM funcionarios WHERE fun_cpf = ?");
+            preparedStatement.setString(1, cpf);
             ResultSet rs = preparedStatement.executeQuery();
 
             resultado = rs.next();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR NUMEROS DA CARTEIRA DE TRABALHO!");
+            JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR CPFs! ");
         }
 
         return resultado;
@@ -239,10 +274,11 @@ public class FuncionarioDAL {
     public boolean autenticarUsuario(String usuario, String senha) {
         boolean resultado = false;
         try {
-            PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f \n"
-                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
-                    + "inner join cargos c on f.fk_car = c.id_car \n"
-                    + "WHERE p.cpf = ? AND f.senha = ?");
+            PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f\n"
+                    + "inner join enderecos e on f.fun_fk_end = e.end_id \n"
+                    + "inner join contatos c on f.fun_fk_con = c.con_id \n"
+                    + "inner join cargos cr on f.fun_fk_car = cr.car_id \n"
+                    + "WHERE f.fun_cpf = ? AND f.fun_senha = ?");
 
             ps.setString(1, usuario);
             ps.setString(2, senha);
@@ -256,48 +292,50 @@ public class FuncionarioDAL {
         }
         return resultado;
     }
-    
-    public String pegarNomeUsuario(String cpf){
+
+    public String pegarNomeUsuario(String cpf) {
         String result = "";
         try {
-            PreparedStatement ps = conexao.prepareStatement("select p.nome \n"
+            PreparedStatement ps = conexao.prepareStatement("select f.fun_nome\n"
                     + "from funcionarios f \n"
-                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
-                    + "inner join cargos c on f.fk_car = c.id_car \n"
-                    + "WHERE p.cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            
+                    + "inner join enderecos e on f.fun_fk_end = e.end_id \n"
+                    + "inner join contatos c on f.fun_fk_con = c.con_id \n"
+                    + "inner join cargos cr on f.fun_fk_car = cr.car_id \n"
+                    + "WHERE f.fun_cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
             rs.first();
-            
-            result = rs.getString("nome");
-            
+
+            result = rs.getString("fun_nome");
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "ERRO AO PEGAR NOME DO FUNCIONÁRIO NO BANCO!");
         }
-        
+
         return result;
     }
-    
-    public String pegarCargoUsuario(String cpf){
+
+    public String pegarCargoUsuario(String cargo) {
         String result = "";
         try {
-            PreparedStatement ps = conexao.prepareStatement("select c.descricao \n"
+            PreparedStatement ps = conexao.prepareStatement("select cr.car_descricao \n"
                     + "from funcionarios f \n"
-                    + "inner join pessoas p on f.fk_pes = p.id_pes \n"
-                    + "inner join cargos c on f.fk_car = c.id_car \n"
-                    + "WHERE p.cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            
-            ps.setString(1, cpf);
+                    + "inner join enderecos e on f.fun_fk_end = e.end_id \n"
+                    + "inner join contatos c on f.fun_fk_con = c.con_id \n"
+                    + "inner join cargos cr on f.fun_fk_car = cr.car_id \n"
+                    + "WHERE f.fun_cpf = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+            ps.setString(1, cargo);
             ResultSet rs = ps.executeQuery();
             rs.first();
-            
-            result = rs.getString("descricao");
-            
+
+            result = rs.getString("car_descricao");
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "ERRO AO PEGAR CARGO DO FUNCIONÁRIO NO BANCO!");
         }
-        
+
         return result;
     }
 }

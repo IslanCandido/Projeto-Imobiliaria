@@ -141,12 +141,12 @@ public class FrmVendas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     FrmFuncionarios telaFuncionarios;
-    FrmPessoas telaPessoas;
+    FrmClientes telaPessoas;
     FrmImoveis telaImoveis;
     
     private void btnAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarClienteActionPerformed
         if (telaPessoas == null) {
-            telaPessoas = new FrmPessoas();
+            telaPessoas = new FrmClientes();
             telaPessoas.setVisible(true);
         } else {
             telaPessoas.setVisible(true);

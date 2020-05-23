@@ -21,7 +21,7 @@ public class EnderecoDAL {
 
     public void adicionar(Endereco endereco) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("INSERT INTO endereços (logradouro, cep, cidade, uf, bairro, complemento) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = conexao.prepareStatement("INSERT INTO enderecos (end_logradouro, end_cep, end_cidade, end_uf, end_bairro, end_complemento) VALUES (?, ?, ?, ?, ?, ?)");
 
             ps.setString(1, endereco.getLogradouro());
             ps.setString(2, endereco.getCep());
@@ -37,7 +37,7 @@ public class EnderecoDAL {
 
     public void excluir(int id) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("DELETE FROM endereços WHERE id_end = ?");
+            PreparedStatement ps = conexao.prepareStatement("DELETE FROM enderecos WHERE end_id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class EnderecoDAL {
 
     public void alterar(Endereco endereco) {
         try {
-            PreparedStatement ps = conexao.prepareStatement("UPDATE Endereços SET logradouro = ?, cep = ?, cidade = ?, uf = ?, bairro = ?, complemento = ? WHERE id_end = ?");
+            PreparedStatement ps = conexao.prepareStatement("UPDATE enderecos SET end_logradouro = ?, end_cep = ?, end_cidade = ?, end_uf = ?, end_bairro = ?, end_complemento = ? WHERE end_id = ?");
 
             ps.setString(1, endereco.getLogradouro());
             ps.setString(2, endereco.getCep());
@@ -66,17 +66,17 @@ public class EnderecoDAL {
         List<Endereco> enderecos = new ArrayList<>();
         try {
             Statement ps = conexao.createStatement();
-            ResultSet rs = ps.executeQuery("SELECT * FROM endereços");
+            ResultSet rs = ps.executeQuery("SELECT * FROM enderecos");
 
             while (rs.next()) {
                 Endereco endereco = new Endereco();
-                endereco.setCodigo(rs.getInt("id_end"));
-                endereco.setLogradouro(rs.getString("logradouro"));
-                endereco.setCep(rs.getString("cep"));
-                endereco.setCidade(rs.getString("cidade"));
-                endereco.setUf(rs.getString("uf"));
-                endereco.setBairro(rs.getString("bairro"));
-                endereco.setComplemento(rs.getString("complemento"));
+                endereco.setCodigo(rs.getInt("end_id"));
+                endereco.setLogradouro(rs.getString("end_logradouro"));
+                endereco.setCep(rs.getString("end_cep"));
+                endereco.setCidade(rs.getString("end_cidade"));
+                endereco.setUf(rs.getString("end_uf"));
+                endereco.setBairro(rs.getString("end_bairro"));
+                endereco.setComplemento(rs.getString("end_complemento"));
 
                 enderecos.add(endereco);
             }
@@ -89,19 +89,19 @@ public class EnderecoDAL {
     public Endereco consultaPorId(int id) {
         Endereco endereco = new Endereco();
         try {
-            PreparedStatement ps = conexao.prepareStatement("SELECT * FROM endereços WHERE id_end = ?");
+            PreparedStatement ps = conexao.prepareStatement("SELECT * FROM enderecos WHERE end_id = ?");
             
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                endereco.setCodigo(rs.getInt("id_end"));
-                endereco.setLogradouro(rs.getString("logradouro"));
-                endereco.setCep(rs.getString("cep"));
-                endereco.setCidade(rs.getString("cidade"));
-                endereco.setUf(rs.getString("uf"));
-                endereco.setBairro(rs.getString("bairro"));
-                endereco.setComplemento(rs.getString("complemento"));
+                endereco.setCodigo(rs.getInt("end_id"));
+                endereco.setLogradouro(rs.getString("end_logradouro"));
+                endereco.setCep(rs.getString("end_cep"));
+                endereco.setCidade(rs.getString("end_cidade"));
+                endereco.setUf(rs.getString("end_uf"));
+                endereco.setBairro(rs.getString("end_bairro"));
+                endereco.setComplemento(rs.getString("end_complemento"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
@@ -112,7 +112,7 @@ public class EnderecoDAL {
     public boolean verificarCepIgual(String cep) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM endereços WHERE cep = ?");
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM enderecos WHERE end_cep = ?");
             preparedStatement.setString(1, cep);
             ResultSet rs = preparedStatement.executeQuery();            
             

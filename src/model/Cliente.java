@@ -2,25 +2,28 @@ package model;
 
 import java.util.Date;
 
-public class Pessoa {
+public class Cliente {
     private int codigo;
     private String nome;
     private String cpf;
     private String email;
     private Date dataNascimento;
     private Endereco idEndereco;
+    private Contato idContato;
 
-    public Pessoa() {
+    public Cliente() {
         idEndereco = new Endereco();
+        idContato = new Contato();
     }
 
-    public Pessoa(int codigo, String nome, String cpf, String email, Date dataNascimento, Endereco idEndereco) {
+    public Cliente(int codigo, String nome, String cpf, String email, Date dataNascimento, Endereco idEndereco, Contato idContato) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.dataNascimento = dataNascimento;
         this.idEndereco = idEndereco;
+        this.idContato = idContato;
     }
 
     @Override
@@ -74,6 +77,14 @@ public class Pessoa {
 
     public void setIdEndereco(Endereco idEndereco) {
         this.idEndereco = idEndereco;
+    }
+
+    public Contato getIdContato() {
+        return idContato;
+    }
+
+    public void setIdContato(Contato idContato) {
+        this.idContato = idContato;
     }
     
     

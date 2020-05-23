@@ -9,34 +9,35 @@ import javax.swing.table.DefaultTableModel;
 import model.Cargo;
 
 public class FrmCargos extends javax.swing.JFrame {
+
     DefaultTableModel modelo = new DefaultTableModel();
     CargoBLL cargoBll = new CargoBLL();
     Cargo cargo = new Cargo();
-    
+
     public FrmCargos() {
         criarTabela();
         consultar();
         initComponents();
     }
 
-    private void criarTabela(){
+    private void criarTabela() {
         tblCargos = new JTable(modelo);
         modelo.addColumn("Código");
         modelo.addColumn("Cargo");
         modelo.addColumn("Salário");
-        
+
         tblCargos.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblCargos.getColumnModel().getColumn(1).setPreferredWidth(30);
         tblCargos.getColumnModel().getColumn(1).setPreferredWidth(30);
     }
-    
-    private void consultar(){
+
+    private void consultar() {
         modelo.setNumRows(0);
         List<Cargo> lista = new ArrayList<Cargo>();
-        
+
         lista = cargoBll.consultar();
-        
-        if (lista.size() > 0){
+
+        if (lista.size() > 0) {
             for (int i = 0; i < lista.size(); i++) {
                 modelo.addRow(new Object[]{
                     lista.get(i).getCodigo(),
@@ -48,14 +49,14 @@ public class FrmCargos extends javax.swing.JFrame {
             modelo.setNumRows(0);
         }
     }
-    
+
     private void preencheCampos(int id) {
         cargo = cargoBll.consultaPorId(id);
         txtCargo.setText(cargo.getDescricao());
         txtSalario.setText(String.valueOf(cargo.getSalario()));
     }
-    
-    private void limparCampos(){
+
+    private void limparCampos() {
         txtCargo.setText("");
         txtSalario.setText("");
         btnSalvar.setEnabled(true);
@@ -179,32 +180,30 @@ public class FrmCargos extends javax.swing.JFrame {
             cargo.setDescricao(txtCargo.getText());
             cargo.setSalario(Float.parseFloat(txtSalario.getText()));
 
-            if(txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()){
+            if (txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            }
-            else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
+            } else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-            }
-            else{
-                if(!cargoBll.verificarCargosIguais(txtCargo.getText())){
+            } else {
+                if (!cargoBll.verificarCargosIguais(txtCargo.getText())) {
                     cargoBll.salvar(cargo);
                     consultar();
                     limparCampos();
-                } else{
+                } else {
                     JOptionPane.showMessageDialog(rootPane, "CARGO JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                 }
-                
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        } 
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         try {
-            if(txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()){
+            if (txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else{
+            } else {
                 cargoBll.remover(cargoBll.consultaPorId(cargo.getCodigo()));
             }
         } catch (Exception e) {
@@ -219,21 +218,16 @@ public class FrmCargos extends javax.swing.JFrame {
             cargo.setDescricao(txtCargo.getText());
             cargo.setSalario(Float.parseFloat(txtSalario.getText()));
 
-            if(txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()){
+            if (txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            }
-            else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
+            } else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-            }
-            else{
-                if(cargoBll.verificarCargosIguais(txtCargo.getText())){
-                    JOptionPane.showMessageDialog(rootPane, "CARGO IGUAIS FORAM CADASTRADOS!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                }
+            } else {
+
                 cargoBll.editar(cargo);
                 consultar();
                 limparCampos();
-                
-                
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -258,7 +252,7 @@ public class FrmCargos extends javax.swing.JFrame {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 25 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         char validar = evt.getKeyChar();
         if (Character.isDigit(validar)) {
             getToolkit().beep();
@@ -276,7 +270,7 @@ public class FrmCargos extends javax.swing.JFrame {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 5 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         char validar = evt.getKeyChar();
         if (Character.isLetter(validar)) {
             getToolkit().beep();

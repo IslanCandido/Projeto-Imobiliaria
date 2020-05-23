@@ -21,7 +21,7 @@ public class CargoDAL {
     public void adicionar(Cargo cargo) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("INSERT INTO Cargos (descricao, salario) VALUES (?, ?)");
+            ("INSERT INTO cargos (car_descricao, car_salario) VALUES (?, ?)");
             ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
             ps.executeUpdate();
@@ -33,7 +33,7 @@ public class CargoDAL {
     public void excluir(int id) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("DELETE FROM Cargos WHERE id_car = ?");
+            ("DELETE FROM cargos WHERE car_id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class CargoDAL {
     public void alterar(Cargo cargo) {
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("UPDATE Cargos SET descricao = ?, salario = ? WHERE id_car = ?");
+            ("UPDATE cargos SET car_descricao = ?, car_salario = ? WHERE car_id = ?");
             ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
             ps.setInt(3, cargo.getCodigo());
@@ -58,12 +58,12 @@ public class CargoDAL {
         List<Cargo> cargos = new ArrayList<>();
         try {
             Statement ps = conexao.createStatement();
-            ResultSet rs = ps.executeQuery("SELECT * FROM Cargos");
+            ResultSet rs = ps.executeQuery("SELECT * FROM cargos");
             while (rs.next()){
                 Cargo cargo = new Cargo();
-                cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setDescricao(rs.getString("descricao"));
-                cargo.setSalario(rs.getFloat("salario"));
+                cargo.setCodigo(rs.getInt("car_id"));
+                cargo.setDescricao(rs.getString("car_descricao"));
+                cargo.setSalario(rs.getFloat("car_salario"));
                 cargos.add(cargo);
             }
         } catch (Exception e) {
@@ -76,14 +76,14 @@ public class CargoDAL {
         Cargo cargo = new Cargo();
         try {
             PreparedStatement ps = conexao.prepareStatement
-            ("SELECT * FROM Cargos WHERE id_car = ?");
+            ("SELECT * FROM cargos WHERE car_id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()){
-                cargo.setCodigo(rs.getInt("id_car"));
-                cargo.setDescricao(rs.getString("descricao"));
-                cargo.setSalario(rs.getFloat("salario"));
+                cargo.setCodigo(rs.getInt("car_id"));
+                cargo.setDescricao(rs.getString("car_descricao"));
+                cargo.setSalario(rs.getFloat("car_salario"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO CONSULTAR DADOS!");
@@ -94,7 +94,7 @@ public class CargoDAL {
     public boolean verificarCargoIgual(String cargo) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM cargos WHERE descricao = ?");
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM cargos WHERE car_descricao = ?");
             preparedStatement.setString(1, cargo);
             ResultSet rs = preparedStatement.executeQuery();            
             

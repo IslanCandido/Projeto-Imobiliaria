@@ -3,13 +3,11 @@ package view;
 import bll.ContatoBLL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.Contato;
-import model.Pessoa;
 
 public class FrmContatos extends javax.swing.JFrame {
 
@@ -17,26 +15,22 @@ public class FrmContatos extends javax.swing.JFrame {
     ContatoBLL contatoBll = new ContatoBLL();
     Contato contato = new Contato();
 
-    Vector<Pessoa> vetorPessoas;
-
     public FrmContatos() {        
         criarTabela();
-        consultar();        
+        consultar();    
         initComponents();
-        preencherCbxEnderecos();
+        
     }
 
     private void criarTabela() {
         tblContatos = new JTable(modelo);
         modelo.addColumn("Código");
-        modelo.addColumn("Pessoa");
         modelo.addColumn("Numero");
         modelo.addColumn("Tipo");
 
         tblContatos.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblContatos.getColumnModel().getColumn(1).setPreferredWidth(50);
         tblContatos.getColumnModel().getColumn(2).setPreferredWidth(50);
-        tblContatos.getColumnModel().getColumn(3).setPreferredWidth(50);
     }
 
     private void consultar() {
@@ -49,7 +43,6 @@ public class FrmContatos extends javax.swing.JFrame {
             for (int i = 0; i < lista.size(); i++) {
                 modelo.addRow(new Object[]{
                     lista.get(i).getCodigo(),
-                    lista.get(i).getIdPessoa().getNome(),
                     lista.get(i).getNumero(),
                     lista.get(i).getTipo()
                 });
@@ -63,20 +56,14 @@ public class FrmContatos extends javax.swing.JFrame {
         contato = contatoBll.consultaPorId(id);
         txtTelefone.setText(contato.getNumero());
         cbxTipoTelefone.setSelectedItem(contato.getTipo());
-        cbxPessoas.setSelectedItem(contato.getIdPessoa().getCodigo());
     }
 
     private void limparCampos() {
         txtTelefone.setValue("");
         cbxTipoTelefone.setSelectedIndex(0);
-        cbxPessoas.setSelectedIndex(0);
         btnSalvar.setEnabled(true);
     }
 
-    private void preencherCbxEnderecos() {
-        vetorPessoas = contatoBll.listarPessoas();
-        cbxPessoas.setModel(new DefaultComboBoxModel(vetorPessoas));
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -84,17 +71,14 @@ public class FrmContatos extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         cbxTipoTelefone = new javax.swing.JComboBox<>();
         txtTelefone = new javax.swing.JFormattedTextField();
-        cbxPessoas = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblContatos = new javax.swing.JTable();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
-        btnAdicionarPessoa = new javax.swing.JButton();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -105,21 +89,16 @@ public class FrmContatos extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Tipo ");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(30, 10, 30, 20);
+        jLabel1.setBounds(20, 10, 30, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Telefone");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(200, 10, 49, 20);
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel3.setText("Pessoa");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(30, 60, 50, 20);
+        jLabel2.setBounds(190, 10, 49, 20);
 
         cbxTipoTelefone.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Pessoal", "Residêncial", "Outro" }));
         getContentPane().add(cbxTipoTelefone);
-        cbxTipoTelefone.setBounds(30, 30, 140, 30);
+        cbxTipoTelefone.setBounds(20, 30, 140, 30);
 
         try {
             txtTelefone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)#####-####")));
@@ -132,10 +111,7 @@ public class FrmContatos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtTelefone);
-        txtTelefone.setBounds(200, 30, 140, 30);
-
-        getContentPane().add(cbxPessoas);
-        cbxPessoas.setBounds(30, 80, 270, 28);
+        txtTelefone.setBounds(190, 30, 140, 30);
 
         tblContatos.setModel(modelo);
         tblContatos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -147,7 +123,7 @@ public class FrmContatos extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblContatos);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 120, 350, 130);
+        jScrollPane2.setBounds(10, 70, 330, 130);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -157,7 +133,7 @@ public class FrmContatos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(70, 260, 55, 41);
+        btnSalvar.setBounds(50, 210, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -167,7 +143,7 @@ public class FrmContatos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(140, 260, 55, 41);
+        btnExcluir.setBounds(120, 210, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -177,7 +153,7 @@ public class FrmContatos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(210, 260, 55, 41);
+        btnEditar.setBounds(190, 210, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -187,23 +163,13 @@ public class FrmContatos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(280, 260, 55, 41);
-
-        btnAdicionarPessoa.setText("+");
-        btnAdicionarPessoa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAdicionarPessoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarPessoaActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnAdicionarPessoa);
-        btnAdicionarPessoa.setBounds(300, 80, 41, 28);
+        btnLimpar.setBounds(260, 210, 55, 41);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 440, 380);
 
-        setSize(new java.awt.Dimension(375, 341));
+        setSize(new java.awt.Dimension(355, 288));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -219,25 +185,12 @@ public class FrmContatos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTelefoneKeyTyped
 
-    FrmPessoas telaPessoas;
-
-    private void btnAdicionarPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPessoaActionPerformed
-        if (telaPessoas == null) {
-            telaPessoas = new FrmPessoas();
-            telaPessoas.setVisible(true);
-        } else {
-            telaPessoas.dispose();
-            telaPessoas.setVisible(true);
-            telaPessoas.setResizable(false);
-        }
-    }//GEN-LAST:event_btnAdicionarPessoaActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
             contato.setTipo(cbxTipoTelefone.getSelectedItem().toString());
             contato.setNumero(txtTelefone.getText());
-            contato.setIdPessoa(vetorPessoas.get(cbxPessoas.getSelectedIndex()));
-
+            
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -273,7 +226,6 @@ public class FrmContatos extends javax.swing.JFrame {
         try {
             contato.setTipo(cbxTipoTelefone.getSelectedItem().toString());
             contato.setNumero(txtTelefone.getText());
-            contato.setIdPessoa(vetorPessoas.get(cbxPessoas.getSelectedIndex()));
 
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
@@ -290,7 +242,6 @@ public class FrmContatos extends javax.swing.JFrame {
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         limparCampos();
-        preencherCbxEnderecos();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void tblContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblContatosMouseClicked
@@ -333,16 +284,13 @@ public class FrmContatos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdicionarPessoa;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JComboBox<String> cbxPessoas;
     private javax.swing.JComboBox<String> cbxTipoTelefone;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblContatos;
     private javax.swing.JLabel teladeFundo;

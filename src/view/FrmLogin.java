@@ -24,13 +24,14 @@ public class FrmLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        txtSenhaAdmin = new javax.swing.JPasswordField();
         IconeUsuario = new javax.swing.JLabel();
         IconeSenha = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         btnEsqueceuSenha = new javax.swing.JButton();
         Logotipo = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnAdministrador = new javax.swing.JButton();
         txtSenha = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
 
@@ -88,18 +89,18 @@ public class FrmLogin extends javax.swing.JFrame {
         getContentPane().add(Logotipo);
         Logotipo.setBounds(80, 0, 120, 140);
 
-        jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Administrador");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAdministrador.setBackground(new java.awt.Color(51, 51, 51));
+        btnAdministrador.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnAdministrador.setForeground(new java.awt.Color(255, 255, 255));
+        btnAdministrador.setText("Administrador");
+        btnAdministrador.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdministrador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAdministradorActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(50, 300, 190, 40);
+        getContentPane().add(btnAdministrador);
+        btnAdministrador.setBounds(50, 300, 190, 40);
 
         txtSenha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -170,9 +171,9 @@ public class FrmLogin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtSenhaKeyTyped
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showConfirmDialog(rootPane, new Object[]{txtSenha}, "Senha de acesso", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-        String senhaDigitada = new String(txtSenha.getPassword());
+    private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
+        JOptionPane.showConfirmDialog(rootPane, new Object[]{txtSenhaAdmin}, "Senha de acesso", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        String senhaDigitada = new String(txtSenhaAdmin.getPassword());
 
         if ("admin".equals(senhaDigitada)) {
             menu = new FrmMenu("Administrador", "Administrador");
@@ -182,7 +183,7 @@ public class FrmLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "SENHA INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             txtSenha.setText("");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAdministradorActionPerformed
 
     private void btnEsqueceuSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsqueceuSenhaActionPerformed
 
@@ -227,11 +228,12 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JLabel IconeSenha;
     private javax.swing.JLabel IconeUsuario;
     private javax.swing.JLabel Logotipo;
+    private javax.swing.JButton btnAdministrador;
     private javax.swing.JButton btnEsqueceuSenha;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPasswordField txtSenha;
+    private javax.swing.JPasswordField txtSenhaAdmin;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

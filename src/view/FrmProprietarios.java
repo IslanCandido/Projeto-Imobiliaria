@@ -1,10 +1,9 @@
 package view;
 
-import bll.PessoaBLL;
+import bll.ProprietarioBLL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Locale;
@@ -15,25 +14,25 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.Endereco;
-import model.Pessoa;
+import model.Contato;
+import model.Proprietario;
 
-public class FrmPessoas extends javax.swing.JFrame {
+public class FrmProprietarios extends javax.swing.JFrame {
 
     DefaultTableModel modelo = new DefaultTableModel();
-    PessoaBLL pessoaBll = new PessoaBLL();
-    Pessoa pessoa = new Pessoa();
+    ProprietarioBLL proprietarioBll = new ProprietarioBLL();
+    Proprietario proprietario = new Proprietario();
 
-    Vector<Endereco> vetorEnderecos;
+    Vector<Contato> vetorContatos;
 
-    public FrmPessoas() {
+    public FrmProprietarios() {
         criarTabela();
         consultar();
         initComponents();
-        preencherCbxEnderecos();
+        preencherCbxs();
     }
 
-    private Date CriarNovaData(String data) {
+    private java.util.Date CriarNovaData(String data) {
         if (data == null) {
             return null;
         }
@@ -47,7 +46,7 @@ public class FrmPessoas extends javax.swing.JFrame {
         return a;
     }
 
-    private String convertDate(Date dtConsulta) {
+    private String convertDate(java.util.Date dtConsulta) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
             return formatter.format(dtConsulta);
@@ -62,8 +61,8 @@ public class FrmPessoas extends javax.swing.JFrame {
         modelo.addColumn("Nome");
         modelo.addColumn("CPF");
         modelo.addColumn("Email");
-        modelo.addColumn("Data de nascimento");
-        modelo.addColumn("Endereço");
+        modelo.addColumn("Data nascimento");
+        modelo.addColumn("Contato");
 
         tblPessoas.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblPessoas.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -75,9 +74,9 @@ public class FrmPessoas extends javax.swing.JFrame {
 
     private void consultar() {
         modelo.setNumRows(0);
-        List<Pessoa> lista = new ArrayList<Pessoa>();
+        List<Proprietario> lista = new ArrayList<Proprietario>();
 
-        lista = pessoaBll.consultar();
+        lista = proprietarioBll.consultar();
 
         if (lista.size() > 0) {
             for (int i = 0; i < lista.size(); i++) {
@@ -87,7 +86,7 @@ public class FrmPessoas extends javax.swing.JFrame {
                     lista.get(i).getCpf(),
                     lista.get(i).getEmail(),
                     lista.get(i).getDataNascimento(),
-                    lista.get(i).getIdEndereco().getCep()
+                    lista.get(i).getIdContato().getNumero()
                 });
             }
         } else {
@@ -96,26 +95,26 @@ public class FrmPessoas extends javax.swing.JFrame {
     }
 
     private void preencheCampos(int id) {
-        pessoa = pessoaBll.consultaPorId(id);
-        txtNome.setText(pessoa.getNome());
-        txtCpf.setText(pessoa.getCpf());
-        txtEmail.setText(pessoa.getEmail());
-        txtDataNascimento.setText(convertDate(pessoa.getDataNascimento()));
-        cbxEnderecos.setSelectedItem(pessoa.getIdEndereco());
+        proprietario = proprietarioBll.consultaPorId(id);
+        txtNome.setText(proprietario.getNome());
+        txtCpf.setText(proprietario.getCpf());
+        txtEmail.setText(proprietario.getEmail());
+        txtDataNascimento.setText(convertDate(proprietario.getDataNascimento()));
+        cbxContatos.setSelectedItem(proprietario.getIdContato());
     }
 
     private void limparCampos() {
         txtNome.setText("");
-        cbxEnderecos.setSelectedIndex(0);
+        cbxContatos.setSelectedIndex(0);
         txtCpf.setValue("");
         txtEmail.setText("");
         txtDataNascimento.setText("");
         btnSalvar.setEnabled(true);
     }
 
-    private void preencherCbxEnderecos() {
-        vetorEnderecos = pessoaBll.listarEnderecos();
-        cbxEnderecos.setModel(new DefaultComboBoxModel(vetorEnderecos));
+    private void preencherCbxs() {
+        vetorContatos = proprietarioBll.listarContatos();
+        cbxContatos.setModel(new DefaultComboBoxModel(vetorContatos));
     }
 
     private boolean isEmail(String email) {
@@ -209,30 +208,81 @@ public class FrmPessoas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        txtCpf = new javax.swing.JFormattedTextField();
-        jLabel1 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
-        txtDataNascimento = new javax.swing.JFormattedTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        cbxEnderecos = new javax.swing.JComboBox<>();
-        btnAdicionarEndereco = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblPessoas = new javax.swing.JTable();
-        btnAdicionarContato = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblPessoas = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        txtCpf = new javax.swing.JFormattedTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtDataNascimento = new javax.swing.JFormattedTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cbxContatos = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        btnAdicionarContato = new javax.swing.JButton();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Cadastro de pessoas");
+        setTitle("Cadastro de Proprietarios");
         setResizable(false);
         getContentPane().setLayout(null);
+
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
+        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSalvar);
+        btnSalvar.setBounds(300, 290, 55, 41);
+
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
+        btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnExcluir);
+        btnExcluir.setBounds(370, 290, 55, 41);
+
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnEditar);
+        btnEditar.setBounds(440, 290, 55, 41);
+
+        btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
+        btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnLimpar);
+        btnLimpar.setBounds(510, 290, 55, 41);
+
+        tblPessoas.setModel(modelo);
+        tblPessoas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tblPessoas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPessoasMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblPessoas);
+
+        getContentPane().add(jScrollPane2);
+        jScrollPane2.setBounds(10, 120, 600, 160);
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -246,26 +296,7 @@ public class FrmPessoas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNome);
-        txtNome.setBounds(30, 30, 290, 28);
-
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel3.setText(" CPF");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(350, 10, 30, 20);
-
-        try {
-            txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txtCpf.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCpfKeyTyped(evt);
-            }
-        });
-        getContentPane().add(txtCpf);
-        txtCpf.setBounds(350, 30, 150, 28);
+        txtNome.setBounds(30, 30, 260, 28);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Email");
@@ -278,7 +309,26 @@ public class FrmPessoas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtEmail);
-        txtEmail.setBounds(30, 80, 290, 28);
+        txtEmail.setBounds(30, 80, 260, 28);
+
+        try {
+            txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtCpf.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCpfKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtCpf);
+        txtCpf.setBounds(320, 30, 120, 28);
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setText(" CPF");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(320, 10, 30, 20);
 
         try {
             txtDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -296,46 +346,32 @@ public class FrmPessoas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDataNascimento);
-        txtDataNascimento.setBounds(350, 80, 150, 28);
+        txtDataNascimento.setBounds(470, 30, 110, 28);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Data Nascimento");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(350, 60, 100, 20);
+        jLabel4.setBounds(470, 10, 100, 20);
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel5.setText(" Endereço");
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(30, 110, 70, 20);
-
-        getContentPane().add(cbxEnderecos);
-        cbxEnderecos.setBounds(30, 130, 360, 28);
-
-        btnAdicionarEndereco.setText("+");
-        btnAdicionarEndereco.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAdicionarEndereco.addActionListener(new java.awt.event.ActionListener() {
+        cbxContatos.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxContatosItemStateChanged(evt);
+            }
+        });
+        cbxContatos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarEnderecoActionPerformed(evt);
+                cbxContatosActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdicionarEndereco);
-        btnAdicionarEndereco.setBounds(390, 130, 41, 28);
+        getContentPane().add(cbxContatos);
+        cbxContatos.setBounds(320, 80, 220, 28);
 
-        tblPessoas.setModel(modelo);
-        tblPessoas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        tblPessoas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblPessoasMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tblPessoas);
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setText("Contato");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(320, 60, 50, 20);
 
-        getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 170, 510, 170);
-
-        btnAdicionarContato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_contato.png"))); // NOI18N
-        btnAdicionarContato.setToolTipText("Cadastrar novo contato");
-        btnAdicionarContato.setContentAreaFilled(false);
+        btnAdicionarContato.setText("+");
         btnAdicionarContato.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdicionarContato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -343,55 +379,103 @@ public class FrmPessoas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarContato);
-        btnAdicionarContato.setBounds(440, 120, 70, 50);
-
-        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
-        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(230, 350, 55, 41);
-
-        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
-        btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluirActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(300, 350, 55, 41);
-
-        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
-        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnEditar);
-        btnEditar.setBounds(370, 350, 55, 41);
-
-        btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
-        btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimparActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(440, 350, 55, 41);
+        btnAdicionarContato.setBounds(540, 80, 41, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 610, 460);
+        teladeFundo.setBounds(0, 0, 700, 400);
 
-        setSize(new java.awt.Dimension(536, 433));
+        setSize(new java.awt.Dimension(625, 370));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        try {
+            proprietario.setNome(txtNome.getText());
+            proprietario.setCpf(txtCpf.getText());
+            proprietario.setEmail(txtEmail.getText());
+            proprietario.setDataNascimento(CriarNovaData(txtDataNascimento.getText()));
+            proprietario.setIdContato(vetorContatos.get(cbxContatos.getSelectedIndex()));
+
+            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
+                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+
+                if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())
+                    && !proprietarioBll.verificarCPFsIguais(txtCpf.getText())) {
+                    proprietarioBll.salvar(proprietario);
+                    consultar();
+                    limparCampos();
+                } else {
+                    if (proprietarioBll.verificarCPFsIguais(txtCpf.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!isEmail(txtEmail.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!isCPF(txtCpf.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!isData(txtDataNascimento.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        try {
+            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
+                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                proprietarioBll.remover(proprietarioBll.consultaPorId(proprietario.getCodigo()));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+        consultar();
+        limparCampos();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        try {
+            proprietario.setNome(txtNome.getText());
+            proprietario.setCpf(txtCpf.getText());
+            proprietario.setEmail(txtEmail.getText());
+            proprietario.setDataNascimento(CriarNovaData(txtDataNascimento.getText()));
+            proprietario.setIdContato(vetorContatos.get(cbxContatos.getSelectedIndex()));
+
+            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
+                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                proprietarioBll.editar(proprietario);
+                consultar();
+                limparCampos();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        limparCampos();
+        preencherCbxs();
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void tblPessoasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPessoasMouseClicked
+        btnSalvar.setEnabled(false);
+        int linha = tblPessoas.getSelectedRow();
+        Integer codigo = (Integer) tblPessoas.getValueAt(linha, 0);
+        preencheCampos((int) codigo);
+    }//GEN-LAST:event_tblPessoasMouseClicked
 
     private void txtNomeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNomeKeyTyped
         Character ch = evt.getKeyChar();
@@ -410,6 +494,15 @@ public class FrmPessoas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE LETRAS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtNomeKeyTyped
+
+    private void txtEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyTyped
+        Character ch = evt.getKeyChar();
+        int comprimentoDeCampo = txtEmail.getText().length();
+        if (comprimentoDeCampo >= 40) {
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 40 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtEmailKeyTyped
 
     private void txtCpfKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCpfKeyTyped
         char validar = evt.getKeyChar();
@@ -439,19 +532,15 @@ public class FrmPessoas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtDataNascimentoKeyTyped
 
-    FrmEnderecos telaEnderecos;
-    FrmContatos telaContatos;
+    private void cbxContatosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxContatosItemStateChanged
 
-    private void btnAdicionarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarEnderecoActionPerformed
-        if (telaEnderecos == null) {
-            telaEnderecos = new FrmEnderecos();
-            telaEnderecos.setVisible(true);
-        } else {
-            telaEnderecos.dispose();
-            telaEnderecos.setVisible(true);
-            telaEnderecos.setResizable(false);
-        }
-    }//GEN-LAST:event_btnAdicionarEnderecoActionPerformed
+    }//GEN-LAST:event_cbxContatosItemStateChanged
+
+    private void cbxContatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxContatosActionPerformed
+
+    }//GEN-LAST:event_cbxContatosActionPerformed
+
+    FrmContatos telaContatos;
 
     private void btnAdicionarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarContatoActionPerformed
         if (telaContatos == null) {
@@ -464,103 +553,9 @@ public class FrmPessoas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAdicionarContatoActionPerformed
 
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        try {
-            pessoa.setNome(txtNome.getText());
-            pessoa.setCpf(txtCpf.getText());
-            pessoa.setEmail(txtEmail.getText());
-            pessoa.setDataNascimento(CriarNovaData(txtDataNascimento.getText()));
-            pessoa.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
-
-            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-
-                if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())
-                        && !pessoaBll.verificarCPFsIguais(txtCpf.getText())) {
-                    pessoaBll.salvar(pessoa);
-                    consultar();
-                    limparCampos();
-                } else {
-                    if (pessoaBll.verificarCPFsIguais(txtCpf.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (!isEmail(txtEmail.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (!isCPF(txtCpf.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (!isData(txtDataNascimento.getText())) {
-                        JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnSalvarActionPerformed
-
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        try {
-            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                pessoaBll.remover(pessoaBll.consultaPorId(pessoa.getCodigo()));
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        }
-        consultar();
-        limparCampos();
-    }//GEN-LAST:event_btnExcluirActionPerformed
-
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        try {
-            pessoa.setNome(txtNome.getText());
-            pessoa.setCpf(txtCpf.getText());
-            pessoa.setEmail(txtEmail.getText());
-            pessoa.setDataNascimento(CriarNovaData(txtDataNascimento.getText()));
-            pessoa.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
-
-            if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                pessoaBll.editar(pessoa);
-                consultar();
-                limparCampos();
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        limparCampos();
-        preencherCbxEnderecos();
-    }//GEN-LAST:event_btnLimparActionPerformed
-
-    private void tblPessoasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPessoasMouseClicked
-        btnSalvar.setEnabled(false);
-        int linha = tblPessoas.getSelectedRow();
-        Integer codigo = (Integer) tblPessoas.getValueAt(linha, 0);
-        preencheCampos((int) codigo);
-    }//GEN-LAST:event_tblPessoasMouseClicked
-
-    private void txtEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyTyped
-        Character ch = evt.getKeyChar();
-        int comprimentoDeCampo = txtEmail.getText().length();
-        if (comprimentoDeCampo >= 40) {
-            evt.consume();
-            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 40 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_txtEmailKeyTyped
-
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -575,38 +570,36 @@ public class FrmPessoas extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmPessoas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProprietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmPessoas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProprietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmPessoas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProprietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmPessoas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProprietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmPessoas().setVisible(true);
+                new FrmProprietarios().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionarContato;
-    private javax.swing.JButton btnAdicionarEndereco;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JComboBox<String> cbxEnderecos;
+    private javax.swing.JComboBox<String> cbxContatos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblPessoas;
     private javax.swing.JLabel teladeFundo;

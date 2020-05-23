@@ -4,17 +4,14 @@ public class Contato {
     private int codigo;
     private String tipo;
     private String numero;
-    private Pessoa idPessoa;
 
     public Contato() {
-        idPessoa = new Pessoa();
     }
 
-    public Contato(int codigo, String tipo, String numero, Pessoa idPessoa) {
+    public Contato(int codigo, String tipo, String numero) {
         this.codigo = codigo;
         this.tipo = tipo;
         this.numero = numero;
-        this.idPessoa = idPessoa;
     }
 
     @Override
@@ -45,14 +42,5 @@ public class Contato {
     public void setNumero(String numero) {
         this.numero = numero;
     }
-
-    public Pessoa getIdPessoa() {
-        return idPessoa;
-    }
-
-    public void setIdPessoa(Pessoa idPessoa) {
-        this.idPessoa = idPessoa;
-    }
-    
     
 }
