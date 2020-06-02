@@ -1,16 +1,14 @@
 package view;
 
 import bll.ClienteBLL;
+import bll.ValidacoesPessoasBLL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -21,14 +19,24 @@ import model.Contato;
 
 public class FrmClientes extends javax.swing.JFrame {
 
+    private static FrmClientes telaClientesGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     ClienteBLL clienteBll = new ClienteBLL();
+    ValidacoesPessoasBLL validacoesclientes = new ClienteBLL();
     Cliente cliente = new Cliente();
 
     Vector<Endereco> vetorEnderecos;
     Vector<Contato> vetorContatos;
 
-    public FrmClientes() {
+    public static FrmClientes getTelaCliente() {
+        if (telaClientesGeral == null) {
+            telaClientesGeral = new FrmClientes();
+        }
+        return telaClientesGeral;
+    }
+
+    private FrmClientes() {
         criarTabela();
         consultar();
         initComponents();
@@ -91,7 +99,7 @@ public class FrmClientes extends javax.swing.JFrame {
                     lista.get(i).getCpf(),
                     lista.get(i).getEmail(),
                     lista.get(i).getDataNascimento(),
-                    lista.get(i).getIdEndereco().getCep(),
+                    lista.get(i).getIdEndereco().getBairro(),
                     lista.get(i).getIdContato().getNumero()
                 });
             }
@@ -116,103 +124,16 @@ public class FrmClientes extends javax.swing.JFrame {
         cbxContatos.setSelectedIndex(0);
         txtCpf.setValue("");
         txtEmail.setText("");
-        txtDataNascimento.setText("");
+        txtDataNascimento.setValue("");
         btnSalvar.setEnabled(true);
     }
 
     private void preencherCbxs() {
         vetorEnderecos = clienteBll.listarEnderecos();
         cbxEnderecos.setModel(new DefaultComboBoxModel(vetorEnderecos));
-        
+
         vetorContatos = clienteBll.listarContatos();
         cbxContatos.setModel(new DefaultComboBoxModel(vetorContatos));
-    }
-
-    private boolean isEmail(String email) {
-        if (email != null && email.length() > 0) {
-            String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(email);
-            if (matcher.matches()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private boolean isData(String data) {
-        String[] dataparticionada = data.split("/");
-        int dia = Integer.parseInt(dataparticionada[0]);
-        int mes = Integer.parseInt(dataparticionada[1]);
-        int ano = Integer.parseInt(dataparticionada[2]);
-        boolean anoBissexto = ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0;
-
-        if (((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) && (dia >= 1 && dia <= 31))
-                || ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia >= 1 && dia <= 30))
-                || ((mes == 2) && (anoBissexto) && (dia >= 1 && dia <= 29) && (ano >= 1920 && ano <= 2002))
-                || ((mes == 2) && !(anoBissexto) && (dia >= 1 && dia <= 28) && (ano >= 1920 && ano <= 2002))) {
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isCPF(String CPF) {
-        if (CPF.equals("00000000000")
-                || CPF.equals("11111111111")
-                || CPF.equals("22222222222") || CPF.equals("33333333333")
-                || CPF.equals("44444444444") || CPF.equals("55555555555")
-                || CPF.equals("66666666666") || CPF.equals("77777777777")
-                || CPF.equals("88888888888") || CPF.equals("99999999999")
-                || (CPF.length() != 11)) {
-            return (false);
-        }
-
-        char dig10, dig11;
-        int sm, i, r, num, peso;
-
-        try {
-            sm = 0;
-            peso = 10;
-            for (i = 0; i < 9; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig10 = '0';
-            } else {
-                dig10 = (char) (r + 48);
-            }
-
-            sm = 0;
-            peso = 11;
-            for (i = 0; i < 10; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig11 = '0';
-            } else {
-                dig11 = (char) (r + 48);
-            }
-
-            if ((dig10 == CPF.charAt(9)) && (dig11 == CPF.charAt(10))) {
-                return (true);
-            } else {
-                return (false);
-            }
-        } catch (InputMismatchException erro) {
-            return (false);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -248,9 +169,9 @@ public class FrmClientes extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setText("Nome");
+        jLabel2.setText("Nome completo");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(20, 10, 32, 20);
+        jLabel2.setBounds(30, 10, 110, 20);
 
         txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -258,13 +179,13 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNome);
-        txtNome.setBounds(20, 30, 260, 28);
+        txtNome.setBounds(30, 30, 260, 28);
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText(" CPF");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(310, 10, 30, 20);
+        jLabel3.setBounds(320, 10, 30, 20);
 
         try {
             txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
@@ -277,12 +198,12 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtCpf);
-        txtCpf.setBounds(310, 30, 110, 28);
+        txtCpf.setBounds(320, 30, 110, 28);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Email");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 60, 30, 20);
+        jLabel1.setBounds(30, 60, 30, 20);
 
         txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -290,7 +211,7 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtEmail);
-        txtEmail.setBounds(20, 80, 260, 28);
+        txtEmail.setBounds(30, 80, 260, 28);
 
         try {
             txtDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -308,17 +229,17 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDataNascimento);
-        txtDataNascimento.setBounds(310, 80, 110, 28);
+        txtDataNascimento.setBounds(320, 80, 110, 28);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Data Nascimento");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(310, 60, 100, 20);
+        jLabel4.setBounds(320, 60, 100, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText(" Endereço");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(450, 10, 70, 20);
+        jLabel5.setBounds(460, 10, 70, 20);
 
         cbxEnderecos.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -331,7 +252,7 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(cbxEnderecos);
-        cbxEnderecos.setBounds(450, 30, 240, 28);
+        cbxEnderecos.setBounds(460, 30, 240, 28);
 
         btnAdicionarEndereco.setText("+");
         btnAdicionarEndereco.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -341,7 +262,7 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarEndereco);
-        btnAdicionarEndereco.setBounds(690, 30, 41, 28);
+        btnAdicionarEndereco.setBounds(700, 30, 41, 28);
 
         tblPessoas.setModel(modelo);
         tblPessoas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -353,7 +274,7 @@ public class FrmClientes extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblPessoas);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 120, 740, 180);
+        jScrollPane2.setBounds(10, 120, 750, 180);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -398,7 +319,7 @@ public class FrmClientes extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Contato");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(450, 60, 50, 20);
+        jLabel6.setBounds(460, 60, 50, 20);
 
         cbxContatos.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -411,7 +332,7 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(cbxContatos);
-        cbxContatos.setBounds(450, 80, 240, 28);
+        cbxContatos.setBounds(460, 80, 240, 28);
 
         btnAdicionarContato.setText("+");
         btnAdicionarContato.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -421,13 +342,13 @@ public class FrmClientes extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarContato);
-        btnAdicionarContato.setBounds(690, 80, 41, 28);
+        btnAdicionarContato.setBounds(700, 80, 41, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 830, 370);
 
-        setSize(new java.awt.Dimension(767, 387));
+        setSize(new java.awt.Dimension(775, 387));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -438,7 +359,7 @@ public class FrmClientes extends javax.swing.JFrame {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 40 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-
+        
         char validar = evt.getKeyChar();
         if (Character.isDigit(validar)) {
             getToolkit().beep();
@@ -482,12 +403,11 @@ public class FrmClientes extends javax.swing.JFrame {
 
     private void btnAdicionarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarEnderecoActionPerformed
         if (telaEnderecos == null) {
-            telaEnderecos = new FrmEnderecos();
+            telaEnderecos = FrmEnderecos.getTelaEndereco();
             telaEnderecos.setVisible(true);
         } else {
             telaEnderecos.dispose();
             telaEnderecos.setVisible(true);
-            telaEnderecos.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarEnderecoActionPerformed
 
@@ -503,24 +423,32 @@ public class FrmClientes extends javax.swing.JFrame {
             if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
                     || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
+            } 
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
 
-                if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())
+                if (validacoesclientes.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText())
                         && !clienteBll.verificarCPFsIguais(txtCpf.getText())) {
-                    clienteBll.salvar(cliente);
+                    if (clienteBll.salvar(cliente)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
                     if (clienteBll.verificarCPFsIguais(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isEmail(txtEmail.getText())) {
+                    if (!clienteBll.isEmail(txtEmail.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isCPF(txtCpf.getText())) {
+                    if (!clienteBll.isCpf(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isData(txtDataNascimento.getText())) {
+                    if (!clienteBll.isData(txtDataNascimento.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -537,7 +465,11 @@ public class FrmClientes extends javax.swing.JFrame {
                     || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                clienteBll.remover(clienteBll.consultaPorId(cliente.getCodigo()));
+                if (clienteBll.remover(clienteBll.consultaPorId(cliente.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -558,10 +490,30 @@ public class FrmClientes extends javax.swing.JFrame {
             if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
                     || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                clienteBll.editar(cliente);
-                consultar();
-                limparCampos();
+            }
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                if (validacoesclientes.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText())) {
+                    if (clienteBll.editar(cliente)) {
+                        JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                } else {
+                    if (!clienteBll.isEmail(txtEmail.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!clienteBll.isCpf(txtCpf.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!clienteBll.isData(txtDataNascimento.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -592,12 +544,11 @@ public class FrmClientes extends javax.swing.JFrame {
 
     private void btnAdicionarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarContatoActionPerformed
         if (telaContatos == null) {
-            telaContatos = new FrmContatos();
+            telaContatos = FrmContatos.getTelaContato();
             telaContatos.setVisible(true);
         } else {
             telaContatos.dispose();
             telaContatos.setVisible(true);
-            telaContatos.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarContatoActionPerformed
 

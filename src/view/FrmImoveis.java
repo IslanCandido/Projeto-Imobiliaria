@@ -1,14 +1,179 @@
 package view;
 
+import bll.ImovelBLL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.Categoria;
+import model.Endereco;
+import model.Imovel;
+import model.Proprietario;
 
 public class FrmImoveis extends javax.swing.JFrame {
 
-    DefaultTableModel modelo = new DefaultTableModel();
+    private static FrmImoveis telaImoveisGeral = null;
 
-    public FrmImoveis() {
+    DefaultTableModel modelo = new DefaultTableModel();
+    ImovelBLL imovelBll = new ImovelBLL();
+    Imovel imovel = new Imovel();
+
+    Vector<Endereco> vetorEnderecos;
+    Vector<Categoria> vetorCategorias;
+    Vector<Proprietario> vetorProprietarios;
+
+    public static FrmImoveis getTelaImovel() {
+        if (telaImoveisGeral == null) {
+            telaImoveisGeral = new FrmImoveis();
+        }
+        return telaImoveisGeral;
+    }
+
+    private FrmImoveis() {
+        criarTabela();
+        consultar();
         initComponents();
+        preencherCbxs();
+        getDataAtual();
+    }
+
+    private Date CriarNovaData(String data) {
+        if (data == null) {
+            return null;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+        java.sql.Date a = null;
+        try {
+            a = new java.sql.Date(format.parse(data).getTime());
+        } catch (ParseException e) {
+        }
+        return a;
+    }
+
+    private String convertDate(Date dtConsulta) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+            return formatter.format(dtConsulta);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void criarTabela() {
+        tblImoveis = new JTable(modelo);
+        modelo.addColumn("Código");
+        modelo.addColumn("Data Inscrição");
+        modelo.addColumn("Categoria");
+        modelo.addColumn("Endereço");
+        modelo.addColumn("Metros");
+        modelo.addColumn("Quartos");
+        modelo.addColumn("Suítes");
+        modelo.addColumn("Descrição");
+        modelo.addColumn("Preço");
+        modelo.addColumn("Proprietário");
+        modelo.addColumn("Situação");
+
+        tblImoveis.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tblImoveis.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(2).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(6).setPreferredWidth(10);
+        tblImoveis.getColumnModel().getColumn(7).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(8).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(9).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(10).setPreferredWidth(50);
+    }
+
+    private void consultar() {
+        modelo.setNumRows(0);
+        List<Imovel> lista = new ArrayList<Imovel>();
+
+        lista = imovelBll.consultar();
+
+        if (lista.size() > 0) {
+            for (int i = 0; i < lista.size(); i++) {
+                modelo.addRow(new Object[]{
+                    lista.get(i).getCodigo(),
+                    lista.get(i).getDtInscricao(),
+                    lista.get(i).getIdCategoria().getNome(),
+                    lista.get(i).getIdEndereco().getBairro(),
+                    lista.get(i).getMetros(),
+                    lista.get(i).getnQuartos(),
+                    lista.get(i).getnSuites(),
+                    lista.get(i).getDescricao(),
+                    lista.get(i).getPreco(),
+                    lista.get(i).getIdProprietario().getNome(),
+                    lista.get(i).getSituacao()
+                });
+            }
+        } else {
+            modelo.setNumRows(0);
+        }
+    }
+
+    private void preencheCampos(int id) {
+        imovel = imovelBll.consultaPorId(id);
+        txtDataInscrição.setText(convertDate(imovel.getDtInscricao()));
+        cbxCategorias.setSelectedItem(imovel.getIdCategoria());
+        cbxEnderecos.setSelectedItem(imovel.getIdEndereco());
+        txtMetros.setText(String.valueOf(imovel.getMetros()));
+        txtNumeroQuartos.setText(String.valueOf(imovel.getnQuartos()));
+        txtNumeroSuites.setText(String.valueOf(imovel.getnSuites()));
+        txtPreco.setText(String.valueOf(imovel.getPreco()));
+        txtDescricao.setText(imovel.getDescricao());
+        cbxProprietarios.setSelectedItem(imovel.getIdProprietario());
+        cbxSituacao.setSelectedItem(imovel.getSituacao());
+        txtMotivo.setText(imovel.getMotivo());
+        if (cbxSituacao.getSelectedItem().equals("Disponivel")) {
+            txtDataBaixa.setText("00/00/0000");
+            
+        } else {
+            txtDataBaixa.setText(convertDate(imovel.getDtBaixa()));
+        }
+
+    }
+
+    private void limparCampos() {
+        getDataAtual();
+        cbxCategorias.setSelectedIndex(0);
+        cbxEnderecos.setSelectedIndex(0);
+        txtMetros.setText("");
+        txtNumeroQuartos.setText("");
+        txtNumeroSuites.setText("");
+        txtPreco.setText("");
+        txtDescricao.setText("");
+        cbxProprietarios.setSelectedIndex(0);
+        cbxSituacao.setSelectedIndex(0);
+        txtDataBaixa.setValue("");
+        txtMotivo.setText("");
+        btnSalvar.setEnabled(true);
+        consultar();
+    }
+
+    private void preencherCbxs() {
+        vetorEnderecos = imovelBll.listarEnderecos();
+        vetorCategorias = imovelBll.listarCategorias();
+        vetorProprietarios = imovelBll.listarProprietarios();
+
+        cbxEnderecos.setModel(new DefaultComboBoxModel(vetorEnderecos));
+        cbxCategorias.setModel(new DefaultComboBoxModel(vetorCategorias));
+        cbxProprietarios.setModel(new DefaultComboBoxModel(vetorProprietarios));
+    }
+
+    private void getDataAtual() {
+        java.util.Date data = new java.util.Date();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        txtDataInscrição.setText(formatador.format(data));
     }
 
     @SuppressWarnings("unchecked")
@@ -41,13 +206,16 @@ public class FrmImoveis extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
         btnAdicionarCategoria = new javax.swing.JButton();
-        btnAdicionarEnderecos = new javax.swing.JButton();
+        btnAdicionarProprietario = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         txtPreco = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         cbxSituacao = new javax.swing.JComboBox<>();
         btnMostrarDisponiveis = new javax.swing.JButton();
         btnMostrarIndisponiveis = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        cbxProprietarios = new javax.swing.JComboBox<>();
+        btnAdicionarEnderecos = new javax.swing.JButton();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -58,7 +226,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText(" Data");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(30, 10, 40, 20);
+        jLabel1.setBounds(40, 10, 40, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText(" Categoria");
@@ -68,7 +236,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText(" Endereço");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(450, 10, 70, 20);
+        jLabel3.setBounds(360, 10, 70, 20);
 
         try {
             txtDataBaixa.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -86,28 +254,28 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDataBaixa);
-        txtDataBaixa.setBounds(310, 130, 110, 28);
+        txtDataBaixa.setBounds(470, 130, 100, 30);
 
         getContentPane().add(cbxCategorias);
-        cbxCategorias.setBounds(170, 30, 210, 28);
+        cbxCategorias.setBounds(170, 30, 120, 28);
 
         getContentPane().add(cbxEnderecos);
-        cbxEnderecos.setBounds(450, 30, 280, 28);
+        cbxEnderecos.setBounds(360, 30, 280, 28);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText(" Metros");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(30, 60, 50, 20);
+        jLabel4.setBounds(40, 60, 50, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText(" Nº Suítes");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(170, 60, 60, 20);
+        jLabel5.setBounds(280, 60, 60, 20);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText(" NºQuartos");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(310, 60, 70, 20);
+        jLabel6.setBounds(160, 60, 70, 20);
 
         txtMetros.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -115,7 +283,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtMetros);
-        txtMetros.setBounds(30, 80, 110, 28);
+        txtMetros.setBounds(40, 80, 90, 28);
 
         txtNumeroSuites.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -123,7 +291,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNumeroSuites);
-        txtNumeroSuites.setBounds(170, 80, 110, 28);
+        txtNumeroSuites.setBounds(280, 80, 90, 28);
 
         txtNumeroQuartos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -131,12 +299,12 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNumeroQuartos);
-        txtNumeroQuartos.setBounds(310, 80, 110, 28);
+        txtNumeroQuartos.setBounds(160, 80, 90, 28);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText(" Descrição");
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(450, 60, 60, 20);
+        jLabel7.setBounds(400, 60, 60, 20);
 
         txtMotivo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -144,22 +312,22 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtMotivo);
-        txtMotivo.setBounds(450, 130, 320, 28);
+        txtMotivo.setBounds(600, 130, 220, 28);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText(" Situação");
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(170, 110, 60, 20);
+        jLabel8.setBounds(330, 110, 60, 20);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel9.setText(" Data da baixa");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(310, 110, 100, 20);
+        jLabel9.setBounds(470, 110, 100, 20);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setText(" Motivo");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(450, 110, 60, 20);
+        jLabel10.setBounds(600, 110, 60, 20);
 
         try {
             txtDataInscrição.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -177,7 +345,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDataInscrição);
-        txtDataInscrição.setBounds(30, 30, 110, 28);
+        txtDataInscrição.setBounds(40, 30, 100, 28);
 
         txtDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -185,7 +353,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDescricao);
-        txtDescricao.setBounds(450, 80, 320, 28);
+        txtDescricao.setBounds(400, 80, 420, 28);
 
         tblImoveis.setModel(modelo);
         tblImoveis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -197,7 +365,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblImoveis);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 170, 780, 200);
+        jScrollPane2.setBounds(10, 170, 840, 180);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -207,7 +375,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(470, 380, 55, 41);
+        btnSalvar.setBounds(530, 360, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -217,7 +385,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(540, 380, 55, 41);
+        btnExcluir.setBounds(600, 360, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -227,7 +395,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(610, 380, 55, 41);
+        btnEditar.setBounds(670, 360, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -237,7 +405,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(680, 380, 55, 41);
+        btnLimpar.setBounds(740, 360, 55, 41);
 
         btnAdicionarCategoria.setText("+");
         btnAdicionarCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -247,22 +415,22 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCategoria);
-        btnAdicionarCategoria.setBounds(380, 30, 41, 28);
+        btnAdicionarCategoria.setBounds(290, 30, 41, 28);
 
-        btnAdicionarEnderecos.setText("+");
-        btnAdicionarEnderecos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAdicionarEnderecos.addActionListener(new java.awt.event.ActionListener() {
+        btnAdicionarProprietario.setText("+");
+        btnAdicionarProprietario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdicionarProprietario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarEnderecosActionPerformed(evt);
+                btnAdicionarProprietarioActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdicionarEnderecos);
-        btnAdicionarEnderecos.setBounds(730, 30, 41, 28);
+        getContentPane().add(btnAdicionarProprietario);
+        btnAdicionarProprietario.setBounds(640, 30, 41, 28);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel11.setText(" Preço");
         getContentPane().add(jLabel11);
-        jLabel11.setBounds(30, 110, 50, 20);
+        jLabel11.setBounds(710, 10, 50, 20);
 
         txtPreco.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -270,16 +438,21 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtPreco);
-        txtPreco.setBounds(30, 130, 90, 28);
+        txtPreco.setBounds(710, 30, 90, 28);
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel12.setText(" R$");
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(120, 130, 20, 30);
+        jLabel12.setBounds(800, 30, 20, 30);
 
         cbxSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Disponivel", "Indisponivel" }));
+        cbxSituacao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxSituacaoItemStateChanged(evt);
+            }
+        });
         getContentPane().add(cbxSituacao);
-        cbxSituacao.setBounds(170, 130, 110, 28);
+        cbxSituacao.setBounds(330, 130, 110, 28);
 
         btnMostrarDisponiveis.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnMostrarDisponiveis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_disponivel.png"))); // NOI18N
@@ -292,7 +465,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostrarDisponiveis);
-        btnMostrarDisponiveis.setBounds(20, 380, 150, 40);
+        btnMostrarDisponiveis.setBounds(20, 360, 150, 40);
 
         btnMostrarIndisponiveis.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnMostrarIndisponiveis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_indisponivel.png"))); // NOI18N
@@ -305,13 +478,31 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostrarIndisponiveis);
-        btnMostrarIndisponiveis.setBounds(180, 380, 150, 40);
+        btnMostrarIndisponiveis.setBounds(180, 360, 150, 40);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel13.setText("Proprietário");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(40, 110, 70, 20);
+
+        getContentPane().add(cbxProprietarios);
+        cbxProprietarios.setBounds(40, 130, 220, 28);
+
+        btnAdicionarEnderecos.setText("+");
+        btnAdicionarEnderecos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdicionarEnderecos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarEnderecosActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAdicionarEnderecos);
+        btnAdicionarEnderecos.setBounds(260, 130, 41, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 840, 450);
+        teladeFundo.setBounds(0, 0, 910, 450);
 
-        setSize(new java.awt.Dimension(806, 461));
+        setSize(new java.awt.Dimension(868, 438));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -343,63 +534,200 @@ public class FrmImoveis extends javax.swing.JFrame {
 
     FrmCategorias telaCategorias;
     FrmEnderecos telaEnderecos;
+    FrmProprietarios telaProprietarios;
 
     private void btnAdicionarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCategoriaActionPerformed
         if (telaCategorias == null) {
-            telaCategorias = new FrmCategorias();
+            telaCategorias = FrmCategorias.getTelaCategoria();
             telaCategorias.setVisible(true);
         } else {
             telaCategorias.dispose();
             telaCategorias.setVisible(true);
-            telaCategorias.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarCategoriaActionPerformed
 
-    private void btnAdicionarEnderecosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarEnderecosActionPerformed
+    private void btnAdicionarProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarProprietarioActionPerformed
         if (telaEnderecos == null) {
-            telaEnderecos = new FrmEnderecos();
+            telaEnderecos = FrmEnderecos.getTelaEndereco();
             telaEnderecos.setVisible(true);
         } else {
             telaEnderecos.dispose();
             telaEnderecos.setVisible(true);
-            telaEnderecos.setResizable(false);
         }
-    }//GEN-LAST:event_btnAdicionarEnderecosActionPerformed
+    }//GEN-LAST:event_btnAdicionarProprietarioActionPerformed
 
     private void btnMostrarDisponiveisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDisponiveisActionPerformed
-        // TODO add your handling code here:
+        modelo.setNumRows(0);
+        List<Imovel> lista;
+
+        lista = imovelBll.mostrarDisponiveis();
+
+        if (lista.size() > 0) {
+            for (int i = 0; i < lista.size(); i++) {
+                modelo.addRow(new Object[]{
+                    lista.get(i).getCodigo(),
+                    lista.get(i).getDtInscricao(),
+                    lista.get(i).getIdCategoria().getNome(),
+                    lista.get(i).getIdEndereco().getBairro(),
+                    lista.get(i).getMetros(),
+                    lista.get(i).getnQuartos(),
+                    lista.get(i).getnSuites(),
+                    lista.get(i).getDescricao(),
+                    lista.get(i).getPreco(),
+                    lista.get(i).getIdProprietario().getNome(),
+                    lista.get(i).getSituacao()
+                });
+            }
+        } else {
+            modelo.setNumRows(0);
+        }
     }//GEN-LAST:event_btnMostrarDisponiveisActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // TODO add your handling code here:
+        try {
+            imovel.setDescricao(txtDescricao.getText());
+            imovel.setDtInscricao(CriarNovaData(txtDataInscrição.getText()));
+            imovel.setDtBaixa(CriarNovaData(txtDataBaixa.getText()));
+            imovel.setIdCategoria(vetorCategorias.get(cbxCategorias.getSelectedIndex()));
+            imovel.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
+            imovel.setIdProprietario(vetorProprietarios.get(cbxProprietarios.getSelectedIndex()));
+            imovel.setMetros(Float.parseFloat(txtMetros.getText()));
+            imovel.setMotivo(txtMotivo.getText());
+            imovel.setPreco(Double.parseDouble(txtPreco.getText()));
+            imovel.setSituacao(cbxSituacao.getSelectedItem().toString());
+            imovel.setnQuartos(Integer.parseInt(txtNumeroQuartos.getText()));
+            imovel.setnSuites(Integer.parseInt(txtNumeroSuites.getText()));
+
+            if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (imovelBll.isData(txtDataInscrição.getText())) {
+                    if (imovelBll.salvar(imovel)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                } else {
+                    if (!imovelBll.isData(txtDataInscrição.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "DATA DE INSCRIÇÃO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR! " + e, "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        try {
+            if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (imovelBll.remover(imovelBll.consultaPorId(imovel.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+        consultar();
+        limparCampos();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        try {
+            imovel.setDescricao(txtDescricao.getText());
+            imovel.setDtInscricao(CriarNovaData(txtDataInscrição.getText()));
+            imovel.setDtBaixa(CriarNovaData(txtDataBaixa.getText()));
+            imovel.setIdCategoria(vetorCategorias.get(cbxCategorias.getSelectedIndex()));
+            imovel.setIdEndereco(vetorEnderecos.get(cbxEnderecos.getSelectedIndex()));
+            imovel.setIdProprietario(vetorProprietarios.get(cbxProprietarios.getSelectedIndex()));
+            imovel.setMetros(Float.parseFloat(txtMetros.getText()));
+            imovel.setMotivo(txtMotivo.getText());
+            imovel.setPreco(Double.parseDouble(txtPreco.getText()));
+            imovel.setSituacao(cbxSituacao.getSelectedItem().toString());
+            imovel.setnQuartos(Integer.parseInt(txtNumeroQuartos.getText()));
+            imovel.setnSuites(Integer.parseInt(txtNumeroSuites.getText()));
+
+            if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (imovelBll.isData(txtDataInscrição.getText())) {
+                    if (imovelBll.editar(imovel)) {
+                        JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                } else {
+                    if (!imovelBll.isData(txtDataInscrição.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "DATA DE INSCRIÇÃO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+        limparCampos();
+        preencherCbxs();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void tblImoveisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblImoveisMouseClicked
-        // TODO add your handling code here:
+        btnSalvar.setEnabled(false);
+        int linha = tblImoveis.getSelectedRow();
+        Integer codigo = (Integer) tblImoveis.getValueAt(linha, 0);
+        preencheCampos((int) codigo);
     }//GEN-LAST:event_tblImoveisMouseClicked
 
     private void btnMostrarIndisponiveisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarIndisponiveisActionPerformed
-        // TODO add your handling code here:
+        modelo.setNumRows(0);
+        List<Imovel> lista = new ArrayList<Imovel>();
+
+        lista = imovelBll.mostrarIndisponiveis();
+
+        if (lista.size() > 0) {
+            for (int i = 0; i < lista.size(); i++) {
+                modelo.addRow(new Object[]{
+                    lista.get(i).getCodigo(),
+                    lista.get(i).getDtInscricao(),
+                    lista.get(i).getIdCategoria().getNome(),
+                    lista.get(i).getIdEndereco().getBairro(),
+                    lista.get(i).getMetros(),
+                    lista.get(i).getnQuartos(),
+                    lista.get(i).getnSuites(),
+                    lista.get(i).getDescricao(),
+                    lista.get(i).getPreco(),
+                    lista.get(i).getIdProprietario().getNome(),
+                    lista.get(i).getSituacao(),
+                    lista.get(i).getDtBaixa(),
+                    lista.get(i).getMotivo()
+                });
+            }
+        } else {
+            modelo.setNumRows(0);
+        }
     }//GEN-LAST:event_btnMostrarIndisponiveisActionPerformed
 
     private void txtDescricaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescricaoKeyTyped
         Character ch = evt.getKeyChar();
         int comprimentoDeCampo = txtDescricao.getText().length();
-        if (comprimentoDeCampo >= 50) {
+        if (comprimentoDeCampo >= 80) {
             evt.consume();
-            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 50 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 80 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtDescricaoKeyTyped
 
@@ -476,6 +804,29 @@ public class FrmImoveis extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtPrecoKeyTyped
 
+    private void btnAdicionarEnderecosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarEnderecosActionPerformed
+        if (telaProprietarios == null) {
+            telaProprietarios = FrmProprietarios.getTelaProprietario();
+            telaProprietarios.setVisible(true);
+        } else {
+            telaProprietarios.dispose();
+            telaProprietarios.setVisible(true);
+        }
+    }//GEN-LAST:event_btnAdicionarEnderecosActionPerformed
+
+    private void cbxSituacaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxSituacaoItemStateChanged
+        if (cbxSituacao.getSelectedItem().equals("Disponivel") || cbxSituacao.getSelectedItem().equals("Selecione")) {
+            txtDataBaixa.setEnabled(false);
+            txtMotivo.setEnabled(false);
+            txtDataBaixa.setText("00/00/0000");
+            txtMotivo.setText("");
+        } else {
+            txtDataBaixa.setEnabled(true);
+            txtMotivo.setEnabled(true);
+            txtDataBaixa.setValue("");
+        }
+    }//GEN-LAST:event_cbxSituacaoItemStateChanged
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -511,6 +862,7 @@ public class FrmImoveis extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionarCategoria;
     private javax.swing.JButton btnAdicionarEnderecos;
+    private javax.swing.JButton btnAdicionarProprietario;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnLimpar;
@@ -519,11 +871,13 @@ public class FrmImoveis extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cbxCategorias;
     private javax.swing.JComboBox<String> cbxEnderecos;
+    private javax.swing.JComboBox<String> cbxProprietarios;
     private javax.swing.JComboBox<String> cbxSituacao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -25,6 +25,7 @@ public class FrmLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         txtSenhaAdmin = new javax.swing.JPasswordField();
+        txtCpfAdmin = new javax.swing.JTextField();
         IconeUsuario = new javax.swing.JLabel();
         IconeSenha = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
@@ -125,6 +126,11 @@ public class FrmLogin extends javax.swing.JFrame {
         txtUsuario.setText("");
     }
 
+    private void limparCamposAlterar() {
+        txtSenhaAdmin.setText("");
+        txtCpfAdmin.setText("");
+    }
+
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if (txtUsuario.getText().isEmpty() || txtSenha.getText().isEmpty()) {
@@ -186,6 +192,42 @@ public class FrmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAdministradorActionPerformed
 
     private void btnEsqueceuSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsqueceuSenhaActionPerformed
+        JOptionPane.showConfirmDialog(rootPane, new Object[]{txtCpfAdmin}, "Digite seu cpf:", JOptionPane.OK_CANCEL_OPTION);
+        String cpf = txtCpfAdmin.getText();
+
+        if (funcionarioBLL.verificarCpfIgual(cpf)) {
+
+            JOptionPane.showConfirmDialog(rootPane, new Object[]{txtSenhaAdmin}, "Nova senha:", JOptionPane.OK_CANCEL_OPTION);
+            String senhaNova = new String(txtSenhaAdmin.getPassword());
+
+            if (senhaNova.length() >= 4 && senhaNova.length() <= 12) {
+                txtSenhaAdmin.setText("");
+                JOptionPane.showConfirmDialog(rootPane, new Object[]{txtSenhaAdmin}, "Digite novamente:", JOptionPane.OK_CANCEL_OPTION);
+                String senha = new String(txtSenhaAdmin.getPassword());
+
+                if (senhaNova.equals(senha)) {
+
+                    if (funcionarioBLL.alterarSenha(cpf, senha)) {
+                        JOptionPane.showMessageDialog(rootPane, "SENHA ALTERADA COM SUCESSO!", "Mensagem!", JOptionPane.INFORMATION_MESSAGE);
+                        limparCamposAlterar();
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "SENHA NÃO FOI ALTERADA!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                        limparCamposAlterar();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "SENHAS INCOMPATIVEIS!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    limparCamposAlterar();
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "SENHA INVALIDA!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                limparCamposAlterar();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "CPF NÃO ENCONTRADO!", "Cuidado!", JOptionPane.INFORMATION_MESSAGE);
+            limparCamposAlterar();
+        }
 
     }//GEN-LAST:event_btnEsqueceuSenhaActionPerformed
 
@@ -232,6 +274,7 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnEsqueceuSenha;
     private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField txtCpfAdmin;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JPasswordField txtSenhaAdmin;
     private javax.swing.JTextField txtUsuario;

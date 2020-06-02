@@ -1,15 +1,14 @@
 package view;
 
 import bll.ProprietarioBLL;
+import bll.ValidacoesPessoasBLL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -19,20 +18,30 @@ import model.Proprietario;
 
 public class FrmProprietarios extends javax.swing.JFrame {
 
+    private static FrmProprietarios telaProprietarioGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     ProprietarioBLL proprietarioBll = new ProprietarioBLL();
+    ValidacoesPessoasBLL validacoesProprietarios = new ProprietarioBLL();
     Proprietario proprietario = new Proprietario();
 
     Vector<Contato> vetorContatos;
 
-    public FrmProprietarios() {
+    public static FrmProprietarios getTelaProprietario() {
+        if (telaProprietarioGeral == null) {
+            telaProprietarioGeral = new FrmProprietarios();
+        }
+        return telaProprietarioGeral;
+    }
+
+    private FrmProprietarios() {
         criarTabela();
         consultar();
         initComponents();
         preencherCbxs();
     }
 
-    private java.util.Date CriarNovaData(String data) {
+    public Date CriarNovaData(String data) {
         if (data == null) {
             return null;
         }
@@ -46,7 +55,7 @@ public class FrmProprietarios extends javax.swing.JFrame {
         return a;
     }
 
-    private String convertDate(java.util.Date dtConsulta) {
+    public String convertDate(Date dtConsulta) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
             return formatter.format(dtConsulta);
@@ -100,7 +109,7 @@ public class FrmProprietarios extends javax.swing.JFrame {
         txtCpf.setText(proprietario.getCpf());
         txtEmail.setText(proprietario.getEmail());
         txtDataNascimento.setText(convertDate(proprietario.getDataNascimento()));
-        cbxContatos.setSelectedItem(proprietario.getIdContato());
+        cbxContatos.setSelectedItem(vetorContatos.get(cbxContatos.getSelectedIndex()));
     }
 
     private void limparCampos() {
@@ -108,100 +117,13 @@ public class FrmProprietarios extends javax.swing.JFrame {
         cbxContatos.setSelectedIndex(0);
         txtCpf.setValue("");
         txtEmail.setText("");
-        txtDataNascimento.setText("");
+        txtDataNascimento.setValue("");
         btnSalvar.setEnabled(true);
     }
 
     private void preencherCbxs() {
         vetorContatos = proprietarioBll.listarContatos();
         cbxContatos.setModel(new DefaultComboBoxModel(vetorContatos));
-    }
-
-    private boolean isEmail(String email) {
-        if (email != null && email.length() > 0) {
-            String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(email);
-            if (matcher.matches()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private boolean isData(String data) {
-        String[] dataparticionada = data.split("/");
-        int dia = Integer.parseInt(dataparticionada[0]);
-        int mes = Integer.parseInt(dataparticionada[1]);
-        int ano = Integer.parseInt(dataparticionada[2]);
-        boolean anoBissexto = ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0;
-
-        if (((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) && (dia >= 1 && dia <= 31))
-                || ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia >= 1 && dia <= 30))
-                || ((mes == 2) && (anoBissexto) && (dia >= 1 && dia <= 29) && (ano >= 1920 && ano <= 2002))
-                || ((mes == 2) && !(anoBissexto) && (dia >= 1 && dia <= 28) && (ano >= 1920 && ano <= 2002))) {
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isCPF(String CPF) {
-        if (CPF.equals("00000000000")
-                || CPF.equals("11111111111")
-                || CPF.equals("22222222222") || CPF.equals("33333333333")
-                || CPF.equals("44444444444") || CPF.equals("55555555555")
-                || CPF.equals("66666666666") || CPF.equals("77777777777")
-                || CPF.equals("88888888888") || CPF.equals("99999999999")
-                || (CPF.length() != 11)) {
-            return (false);
-        }
-
-        char dig10, dig11;
-        int sm, i, r, num, peso;
-
-        try {
-            sm = 0;
-            peso = 10;
-            for (i = 0; i < 9; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig10 = '0';
-            } else {
-                dig10 = (char) (r + 48);
-            }
-
-            sm = 0;
-            peso = 11;
-            for (i = 0; i < 10; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig11 = '0';
-            } else {
-                dig11 = (char) (r + 48);
-            }
-
-            if ((dig10 == CPF.charAt(9)) && (dig11 == CPF.charAt(10))) {
-                return (true);
-            } else {
-                return (false);
-            }
-        } catch (InputMismatchException erro) {
-            return (false);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -286,9 +208,9 @@ public class FrmProprietarios extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setText("Nome");
+        jLabel2.setText("Nome completo");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(30, 10, 32, 20);
+        jLabel2.setBounds(30, 10, 140, 20);
 
         txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -391,6 +313,7 @@ public class FrmProprietarios extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
+
             proprietario.setNome(txtNome.getText());
             proprietario.setCpf(txtCpf.getText());
             proprietario.setEmail(txtEmail.getText());
@@ -398,26 +321,33 @@ public class FrmProprietarios extends javax.swing.JFrame {
             proprietario.setIdContato(vetorContatos.get(cbxContatos.getSelectedIndex()));
 
             if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
+            }
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
 
-                if (isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())
-                    && !proprietarioBll.verificarCPFsIguais(txtCpf.getText())) {
-                    proprietarioBll.salvar(proprietario);
+                if (validacoesProprietarios.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText()) && !proprietarioBll.verificarCPFsIguais(txtCpf.getText())) {
+                    if (proprietarioBll.salvar(proprietario)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
                     if (proprietarioBll.verificarCPFsIguais(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF JÁ FOI CADASTRADO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isEmail(txtEmail.getText())) {
+                    if (!proprietarioBll.isEmail(txtEmail.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isCPF(txtCpf.getText())) {
+                    if (!proprietarioBll.isCpf(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isData(txtDataNascimento.getText())) {
+                    if (!proprietarioBll.isData(txtDataNascimento.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -431,10 +361,14 @@ public class FrmProprietarios extends javax.swing.JFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         try {
             if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                proprietarioBll.remover(proprietarioBll.consultaPorId(proprietario.getCodigo()));
+                if (proprietarioBll.remover(proprietarioBll.consultaPorId(proprietario.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -452,12 +386,32 @@ public class FrmProprietarios extends javax.swing.JFrame {
             proprietario.setIdContato(vetorContatos.get(cbxContatos.getSelectedIndex()));
 
             if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()
-                || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
+                    || txtEmail.getText().isEmpty() || txtDataNascimento.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                proprietarioBll.editar(proprietario);
-                consultar();
-                limparCampos();
+            }
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                if (validacoesProprietarios.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText())) {
+                    if (proprietarioBll.editar(proprietario)) {
+                        JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                } else {
+                    if (!proprietarioBll.isEmail(txtEmail.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!proprietarioBll.isCpf(txtCpf.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!proprietarioBll.isData(txtDataNascimento.getText())) {
+                        JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -544,12 +498,11 @@ public class FrmProprietarios extends javax.swing.JFrame {
 
     private void btnAdicionarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarContatoActionPerformed
         if (telaContatos == null) {
-            telaContatos = new FrmContatos();
+            telaContatos = FrmContatos.getTelaContato();
             telaContatos.setVisible(true);
         } else {
             telaContatos.dispose();
             telaContatos.setVisible(true);
-            telaContatos.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarContatoActionPerformed
 

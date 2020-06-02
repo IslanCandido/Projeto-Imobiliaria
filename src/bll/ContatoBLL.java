@@ -11,16 +11,16 @@ public class ContatoBLL {
         dal = new ContatoDAL();
     }
     
-    public void salvar(Contato contato) throws Exception {
-        dal.adicionar(contato);
+    public boolean salvar(Contato contato) throws Exception {
+        return dal.adicionar(contato);
     }
 
-    public void editar(Contato contato) throws Exception {
-        dal.alterar(contato);
+    public boolean editar(Contato contato) throws Exception {
+        return dal.alterar(contato);
     }
 
-    public void remover(Contato contato) throws Exception {
-        dal.excluir(contato.getCodigo());
+    public boolean remover(Contato contato) throws Exception {
+        return dal.excluir(contato.getCodigo());
     }
 
     public List<Contato> consultar() {
@@ -28,7 +28,7 @@ public class ContatoBLL {
     }
 
     public Contato consultaPorId(int id) {
-        return dal.consultaPorId(id);
+        return dal.consultarPorId(id);
     }
 
     public boolean verificarNumerosIguais(String numero){

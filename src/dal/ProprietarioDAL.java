@@ -13,7 +13,7 @@ import model.Contato;
 import model.Proprietario;
 import util.Conexao;
 
-public class ProprietarioDAL {
+public class ProprietarioDAL implements BasicoDAL<Proprietario>{
 
     private Connection conexao;
 
@@ -21,7 +21,9 @@ public class ProprietarioDAL {
         conexao = Conexao.getConexao();
     }
 
-    public void adicionar(Proprietario proprietario) {
+    @Override
+    public boolean adicionar(Proprietario proprietario) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("INSERT INTO proprietarios (pro_cpf, pro_email, pro_dt_nascimento, pro_nome, pro_fk_con) VALUES (?, ?, ?, ?, ?)");
 
@@ -30,23 +32,29 @@ public class ProprietarioDAL {
             ps.setDate(3, new java.sql.Date(proprietario.getDataNascimento().getTime()));
             ps.setString(4, proprietario.getNome());
             ps.setInt(5, proprietario.getIdContato().getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n" + e);
         }
+        return result;
     }
 
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("DELETE FROM proprietarios WHERE pro_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
 
-    public void alterar(Proprietario proprietario) {
+    @Override
+    public boolean alterar(Proprietario proprietario) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE proprietarios SET pro_cpf = ?, pro_email = ?, pro_dt_nascimento = ?, pro_nome = ?, pro_fk_con = ? WHERE pro_id = ?");
 
@@ -56,12 +64,14 @@ public class ProprietarioDAL {
             ps.setString(4, proprietario.getNome());
             ps.setInt(5, proprietario.getIdContato().getCodigo());
             ps.setInt(6, proprietario.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
 
+    @Override
     public List<Proprietario> consultar() {
         List<Proprietario> proprietarios = new ArrayList<>();
         try {
@@ -92,7 +102,8 @@ public class ProprietarioDAL {
         return proprietarios;
     }
 
-    public Proprietario consultaPorId(int id) {
+    @Override
+    public Proprietario consultarPorId(int id) {
         Proprietario proprietario = new Proprietario();
         try {
             PreparedStatement ps = conexao.prepareStatement("select * from proprietarios p\n"

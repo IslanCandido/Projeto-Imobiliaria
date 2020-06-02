@@ -4,6 +4,8 @@
   <NonVisualComponents>
     <Component class="javax.swing.JPasswordField" name="txtSenhaAdmin">
     </Component>
+    <Component class="javax.swing.JTextField" name="txtCpfAdmin">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>

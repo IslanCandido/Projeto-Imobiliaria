@@ -10,11 +10,20 @@ import model.Cargo;
 
 public class FrmCargos extends javax.swing.JFrame {
 
+    private static FrmCargos telaCargosGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     CargoBLL cargoBll = new CargoBLL();
     Cargo cargo = new Cargo();
 
-    public FrmCargos() {
+    public static FrmCargos getTelaCargo() {
+        if (telaCargosGeral == null) {
+            telaCargosGeral = new FrmCargos();
+        }
+        return telaCargosGeral;
+    }
+
+    private FrmCargos() {
         criarTabela();
         consultar();
         initComponents();
@@ -125,7 +134,7 @@ public class FrmCargos extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblCargos);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 70, 330, 130);
+        jScrollPane2.setBounds(10, 70, 330, 100);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -135,7 +144,7 @@ public class FrmCargos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(60, 210, 55, 41);
+        btnSalvar.setBounds(60, 180, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -145,7 +154,7 @@ public class FrmCargos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(130, 210, 55, 41);
+        btnExcluir.setBounds(130, 180, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -155,7 +164,7 @@ public class FrmCargos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(200, 210, 55, 41);
+        btnEditar.setBounds(200, 180, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -165,13 +174,13 @@ public class FrmCargos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(270, 210, 55, 41);
+        btnLimpar.setBounds(270, 180, 55, 41);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 430, 360);
 
-        setSize(new java.awt.Dimension(361, 295));
+        setSize(new java.awt.Dimension(361, 259));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -182,11 +191,15 @@ public class FrmCargos extends javax.swing.JFrame {
 
             if (txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
+            } else if (cargo.getSalario() < 600 || cargo.getSalario() > 50000) {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (!cargoBll.verificarCargosIguais(txtCargo.getText())) {
-                    cargoBll.salvar(cargo);
+                    if (cargoBll.salvar(cargo)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
@@ -204,7 +217,11 @@ public class FrmCargos extends javax.swing.JFrame {
             if (txtCargo.getText().isEmpty() || txtSalario.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                cargoBll.remover(cargoBll.consultaPorId(cargo.getCodigo()));
+                if (cargoBll.remover(cargoBll.consultaPorId(cargo.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -223,11 +240,13 @@ public class FrmCargos extends javax.swing.JFrame {
             } else if (cargo.getSalario() < 800 || cargo.getSalario() > 50000) {
                 JOptionPane.showMessageDialog(rootPane, "PREÇO INVALIDO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             } else {
-
-                cargoBll.editar(cargo);
+                if (cargoBll.editar(cargo)) {
+                    JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
                 consultar();
                 limparCampos();
-
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);

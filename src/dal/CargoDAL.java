@@ -11,49 +11,62 @@ import javax.swing.JOptionPane;
 import model.Cargo;
 import util.Conexao;
 
-public class CargoDAL {
+public class CargoDAL implements BasicoDAL<Cargo>{
     private Connection conexao;
 
     public CargoDAL() {
         conexao = Conexao.getConexao();
     }
     
-    public void adicionar(Cargo cargo) {
+    @Override
+    public boolean adicionar(Cargo cargo) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("INSERT INTO cargos (car_descricao, car_salario) VALUES (?, ?)");
             ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
-            ps.executeUpdate();
+            
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!");
         }
+        return result;
     }
     
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("DELETE FROM cargos WHERE car_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
     
-    public void alterar(Cargo cargo) {
+    @Override
+    public boolean alterar(Cargo cargo) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("UPDATE cargos SET car_descricao = ?, car_salario = ? WHERE car_id = ?");
             ps.setString(1, cargo.getDescricao());
             ps.setFloat(2, cargo.getSalario());
             ps.setInt(3, cargo.getCodigo());
-            ps.executeUpdate();
+            
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
     
+    @Override
     public List<Cargo> consultar(){
         List<Cargo> cargos = new ArrayList<>();
         try {
@@ -72,6 +85,7 @@ public class CargoDAL {
         return cargos;
     }
     
+    @Override
     public Cargo consultarPorId(int id){
         Cargo cargo = new Cargo();
         try {

@@ -1,17 +1,23 @@
 package model;
 
 public class Categoria {
+    //private static Categoria categoriaGeral = null; 
     private int codigo;
     private String nome;
 
+    /*public static Categoria getCategoria(){
+        //if(categoriaGeral == null){
+            categoriaGeral = new Categoria();
+        //}
+        return categoriaGeral;
+    }
+    
+    private Categoria() {
+    }*/
+    
     public Categoria() {
     }
-
-    public Categoria(int codigo, String nome) {
-        this.codigo = codigo;
-        this.nome = nome;
-    }
-
+    
     public int getCodigo() {
         return codigo;
     }

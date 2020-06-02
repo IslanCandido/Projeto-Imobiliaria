@@ -11,16 +11,16 @@ public class CargoBLL {
         dal = new CargoDAL();
     }
     
-    public void salvar(Cargo cargo) throws Exception {
-        dal.adicionar(cargo);
+    public boolean salvar(Cargo cargo) throws Exception {
+        return dal.adicionar(cargo);
     }
 
-    public void editar(Cargo cargo) throws Exception {
-        dal.alterar(cargo);
+    public boolean editar(Cargo cargo) throws Exception {
+        return dal.alterar(cargo);
     }
 
-    public void remover(Cargo cargo) throws Exception {
-        dal.excluir(cargo.getCodigo());
+    public boolean remover(Cargo cargo) throws Exception {
+        return dal.excluir(cargo.getCodigo());
     }
     
      public List<Cargo> consultar(){

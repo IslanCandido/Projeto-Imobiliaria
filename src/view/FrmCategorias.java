@@ -10,11 +10,20 @@ import model.Categoria;
 
 public class FrmCategorias extends javax.swing.JFrame {
 
+    private static FrmCategorias telaCategoriaGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     CategoriaBLL categoriaBll = new CategoriaBLL();
     Categoria categoria = new Categoria();
 
-    public FrmCategorias() {
+    public static FrmCategorias getTelaCategoria() {
+        if (telaCategoriaGeral == null) {
+            telaCategoriaGeral = new FrmCategorias();
+        }
+        return telaCategoriaGeral;
+    }
+
+    private FrmCategorias() {
         criarTabela();
         consultar();
         initComponents();
@@ -100,7 +109,7 @@ public class FrmCategorias extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblCategorias);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 70, 270, 110);
+        jScrollPane2.setBounds(10, 70, 270, 90);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -110,7 +119,7 @@ public class FrmCategorias extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(90, 190, 55, 41);
+        btnExcluir.setBounds(90, 170, 55, 41);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -120,7 +129,7 @@ public class FrmCategorias extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(30, 190, 55, 41);
+        btnSalvar.setBounds(30, 170, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -130,7 +139,7 @@ public class FrmCategorias extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(150, 190, 55, 41);
+        btnEditar.setBounds(150, 170, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -140,13 +149,13 @@ public class FrmCategorias extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(210, 190, 55, 41);
+        btnLimpar.setBounds(210, 170, 55, 41);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 350, 290);
 
-        setSize(new java.awt.Dimension(305, 268));
+        setSize(new java.awt.Dimension(305, 246));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -158,7 +167,11 @@ public class FrmCategorias extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (!categoriaBll.verificarCategoriasIguais(txtCategoria.getText())) {
-                    categoriaBll.salvar(categoria);
+                    if (categoriaBll.salvar(categoria)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
@@ -176,7 +189,11 @@ public class FrmCategorias extends javax.swing.JFrame {
             if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                categoriaBll.remover(categoriaBll.consultaPorId(categoria.getCodigo()));
+                if (categoriaBll.remover(categoriaBll.consultaPorId(categoria.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -192,7 +209,11 @@ public class FrmCategorias extends javax.swing.JFrame {
             if (txtCategoria.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                categoriaBll.editar(categoria);
+                if (categoriaBll.editar(categoria)) {
+                    JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
                 consultar();
                 limparCampos();
             }

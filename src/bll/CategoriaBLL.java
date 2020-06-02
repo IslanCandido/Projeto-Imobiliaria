@@ -11,16 +11,16 @@ public class CategoriaBLL {
         dal = new CategoriaDAL();
     }
     
-    public void salvar(Categoria categoria) throws Exception {
-        dal.adicionar(categoria);
+    public boolean salvar(Categoria categoria) throws Exception {
+        return dal.adicionar(categoria);
     }
 
-    public void editar(Categoria categoria) throws Exception {
-        dal.alterar(categoria);
+    public boolean editar(Categoria categoria) throws Exception {
+        return dal.alterar(categoria);
     }
 
-    public void remover(Categoria categoria) throws Exception {
-        dal.excluir(categoria.getCodigo());
+    public boolean remover(Categoria categoria) throws Exception {
+        return dal.excluir(categoria.getCodigo());
     }
     
      public List<Categoria> consultar(){

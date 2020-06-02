@@ -3,7 +3,6 @@ package view;
 import bll.ContatoBLL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -11,15 +10,24 @@ import model.Contato;
 
 public class FrmContatos extends javax.swing.JFrame {
 
+    private static FrmContatos telaContatosGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     ContatoBLL contatoBll = new ContatoBLL();
     Contato contato = new Contato();
 
-    public FrmContatos() {        
+    public static FrmContatos getTelaContato() {
+        if (telaContatosGeral == null) {
+            telaContatosGeral = new FrmContatos();
+        }
+        return telaContatosGeral;
+    }
+
+    private FrmContatos() {
         criarTabela();
-        consultar();    
+        consultar();
         initComponents();
-        
+
     }
 
     private void criarTabela() {
@@ -64,7 +72,6 @@ public class FrmContatos extends javax.swing.JFrame {
         btnSalvar.setEnabled(true);
     }
 
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -96,7 +103,7 @@ public class FrmContatos extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(190, 10, 49, 20);
 
-        cbxTipoTelefone.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Pessoal", "Residêncial", "Outro" }));
+        cbxTipoTelefone.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Pessoal", "Residêncial" }));
         getContentPane().add(cbxTipoTelefone);
         cbxTipoTelefone.setBounds(20, 30, 140, 30);
 
@@ -190,12 +197,16 @@ public class FrmContatos extends javax.swing.JFrame {
         try {
             contato.setTipo(cbxTipoTelefone.getSelectedItem().toString());
             contato.setNumero(txtTelefone.getText());
-            
+
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (!contatoBll.verificarNumerosIguais(txtTelefone.getText())) {
-                    contatoBll.salvar(contato);
+                    if (contatoBll.salvar(contato)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
@@ -213,7 +224,11 @@ public class FrmContatos extends javax.swing.JFrame {
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                contatoBll.remover(contatoBll.consultaPorId(contato.getCodigo()));
+                if (contatoBll.remover(contatoBll.consultaPorId(contato.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -230,7 +245,11 @@ public class FrmContatos extends javax.swing.JFrame {
             if (txtTelefone.getText().isEmpty() || cbxTipoTelefone.getSelectedItem().equals("Selecione")) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                contatoBll.editar(contato);
+                if (contatoBll.editar(contato)) {
+                    JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
                 consultar();
                 limparCampos();
 

@@ -15,7 +15,7 @@ import model.Contato;
 import model.Endereco;
 import util.Conexao;
 
-public class FuncionarioDAL {
+public class FuncionarioDAL implements BasicoDAL<Funcionario> {
 
     private Connection conexao;
 
@@ -23,7 +23,9 @@ public class FuncionarioDAL {
         conexao = Conexao.getConexao();
     }
 
-    public void adicionar(Funcionario funcionario) {
+    @Override
+    public boolean adicionar(Funcionario funcionario) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("INSERT INTO funcionarios (fun_nome, fun_cpf, fun_email, fun_dt_nascimento, fun_pis, fun_n_contrato, fun_senha, fun_fk_end, fun_fk_con, fun_fk_car) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, funcionario.getNome());
@@ -36,23 +38,29 @@ public class FuncionarioDAL {
             ps.setInt(8, funcionario.getIdEndereco().getCodigo());
             ps.setInt(9, funcionario.getIdContato().getCodigo());
             ps.setInt(10, funcionario.getIdCargo().getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n" + e);
         }
+        return result;
     }
 
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("DELETE FROM funcionarios WHERE fun_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
 
-    public void alterar(Funcionario funcionario) {
+    @Override
+    public boolean alterar(Funcionario funcionario) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE funcionarios SET fun_nome = ?, fun_cpf = ?, fun_email = ?, fun_dt_nascimento = ?, fun_pis = ?, fun_n_contrato = ?, fun_senha = ?, fun_fk_end = ?, fun_fk_con = ?, fun_fk_car = ? WHERE fun_id = ?");
 
@@ -67,12 +75,14 @@ public class FuncionarioDAL {
             ps.setInt(9, funcionario.getIdContato().getCodigo());
             ps.setInt(10, funcionario.getIdCargo().getCodigo());
             ps.setInt(11, funcionario.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
 
+    @Override
     public List<Funcionario> consultar() {
         List<Funcionario> funcionarios = new ArrayList<>();
         try {
@@ -124,7 +134,8 @@ public class FuncionarioDAL {
         return funcionarios;
     }
 
-    public Funcionario consultaPorId(int id) {
+    @Override
+    public Funcionario consultarPorId(int id) {
         Funcionario funcionario = new Funcionario();
         try {
             PreparedStatement ps = conexao.prepareStatement("select * from funcionarios f\n"
@@ -291,6 +302,20 @@ public class FuncionarioDAL {
             JOptionPane.showMessageDialog(null, "ERRO AO AUTENTICAR FUNCIONÁRIO NO BANCO!");
         }
         return resultado;
+    }
+
+    public boolean alterarSenha(String cpf, String senha) {
+        boolean result = false;
+        try {
+            PreparedStatement ps = conexao.prepareStatement("update funcionarios set fun_senha = ?\n"
+                    + "WHERE fun_cpf = ?");
+            ps.setString(1, senha);
+            ps.setString(2, cpf);            
+            result = ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO ALTERAR SENHA NO BANCO!");
+        }
+        return result;
     }
 
     public String pegarNomeUsuario(String cpf) {

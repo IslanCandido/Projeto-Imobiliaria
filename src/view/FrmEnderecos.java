@@ -12,12 +12,20 @@ import util.ViaCEPException;
 
 public class FrmEnderecos extends javax.swing.JFrame {
 
+    private static FrmEnderecos telaEnderecosGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     EnderecoBLL enderecoBll = new EnderecoBLL();
     Endereco endereco = new Endereco();
 
-    public FrmEnderecos() {
+    public static FrmEnderecos getTelaEndereco() {
+        if (telaEnderecosGeral == null) {
+            telaEnderecosGeral = new FrmEnderecos();
+        }
+        return telaEnderecosGeral;
+    }
 
+    private FrmEnderecos() {
         criarTabela();
         consultar();
         initComponents();
@@ -318,7 +326,11 @@ public class FrmEnderecos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (!enderecoBll.verificarCEPsIguais(txtCep.getText())) {
-                    enderecoBll.salvar(endereco);
+                    if (enderecoBll.salvar(endereco)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
@@ -336,7 +348,11 @@ public class FrmEnderecos extends javax.swing.JFrame {
                     || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                enderecoBll.remover(enderecoBll.consultaPorId(endereco.getCodigo()));
+                if (enderecoBll.remover(enderecoBll.consultaPorId(endereco.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -358,7 +374,11 @@ public class FrmEnderecos extends javax.swing.JFrame {
                     || txtCidade.getText().isEmpty() || txtUf.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                enderecoBll.editar(endereco);
+                if (enderecoBll.editar(endereco)) {
+                    JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
                 consultar();
                 limparCampos();
             }
@@ -403,7 +423,7 @@ public class FrmEnderecos extends javax.swing.JFrame {
 
     private void txtComplementoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtComplementoKeyTyped
         Character ch = evt.getKeyChar();
-        int comprimentoDeCampo = txtLogradouro.getText().length();
+        int comprimentoDeCampo = txtComplemento.getText().length();
         if (comprimentoDeCampo >= 20) {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 20 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);

@@ -1,22 +1,32 @@
 package view;
 
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
 public class FrmMenu extends javax.swing.JFrame {
 
-    FrmClientes telaPessoas;
+    FrmClientes telaClientes;
     FrmFuncionarios telaFuncionarios;
     FrmImoveis telaImoveis;
     FrmVendas telaVendas;
     FrmProprietarios telaPropietarios;
-    
+
     public FrmMenu(String nome, String cargo) {
         initComponents();
         lblusuario.setText(nome);
         lblcargo.setText(cargo);
+        lblData.setText(getDataAtual());
     }
 
     private FrmMenu() {
+        initComponents();
+        lblData.setText(getDataAtual());
+    }
+    
+    private String getDataAtual(){
+        java.util.Date data = new java.util.Date();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        return formatador.format(data);
     }
 
     @SuppressWarnings("unchecked")
@@ -27,6 +37,7 @@ public class FrmMenu extends javax.swing.JFrame {
         lblusuario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblcargo = new javax.swing.JLabel();
+        lblData = new javax.swing.JLabel();
         TeladeFundo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -68,6 +79,11 @@ public class FrmMenu extends javax.swing.JFrame {
         lblcargo.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(lblcargo);
         lblcargo.setBounds(70, 480, 340, 30);
+
+        lblData.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblData.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblData);
+        lblData.setBounds(1000, 490, 80, 20);
 
         TeladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_Menu.jpg"))); // NOI18N
         getContentPane().add(TeladeFundo);
@@ -170,75 +186,51 @@ public class FrmMenu extends javax.swing.JFrame {
 
     private void MenuItemClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemClienteActionPerformed
         if (lblcargo.getText().equals("Corretor")) {
-            if (telaPessoas == null) {
-                telaPessoas = new FrmClientes();
-                telaPessoas.setVisible(true);
-            } else {
-                telaPessoas.setVisible(true);
-                telaPessoas.setResizable(false);
-            }
+            telaClientes = FrmClientes.getTelaCliente();
+            telaClientes.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_MenuItemClienteActionPerformed
 
     private void MenuItemFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFuncionarioActionPerformed
         if (lblcargo.getText().equals("Administrador")) {
-            if (telaFuncionarios == null) {
-                telaFuncionarios = new FrmFuncionarios();
-                telaFuncionarios.setVisible(true);
-            } else {
-                telaFuncionarios.setVisible(true);
-                telaFuncionarios.setResizable(false);
-            }
+            telaFuncionarios = FrmFuncionarios.getTelaFuncionario();
+            telaFuncionarios.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_MenuItemFuncionarioActionPerformed
 
     private void MenuItemImovelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemImovelActionPerformed
         if (lblcargo.getText().equals("Corretor")) {
-            if (telaImoveis == null) {
-                telaImoveis = new FrmImoveis();
-                telaImoveis.setVisible(true);
-            } else {
-                telaImoveis.setVisible(true);
-                telaImoveis.setResizable(false);
-            }
+            telaImoveis = FrmImoveis.getTelaImovel();
+            telaImoveis.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_MenuItemImovelActionPerformed
 
     private void MenuItemVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemVendaActionPerformed
         if (lblcargo.getText().equals("Corretor")) {
-            if (telaVendas == null) {
-                telaVendas = new FrmVendas();
-                telaVendas.setVisible(true);
-            } else {
-                telaVendas.setVisible(true);
-                telaVendas.setResizable(false);
-            }
+            telaVendas = FrmVendas.getTelaVenda();
+            telaVendas.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_MenuItemVendaActionPerformed
 
     private void MenuItemProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemProprietarioActionPerformed
         if (lblcargo.getText().equals("Corretor")) {
-            if (telaPropietarios == null) {
-                telaPropietarios = new FrmProprietarios();
-                telaPropietarios.setVisible(true);
-            } else {
-                telaPropietarios.setVisible(true);
-                telaPropietarios.setResizable(false);
-            }
+            telaPropietarios = FrmProprietarios.getTelaProprietario();
+            telaPropietarios.setVisible(true);
+
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Você não tem permissão para essa funcionalidade!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_MenuItemProprietarioActionPerformed
 
@@ -292,6 +284,7 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JLabel lblData;
     private javax.swing.JLabel lblcargo;
     private javax.swing.JLabel lblusuario;
     // End of variables declaration//GEN-END:variables

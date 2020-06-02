@@ -7,13 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import model.Contato;
-import model.Cliente;
 import util.Conexao;
 
-public class ContatoDAL {
+public class ContatoDAL implements BasicoDAL<Contato>{
 
     private Connection conexao;
 
@@ -21,41 +19,50 @@ public class ContatoDAL {
         conexao = Conexao.getConexao();
     }
 
-    public void adicionar(Contato contato) {
+    @Override
+    public boolean adicionar(Contato contato) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("INSERT INTO contatos (con_tipo, con_numero) VALUES (?, ?)");
 
             ps.setString(1, contato.getTipo());
             ps.setString(2, contato.getNumero());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n" + e);
         }
+        return result;
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("DELETE FROM contatos WHERE con_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
 
-    public void alterar(Contato contato) {
+    @Override
+    public boolean alterar(Contato contato) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE contatos SET con_tipo = ?, con_numero = ? WHERE con_id = ?");
 
             ps.setString(1, contato.getTipo());
             ps.setString(2, contato.getNumero());
             ps.setInt(3, contato.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
 
+    @Override
     public List<Contato> consultar() {
         List<Contato> contatos = new ArrayList<>();
         try {
@@ -76,7 +83,8 @@ public class ContatoDAL {
         return contatos;
     }
 
-    public Contato consultaPorId(int id) {
+    @Override
+    public Contato consultarPorId(int id) {
         Contato contato = new Contato();
         try {
             PreparedStatement ps = conexao.prepareStatement("select * from contatos \n"

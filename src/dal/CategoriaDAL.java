@@ -11,47 +11,57 @@ import javax.swing.JOptionPane;
 import model.Categoria;
 import util.Conexao;
 
-public class CategoriaDAL {
+public class CategoriaDAL implements BasicoDAL<Categoria>{
     private Connection conexao;
-
+    
     public CategoriaDAL() {
         conexao = Conexao.getConexao();
     }
     
-    public void adicionar(Categoria categoria) {
+    @Override
+    public boolean adicionar(Categoria categoria) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("INSERT INTO categorias (cat_nome) VALUES (?)");
             ps.setString(1, categoria.getNome());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!");
         }
+        return result;
     }
     
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("DELETE FROM categorias WHERE cat_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
     
-    public void alterar(Categoria categoria) {
+    @Override
+    public boolean alterar(Categoria categoria) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement
             ("UPDATE Categorias SET cat_nome = ? WHERE cat_id = ?");
             ps.setString(1, categoria.getNome());
             ps.setInt(2, categoria.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
     
+    @Override
     public List<Categoria> consultar(){
         List<Categoria> categorias = new ArrayList<>();
         try {
@@ -64,11 +74,12 @@ public class CategoriaDAL {
                 categorias.add(categoria);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR TODOS OS DADOS!");
+            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR TODOS OS DADOS!" + e);
         }
         return categorias;
     }
     
+    @Override
     public Categoria consultarPorId(int id){
         Categoria categoria = new Categoria();
         try {

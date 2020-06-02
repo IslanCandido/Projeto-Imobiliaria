@@ -1,16 +1,14 @@
 package view;
 
 import bll.FuncionarioBLL;
+import bll.ValidacoesPessoasBLL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -22,15 +20,25 @@ import model.Endereco;
 
 public class FrmFuncionarios extends javax.swing.JFrame {
 
+    private static FrmFuncionarios telaFuncionariosGeral = null;
+
     DefaultTableModel modelo = new DefaultTableModel();
     FuncionarioBLL funcionarioBll = new FuncionarioBLL();
+    ValidacoesPessoasBLL validacoesFuncionarios = new FuncionarioBLL();
     Funcionario funcionario = new Funcionario();
 
     Vector<Endereco> vetorEnderecos;
     Vector<Contato> vetorContatos;
     Vector<Cargo> vetorCargos;
 
-    public FrmFuncionarios() {
+    public static FrmFuncionarios getTelaFuncionario() {
+        if (telaFuncionariosGeral == null) {
+            telaFuncionariosGeral = new FrmFuncionarios();
+        }
+        return telaFuncionariosGeral;
+    }
+
+    private FrmFuncionarios() {
         criarTabela();
         consultar();
         initComponents();
@@ -72,7 +80,6 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         modelo.addColumn("Cargo");
         modelo.addColumn("PIS");
         modelo.addColumn("Nº Contrato");
-        modelo.addColumn("Senha");
 
         tblFuncionarios.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblFuncionarios.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -84,7 +91,6 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         tblFuncionarios.getColumnModel().getColumn(7).setPreferredWidth(50);
         tblFuncionarios.getColumnModel().getColumn(8).setPreferredWidth(50);
         tblFuncionarios.getColumnModel().getColumn(9).setPreferredWidth(50);
-        tblFuncionarios.getColumnModel().getColumn(10).setPreferredWidth(50);
     }
 
     private void consultar() {
@@ -101,12 +107,11 @@ public class FrmFuncionarios extends javax.swing.JFrame {
                     lista.get(i).getCpf(),
                     lista.get(i).getEmail(),
                     lista.get(i).getDataNascimento(),
-                    lista.get(i).getIdEndereco().getCep(),
+                    lista.get(i).getIdEndereco().getBairro(),
                     lista.get(i).getIdContato().getNumero(),
                     lista.get(i).getIdCargo().getDescricao(),
                     lista.get(i).getPis(),
-                    lista.get(i).getnContrato(),
-                    lista.get(i).getSenha()
+                    lista.get(i).getnContrato()
                 });
             }
         } else {
@@ -132,7 +137,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         txtNome.setText("");
         txtCpf.setValue("");
         txtEmail.setText("");
-        txtDataNascimento.setText("");
+        txtDataNascimento.setValue("");
         cbxEnderecos.setSelectedIndex(0);
         cbxContatos.setSelectedIndex(0);
         cbxCargos.setSelectedIndex(0);
@@ -150,118 +155,6 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         cbxEnderecos.setModel(new DefaultComboBoxModel(vetorEnderecos));
         cbxContatos.setModel(new DefaultComboBoxModel(vetorContatos));
         cbxCargos.setModel(new DefaultComboBoxModel(vetorCargos));
-    }
-
-    private boolean isEmail(String email) {
-        if (email != null && email.length() > 0) {
-            String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(email);
-            if (matcher.matches()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private boolean isData(String data) {
-        String[] dataparticionada = data.split("/");
-        int dia = Integer.parseInt(dataparticionada[0]);
-        int mes = Integer.parseInt(dataparticionada[1]);
-        int ano = Integer.parseInt(dataparticionada[2]);
-        boolean anoBissexto = ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0;
-
-        if (((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) && (dia >= 1 && dia <= 31))
-                || ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia >= 1 && dia <= 30))
-                || ((mes == 2) && (anoBissexto) && (dia >= 1 && dia <= 29) && (ano >= 1920 && ano <= 2002))
-                || ((mes == 2) && !(anoBissexto) && (dia >= 1 && dia <= 28) && (ano >= 1920 && ano <= 2002))) {
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isCPF(String CPF) {
-        if (CPF.equals("00000000000")
-                || CPF.equals("11111111111")
-                || CPF.equals("22222222222") || CPF.equals("33333333333")
-                || CPF.equals("44444444444") || CPF.equals("55555555555")
-                || CPF.equals("66666666666") || CPF.equals("77777777777")
-                || CPF.equals("88888888888") || CPF.equals("99999999999")
-                || (CPF.length() != 11)) {
-            return (false);
-        }
-
-        char dig10, dig11;
-        int sm, i, r, num, peso;
-
-        try {
-            sm = 0;
-            peso = 10;
-            for (i = 0; i < 9; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig10 = '0';
-            } else {
-                dig10 = (char) (r + 48);
-            }
-
-            sm = 0;
-            peso = 11;
-            for (i = 0; i < 10; i++) {
-                num = (int) (CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig11 = '0';
-            } else {
-                dig11 = (char) (r + 48);
-            }
-
-            if ((dig10 == CPF.charAt(9)) && (dig11 == CPF.charAt(10))) {
-                return (true);
-            } else {
-                return (false);
-            }
-        } catch (InputMismatchException erro) {
-            return (false);
-        }
-    }
-
-    private boolean isPIS(String pis) {
-        String multiplicador = "3298765432";
-        int total = 0;
-        boolean resultado = true;
-
-        if (resultado) {
-            for (int i = 0; i < 10; i++) {
-
-                int multiplicando = Integer.parseInt(pis.substring(i, i + 1));
-                int totalMultiplicador = Integer.parseInt(multiplicador.substring(i, i + 1));
-                total += multiplicando * totalMultiplicador;
-            }
-
-            int resto = 11 - total % 11;
-            resto = resto == 10 || resto == 11 ? 0 : resto;
-
-            int digito = 99;
-
-            digito = Integer.parseInt("" + pis.charAt(10));
-            resultado = resto == digito;
-        }
-
-        return resultado;
     }
 
     @SuppressWarnings("unchecked")
@@ -308,12 +201,12 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText(" PIS");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(650, 60, 30, 20);
+        jLabel1.setBounds(670, 60, 30, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText(" Nº contrato");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(650, 10, 80, 20);
+        jLabel3.setBounds(670, 10, 80, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText("Cargo");
@@ -326,11 +219,11 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNcontrato);
-        txtNcontrato.setBounds(650, 30, 140, 28);
+        txtNcontrato.setBounds(670, 30, 170, 28);
 
         cbxCargos.setToolTipText("");
         getContentPane().add(cbxCargos);
-        cbxCargos.setBounds(360, 130, 220, 28);
+        cbxCargos.setBounds(360, 130, 240, 28);
 
         btnAdicionarCargo.setText("+");
         btnAdicionarCargo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -340,7 +233,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCargo);
-        btnAdicionarCargo.setBounds(580, 130, 41, 28);
+        btnAdicionarCargo.setBounds(600, 130, 41, 28);
 
         tblFuncionarios.setModel(modelo);
         tblFuncionarios.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -352,7 +245,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblFuncionarios);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 180, 810, 220);
+        jScrollPane2.setBounds(10, 180, 860, 180);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -362,7 +255,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(470, 410, 55, 41);
+        btnSalvar.setBounds(500, 370, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -372,7 +265,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(540, 410, 55, 41);
+        btnExcluir.setBounds(570, 370, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -382,7 +275,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(680, 410, 55, 41);
+        btnLimpar.setBounds(710, 370, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -392,12 +285,12 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(610, 410, 55, 41);
+        btnEditar.setBounds(640, 370, 55, 41);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText(" Senha de acesso");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(650, 110, 110, 20);
+        jLabel6.setBounds(670, 110, 110, 20);
 
         try {
             txtPis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
@@ -410,7 +303,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtPis);
-        txtPis.setBounds(650, 80, 140, 28);
+        txtPis.setBounds(670, 80, 170, 28);
 
         txtSenhaAcesso.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -418,13 +311,13 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtSenhaAcesso);
-        txtSenhaAcesso.setBounds(650, 130, 140, 28);
+        txtSenhaAcesso.setBounds(670, 130, 140, 28);
 
         jLabel7.setBackground(new java.awt.Color(255, 255, 255));
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel7.setText("Nome");
+        jLabel7.setText("Nome completo");
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(40, 10, 32, 20);
+        jLabel7.setBounds(40, 10, 100, 20);
 
         txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -490,7 +383,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         txtDataNascimento.setBounds(200, 130, 130, 28);
 
         getContentPane().add(cbxEnderecos);
-        cbxEnderecos.setBounds(360, 30, 220, 28);
+        cbxEnderecos.setBounds(360, 30, 240, 28);
 
         btnAdicionarEndereco.setText("+");
         btnAdicionarEndereco.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -500,10 +393,10 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarEndereco);
-        btnAdicionarEndereco.setBounds(580, 30, 41, 28);
+        btnAdicionarEndereco.setBounds(600, 30, 41, 28);
 
         getContentPane().add(cbxContatos);
-        cbxContatos.setBounds(360, 80, 220, 28);
+        cbxContatos.setBounds(360, 80, 240, 28);
 
         btnAdicionarContato.setText("+");
         btnAdicionarContato.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -513,7 +406,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarContato);
-        btnAdicionarContato.setBounds(580, 80, 41, 28);
+        btnAdicionarContato.setBounds(600, 80, 41, 28);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel11.setText("Contato");
@@ -528,7 +421,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         btnGerarSenha.setBackground(new java.awt.Color(153, 153, 255));
         btnGerarSenha.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         btnGerarSenha.setForeground(new java.awt.Color(255, 255, 255));
-        btnGerarSenha.setText("Gerar senha");
+        btnGerarSenha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_nova_senha.png"))); // NOI18N
         btnGerarSenha.setContentAreaFilled(false);
         btnGerarSenha.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGerarSenha.addActionListener(new java.awt.event.ActionListener() {
@@ -537,13 +430,13 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnGerarSenha);
-        btnGerarSenha.setBounds(700, 160, 100, 10);
+        btnGerarSenha.setBounds(810, 130, 30, 30);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 860, 490);
+        teladeFundo.setBounds(0, 0, 900, 490);
 
-        setSize(new java.awt.Dimension(834, 491));
+        setSize(new java.awt.Dimension(885, 450));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -551,9 +444,10 @@ public class FrmFuncionarios extends javax.swing.JFrame {
 
     private void btnAdicionarCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCargoActionPerformed
         if (telaCargos == null) {
-            telaCargos = new FrmCargos();
+            telaCargos = FrmCargos.getTelaCargo();
             telaCargos.setVisible(true);
         } else {
+            telaCargos.dispose();
             telaCargos.setVisible(true);
             telaCargos.setResizable(false);
         }
@@ -588,23 +482,33 @@ public class FrmFuncionarios extends javax.swing.JFrame {
                     || txtDataNascimento.getText().isEmpty() || txtPis.getText().isEmpty()
                     || txtNcontrato.getText().isEmpty() || txtSenhaAcesso.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                if (isPIS(txtPis.getText()) && isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())
-                        && !funcionarioBll.verificarCpfIgual(txtCpf.getText()) && !funcionarioBll.verificarPisIgual(txtPis.getText())) {
-                    funcionarioBll.salvar(funcionario);
+            }
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else if(txtSenhaAcesso.getText().length() < 4){
+                JOptionPane.showMessageDialog(rootPane, "SENHA MUITO CURTA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                if (validacoesFuncionarios.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText()) && funcionarioBll.isPIS(txtPis.getText()) && !funcionarioBll.verificarCpfIgual(txtCpf.getText()) && !funcionarioBll.verificarPisIgual(txtPis.getText())) {
+                    if (funcionarioBll.salvar(funcionario)) {
+                        JOptionPane.showMessageDialog(rootPane, "Salvo com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao salvar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
-                    if (!isPIS(txtPis.getText())) {
+                    if (!funcionarioBll.isPIS(txtPis.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "PIS INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isEmail(txtEmail.getText())) {
+                    if (!funcionarioBll.isEmail(txtEmail.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isCPF(txtCpf.getText())) {
+                    if (!funcionarioBll.isCpf(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isData(txtDataNascimento.getText())) {
+                    if (!funcionarioBll.isData(txtDataNascimento.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
                     if (funcionarioBll.verificarCpfIgual(txtCpf.getText())) {
@@ -629,7 +533,11 @@ public class FrmFuncionarios extends javax.swing.JFrame {
                     || txtNcontrato.getText().isEmpty() || txtSenhaAcesso.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
-                funcionarioBll.remover(funcionarioBll.consultaPorId(funcionario.getCodigo()));
+                if (funcionarioBll.remover(funcionarioBll.consultaPorId(funcionario.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Removido com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao remover!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
@@ -655,22 +563,30 @@ public class FrmFuncionarios extends javax.swing.JFrame {
                     || txtDataNascimento.getText().isEmpty() || txtPis.getText().isEmpty()
                     || txtNcontrato.getText().isEmpty() || txtSenhaAcesso.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                if (isPIS(txtPis.getText()) && isEmail(txtEmail.getText()) && isCPF(txtCpf.getText()) && isData(txtDataNascimento.getText())) {
-                    funcionarioBll.editar(funcionario);
+            }
+            else if(txtNome.getText().length() < 15){
+                JOptionPane.showMessageDialog(rootPane, "DIGITE SEU NOME COMPLETO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                if (validacoesFuncionarios.validacoes(txtEmail.getText(), txtDataNascimento.getText(), txtCpf.getText()) && funcionarioBll.isPIS(txtPis.getText())) {
+                    if (funcionarioBll.editar(funcionario)) {
+                        JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
                     consultar();
                     limparCampos();
                 } else {
-                    if (!isPIS(txtPis.getText())) {
+                    if (!funcionarioBll.isPIS(txtPis.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "PIS INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isEmail(txtEmail.getText())) {
+                    if (!funcionarioBll.isEmail(txtEmail.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "EMAIL INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isCPF(txtCpf.getText())) {
+                    if (!funcionarioBll.isCpf(txtCpf.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "CPF INVALIDO!", "Cuidado!", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!isData(txtDataNascimento.getText())) {
+                    if (!funcionarioBll.isData(txtDataNascimento.getText())) {
                         JOptionPane.showMessageDialog(rootPane, "DATA NASCIMENTO INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -780,23 +696,21 @@ public class FrmFuncionarios extends javax.swing.JFrame {
 
     private void btnAdicionarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarEnderecoActionPerformed
         if (telaEnderecos == null) {
-            telaEnderecos = new FrmEnderecos();
+            telaEnderecos = FrmEnderecos.getTelaEndereco();
             telaEnderecos.setVisible(true);
         } else {
             telaEnderecos.dispose();
             telaEnderecos.setVisible(true);
-            telaEnderecos.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarEnderecoActionPerformed
 
     private void btnAdicionarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarContatoActionPerformed
         if (telaContatos == null) {
-            telaContatos = new FrmContatos();
+            telaContatos = FrmContatos.getTelaContato();
             telaContatos.setVisible(true);
         } else {
             telaContatos.dispose();
             telaContatos.setVisible(true);
-            telaContatos.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarContatoActionPerformed
 
@@ -809,7 +723,7 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             int j = (int) (Math.random() * carct.length);
             senha += carct[j];
         }
-        
+
         txtSenhaAcesso.setText(senha);
     }//GEN-LAST:event_btnGerarSenhaActionPerformed
 

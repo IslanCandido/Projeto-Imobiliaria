@@ -14,7 +14,7 @@ import model.Cliente;
 import model.Contato;
 import util.Conexao;
 
-public class ClienteDAL {
+public class ClienteDAL implements BasicoDAL<Cliente>{
 
     private Connection conexao;
 
@@ -22,7 +22,9 @@ public class ClienteDAL {
         conexao = Conexao.getConexao();
     }
 
-    public void adicionar(Cliente cliente) {
+    @Override
+    public boolean adicionar(Cliente cliente) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("INSERT INTO clientes (cli_cpf, cli_email, cli_dt_nascimento, cli_nome, cli_fk_end, cli_fk_con) VALUES (?, ?, ?, ?, ?, ?)");
 
@@ -32,23 +34,29 @@ public class ClienteDAL {
             ps.setString(4, cliente.getNome());
             ps.setInt(5, cliente.getIdEndereco().getCodigo());
             ps.setInt(6, cliente.getIdContato().getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n" + e);
         }
+        return result;
     }
 
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("DELETE FROM clientes WHERE cli_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
 
-    public void alterar(Cliente cliente) {
+    @Override
+    public boolean alterar(Cliente cliente) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE clientes SET cli_cpf = ?, cli_email = ?, cli_dt_nascimento = ?, cli_nome = ?, cli_fk_end = ?, cli_fk_con = ? WHERE cli_id = ?");
 
@@ -59,12 +67,14 @@ public class ClienteDAL {
             ps.setInt(5, cliente.getIdEndereco().getCodigo());
             ps.setInt(6, cliente.getIdContato().getCodigo());
             ps.setInt(7, cliente.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
 
+    @Override
     public List<Cliente> consultar() {
         List<Cliente> clientes = new ArrayList<>();
         try {
@@ -107,7 +117,8 @@ public class ClienteDAL {
         return clientes;
     }
 
-    public Cliente consultaPorId(int id) {
+    @Override
+    public Cliente consultarPorId(int id) {
         Cliente cliente = new Cliente();
         try {
             PreparedStatement ps = conexao.prepareStatement("select * from clientes cl \n"
@@ -208,4 +219,5 @@ public class ClienteDAL {
 
         return resultado;
     }
+
 }

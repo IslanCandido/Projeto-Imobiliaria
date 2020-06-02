@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import model.Endereco;
 import util.Conexao;
 
-public class EnderecoDAL {
+public class EnderecoDAL implements BasicoDAL<Endereco>{
 
     private Connection conexao;
 
@@ -19,7 +19,9 @@ public class EnderecoDAL {
         conexao = Conexao.getConexao();
     }
 
-    public void adicionar(Endereco endereco) {
+    @Override
+    public boolean adicionar(Endereco endereco) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("INSERT INTO enderecos (end_logradouro, end_cep, end_cidade, end_uf, end_bairro, end_complemento) VALUES (?, ?, ?, ?, ?, ?)");
 
@@ -29,23 +31,29 @@ public class EnderecoDAL {
             ps.setString(4, endereco.getUf());
             ps.setString(5, endereco.getBairro());
             ps.setString(6, endereco.getComplemento());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS!\n"+ e);
         }
+        return result;
     }
 
-    public void excluir(int id) {
+    @Override
+    public boolean excluir(int id) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("DELETE FROM enderecos WHERE end_id = ?");
             ps.setInt(1, id);
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO REMOVER DADOS!");
         }
+        return result;
     }
 
-    public void alterar(Endereco endereco) {
+    @Override
+    public boolean alterar(Endereco endereco) {
+        boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE enderecos SET end_logradouro = ?, end_cep = ?, end_cidade = ?, end_uf = ?, end_bairro = ?, end_complemento = ? WHERE end_id = ?");
 
@@ -56,12 +64,14 @@ public class EnderecoDAL {
             ps.setString(5, endereco.getBairro());
             ps.setString(6, endereco.getComplemento());
             ps.setInt(7, endereco.getCodigo());
-            ps.executeUpdate();
+            result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
         }
+        return result;
     }
 
+    @Override
     public List<Endereco> consultar() {
         List<Endereco> enderecos = new ArrayList<>();
         try {
@@ -86,7 +96,8 @@ public class EnderecoDAL {
         return enderecos;
     }
 
-    public Endereco consultaPorId(int id) {
+    @Override
+    public Endereco consultarPorId(int id) {
         Endereco endereco = new Endereco();
         try {
             PreparedStatement ps = conexao.prepareStatement("SELECT * FROM enderecos WHERE end_id = ?");

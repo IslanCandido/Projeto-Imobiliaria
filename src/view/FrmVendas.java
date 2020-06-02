@@ -1,21 +1,160 @@
 package view;
 
+import bll.VendaBLL;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
+import model.Cliente;
+import model.Funcionario;
+import model.Imovel;
+import model.Venda;
 
 public class FrmVendas extends javax.swing.JFrame {
 
-    DefaultTableModel modelo = new DefaultTableModel();
+    private static FrmVendas telaVendasGeral = null;
 
-    public FrmVendas() {
-        initComponents();
+    DefaultTableModel modelo = new DefaultTableModel();
+    VendaBLL vendaBll = new VendaBLL();
+    Venda venda = new Venda();
+
+    Vector<Cliente> vetorClientes;
+    Vector<Funcionario> vetorFuncionarios;
+    Vector<Imovel> vetorImoveis;
+
+    DecimalFormat df = new DecimalFormat("####");
+
+    public static FrmVendas getTelaVenda() {
+        if (telaVendasGeral == null) {
+            telaVendasGeral = new FrmVendas();
+        }
+        return telaVendasGeral;
     }
 
+    private FrmVendas() {
+        criarTabela();
+        consultar();
+        initComponents();
+        txtDataVenda.setText(getDataAtual());
+        txtValor.setEnabled(false);
+        preencherCbxs();
+    }
+
+    private Date CriarNovaData(String data) {
+        if (data == null) {
+            return null;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+        java.sql.Date a = null;
+        try {
+            a = new java.sql.Date(format.parse(data).getTime());
+        } catch (ParseException e) {
+        }
+        return a;
+    }
+
+    private String convertDate(Date dtConsulta) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+            return formatter.format(dtConsulta);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void criarTabela() {
+        tblVendas = new JTable(modelo);
+        modelo.addColumn("Código");
+        modelo.addColumn("Data Venda");
+        modelo.addColumn("Funcionário");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Imovel");
+        modelo.addColumn("Valor");
+        modelo.addColumn("Comissão");
+
+        tblVendas.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tblVendas.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tblVendas.getColumnModel().getColumn(2).setPreferredWidth(50);
+        tblVendas.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tblVendas.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tblVendas.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tblVendas.getColumnModel().getColumn(6).setPreferredWidth(50);
+    }
+
+    private void consultar() {
+        modelo.setNumRows(0);
+        List<Venda> lista = new ArrayList<Venda>();
+
+        lista = vendaBll.consultar();
+
+        if (lista.size() > 0) {
+            for (int i = 0; i < lista.size(); i++) {
+                modelo.addRow(new Object[]{
+                    lista.get(i).getCodigo(),
+                    lista.get(i).getDataVenda(),
+                    lista.get(i).getIdFuncionario().getNome(),
+                    lista.get(i).getIdCliente().getNome(),
+                    lista.get(i).getIdImovel().getCodigo(),
+                    lista.get(i).getValor(),
+                    lista.get(i).getPercentualComissao()
+                });
+            }
+        } else {
+            modelo.setNumRows(0);
+        }
+    }
+
+    private void preencheCampos(int id) {
+        venda = vendaBll.consultaPorId(id);
+        txtComissao.setText(String.valueOf(venda.getPercentualComissao()));
+        txtValor.setText(String.valueOf(venda.getValor()));
+        txtDataVenda.setText(convertDate(venda.getDataVenda()));
+        cbxClientes.setSelectedItem(venda.getIdCliente());
+        cbxFuncionarios.setSelectedItem(venda.getIdFuncionario());
+        cbxImoveis.setSelectedItem(venda.getIdImovel());
+    }
+
+    private void limparCampos() {
+        txtComissao.setText("");
+        txtValor.setText("");
+        txtDataVenda.setText(getDataAtual());
+        cbxClientes.setSelectedIndex(0);
+        cbxFuncionarios.setSelectedIndex(0);
+        cbxImoveis.setSelectedIndex(0);
+        btnSalvar.setEnabled(true);
+    }
+
+    private void preencherCbxs() {
+        vetorClientes = vendaBll.listarClientes();
+        cbxClientes.setModel(new DefaultComboBoxModel(vetorClientes));
+
+        vetorFuncionarios = vendaBll.listarFuncionarios();
+        cbxFuncionarios.setModel(new DefaultComboBoxModel(vetorFuncionarios));
+
+        vetorImoveis = vendaBll.listaImoveis();
+        cbxImoveis.setModel(new DefaultComboBoxModel(vetorImoveis));
+    }
+
+    private String getDataAtual() {
+        java.util.Date data = new java.util.Date();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        return formatador.format(data);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnEditar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -30,12 +169,22 @@ public class FrmVendas extends javax.swing.JFrame {
         tblVendas = new javax.swing.JTable();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
         btnAdicionarCliente = new javax.swing.JButton();
         btnAdicionarImovel = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtDataVenda = new javax.swing.JFormattedTextField();
+        lblPorcentagem = new javax.swing.JLabel();
         teladeFundo = new javax.swing.JLabel();
+
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gerenciamento de vendas");
@@ -43,69 +192,89 @@ public class FrmVendas extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Percentual da Comissão");
+        jLabel1.setText("Comissão");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(470, 10, 160, 20);
+        jLabel1.setBounds(390, 10, 110, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Valor");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(330, 10, 40, 20);
+        jLabel2.setBounds(390, 60, 40, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel3.setText("Cliente");
+        jLabel3.setText(" Cliente");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(20, 60, 50, 20);
+        jLabel3.setBounds(30, 60, 50, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel4.setText("Imóvel");
+        jLabel4.setText(" Imóvel");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(330, 60, 50, 20);
+        jLabel4.setBounds(30, 110, 50, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText("Funcionário");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(20, 10, 80, 20);
+        jLabel5.setBounds(150, 10, 80, 20);
 
         getContentPane().add(cbxFuncionarios);
-        cbxFuncionarios.setBounds(20, 30, 280, 28);
+        cbxFuncionarios.setBounds(150, 30, 220, 28);
 
         getContentPane().add(cbxClientes);
-        cbxClientes.setBounds(20, 80, 240, 28);
+        cbxClientes.setBounds(30, 80, 300, 28);
 
+        cbxImoveis.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxImoveisItemStateChanged(evt);
+            }
+        });
         getContentPane().add(cbxImoveis);
-        cbxImoveis.setBounds(330, 80, 240, 28);
+        cbxImoveis.setBounds(30, 130, 440, 28);
         getContentPane().add(txtValor);
-        txtValor.setBounds(330, 30, 100, 28);
+        txtValor.setBounds(390, 80, 100, 28);
         getContentPane().add(txtComissao);
-        txtComissao.setBounds(470, 30, 140, 28);
+        txtComissao.setBounds(390, 30, 100, 28);
 
         tblVendas.setModel(modelo);
         tblVendas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tblVendas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblVendasMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblVendas);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 120, 620, 170);
+        jScrollPane2.setBounds(10, 170, 520, 160);
 
-        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda_realizada.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(310, 300, 55, 41);
+        btnSalvar.setBounds(300, 340, 55, 41);
 
-        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda_cancelada.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(380, 300, 55, 41);
-
-        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
-        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btnEditar);
-        btnEditar.setBounds(450, 300, 55, 41);
+        btnExcluir.setBounds(370, 340, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(520, 300, 55, 41);
+        btnLimpar.setBounds(440, 340, 55, 41);
 
         btnAdicionarCliente.setText("+");
         btnAdicionarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -115,7 +284,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCliente);
-        btnAdicionarCliente.setBounds(260, 80, 41, 28);
+        btnAdicionarCliente.setBounds(330, 80, 41, 28);
 
         btnAdicionarImovel.setText("+");
         btnAdicionarImovel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -125,44 +294,199 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarImovel);
-        btnAdicionarImovel.setBounds(570, 80, 41, 28);
+        btnAdicionarImovel.setBounds(470, 130, 41, 28);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel6.setText("R$");
+        jLabel6.setText(" R$");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(430, 30, 20, 30);
+        jLabel6.setBounds(490, 80, 20, 30);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel7.setText(" Data de Venda");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(30, 10, 90, 20);
+
+        try {
+            txtDataVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtDataVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDataVendaActionPerformed(evt);
+            }
+        });
+        txtDataVenda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDataVendaKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtDataVenda);
+        txtDataVenda.setBounds(30, 30, 90, 28);
+
+        lblPorcentagem.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblPorcentagem.setText(" %");
+        getContentPane().add(lblPorcentagem);
+        lblPorcentagem.setBounds(490, 30, 20, 30);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(-10, 0, 760, 400);
+        teladeFundo.setBounds(0, -10, 680, 440);
 
-        setSize(new java.awt.Dimension(646, 379));
+        setSize(new java.awt.Dimension(544, 418));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    FrmFuncionarios telaFuncionarios;
     FrmClientes telaPessoas;
     FrmImoveis telaImoveis;
-    
+
     private void btnAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarClienteActionPerformed
         if (telaPessoas == null) {
-            telaPessoas = new FrmClientes();
+            telaPessoas = FrmClientes.getTelaCliente();
             telaPessoas.setVisible(true);
         } else {
+            telaPessoas.dispose();
             telaPessoas.setVisible(true);
-            telaPessoas.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarClienteActionPerformed
 
     private void btnAdicionarImovelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarImovelActionPerformed
         if (telaImoveis == null) {
-            telaImoveis = new FrmImoveis();
+            telaImoveis = FrmImoveis.getTelaImovel();
             telaImoveis.setVisible(true);
         } else {
+            telaImoveis.dispose();
             telaImoveis.setVisible(true);
-            telaImoveis.setResizable(false);
         }
     }//GEN-LAST:event_btnAdicionarImovelActionPerformed
+
+    private void txtDataVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDataVendaActionPerformed
+
+    }//GEN-LAST:event_txtDataVendaActionPerformed
+
+    private void txtDataVendaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDataVendaKeyTyped
+        char validar = evt.getKeyChar();
+
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+
+            evt.consume();
+
+            JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtDataVendaKeyTyped
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        try {
+            venda.setDataVenda(CriarNovaData(txtDataVenda.getText()));
+            venda.setPercentualComissao(Integer.parseInt(txtComissao.getText()));
+            venda.setValor(Double.parseDouble(txtValor.getText()));
+            venda.setIdCliente(vetorClientes.get(cbxClientes.getSelectedIndex()));
+            venda.setIdFuncionario(vetorFuncionarios.get(cbxFuncionarios.getSelectedIndex()));
+            venda.setIdImovel(vetorImoveis.get(cbxImoveis.getSelectedIndex()));
+
+            if (txtDataVenda.getText().isEmpty() || txtComissao.getText().isEmpty() || txtValor.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else if(venda.getPercentualComissao() > 20 || venda.getPercentualComissao() <3){
+                JOptionPane.showMessageDialog(rootPane, "COMISSÃO INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                if (vendaBll.isData(txtDataVenda.getText())) {
+                    if (vendaBll.salvar(venda)) {
+                        JOptionPane.showMessageDialog(rootPane, "Venda realizada com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                        if (vendaBll.deixarImovelIndisponivel(venda.getIdImovel().getCodigo(), CriarNovaData(getDataAtual()))) {
+                            JOptionPane.showMessageDialog(rootPane, "Imovel não está mais disponivel para venda!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Erro ao mudar disponibilidade do imovel!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao realizar venda!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                    preencherCbxs();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "DATA DE VENDA INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO SALVAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        try {
+            if (txtDataVenda.getText().isEmpty() || txtComissao.getText().isEmpty() || txtValor.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (vendaBll.remover(vendaBll.consultaPorId(venda.getCodigo()))) {
+                    JOptionPane.showMessageDialog(rootPane, "Venda cancelada com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    if (vendaBll.deixarImovelDisponivel(venda.getIdImovel().getCodigo(), CriarNovaData("00/00/0000"))) {
+                        JOptionPane.showMessageDialog(rootPane, "Imovel agora está disponivel para venda!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao mudar disponibilidade do imovel!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao cancelar venda!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO REMOVER!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+        consultar();
+        limparCampos();
+        preencherCbxs();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        try {
+            venda.setDataVenda(CriarNovaData(txtDataVenda.getText()));
+            venda.setPercentualComissao(Integer.parseInt(txtComissao.getText()));
+            venda.setValor(Double.parseDouble(txtValor.getText()));
+            venda.setIdCliente(vetorClientes.get(cbxClientes.getSelectedIndex()));
+            venda.setIdFuncionario(vetorFuncionarios.get(cbxFuncionarios.getSelectedIndex()));
+            venda.setIdImovel(vetorImoveis.get(cbxImoveis.getSelectedIndex()));
+
+            if (txtDataVenda.getText().isEmpty() || txtComissao.getText().isEmpty() || txtValor.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (vendaBll.isData(txtDataVenda.getText())) {
+                    if (vendaBll.editar(venda)) {
+                        JOptionPane.showMessageDialog(rootPane, "Editado com sucesso!", "Mensagem!!!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao editar!", "Mensagem!!!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    consultar();
+                    limparCampos();
+                    preencherCbxs();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "DATA DE VENDA INVALIDO!", "Atenção!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "ERRO AO EDITAR!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        limparCampos();
+        preencherCbxs();
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void tblVendasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVendasMouseClicked
+        btnSalvar.setEnabled(false);
+        int linha = tblVendas.getSelectedRow();
+        Integer codigo = (Integer) tblVendas.getValueAt(linha, 0);
+        preencheCampos((int) codigo);
+    }//GEN-LAST:event_tblVendasMouseClicked
+
+    private void cbxImoveisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxImoveisItemStateChanged
+        venda.setIdImovel(vetorImoveis.get(cbxImoveis.getSelectedIndex()));
+        int id = venda.getIdImovel().getCodigo();
+        txtValor.setText(String.valueOf(df.format(vendaBll.getPreco(id))));
+        txtValor.setEnabled(true);
+    }//GEN-LAST:event_cbxImoveisItemStateChanged
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -212,10 +536,13 @@ public class FrmVendas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblPorcentagem;
     private javax.swing.JTable tblVendas;
     private javax.swing.JLabel teladeFundo;
     private javax.swing.JTextField txtComissao;
+    private javax.swing.JFormattedTextField txtDataVenda;
     private javax.swing.JTextField txtValor;
     // End of variables declaration//GEN-END:variables
 }

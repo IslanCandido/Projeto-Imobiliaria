@@ -12,6 +12,7 @@ public class Imovel {
     private int nSuites;
     private String descricao;
     private double preco;
+    private Proprietario idProprietario;
     private String situacao;
     private Date dtBaixa;
     private String motivo;
@@ -19,9 +20,10 @@ public class Imovel {
     public Imovel() {
         idCategoria = new Categoria();
         idEndereco = new Endereco();
+        idProprietario = new Proprietario();
     }
 
-    public Imovel(int codigo, Date dtInscricao, Categoria idCategoria, Endereco idEndereco, float metros, int nQuartos, int nSuites, String descricao, double preco, String situacao, Date dt_baixa, String motivo) {
+    public Imovel(int codigo, Date dtInscricao, Categoria idCategoria, Endereco idEndereco, float metros, int nQuartos, int nSuites, String descricao, double preco, Proprietario idProprietario, String situacao, Date dtBaixa, String motivo) {
         this.codigo = codigo;
         this.dtInscricao = dtInscricao;
         this.idCategoria = idCategoria;
@@ -31,14 +33,15 @@ public class Imovel {
         this.nSuites = nSuites;
         this.descricao = descricao;
         this.preco = preco;
+        this.idProprietario = idProprietario;
         this.situacao = situacao;
-        this.dtBaixa = dt_baixa;
+        this.dtBaixa = dtBaixa;
         this.motivo = motivo;
     }
 
     @Override
     public String toString() {
-        return getIdCategoria().getNome() + " - " + getDescricao();
+        return  getDtInscricao()+ " - "+getIdCategoria().getNome()+" : "+ getDescricao();
     }    
 
     public int getCodigo() {
@@ -113,6 +116,14 @@ public class Imovel {
         this.preco = preco;
     }
 
+    public Proprietario getIdProprietario() {
+        return idProprietario;
+    }
+
+    public void setIdProprietario(Proprietario idProprietario) {
+        this.idProprietario = idProprietario;
+    }
+
     public String getSituacao() {
         return situacao;
     }
@@ -121,12 +132,12 @@ public class Imovel {
         this.situacao = situacao;
     }
 
-    public Date getDt_baixa() {
+    public Date getDtBaixa() {
         return dtBaixa;
     }
 
-    public void setDt_baixa(Date dt_baixa) {
-        this.dtBaixa = dt_baixa;
+    public void setDtBaixa(Date dtBaixa) {
+        this.dtBaixa = dtBaixa;
     }
 
     public String getMotivo() {

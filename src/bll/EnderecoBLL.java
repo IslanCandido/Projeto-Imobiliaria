@@ -11,16 +11,16 @@ public class EnderecoBLL {
         dal = new EnderecoDAL();
     }
     
-    public void salvar(Endereco endereco) throws Exception {
-        dal.adicionar(endereco);
+    public boolean salvar(Endereco endereco) throws Exception {
+        return dal.adicionar(endereco);
     }
 
-    public void editar(Endereco endereco) throws Exception {
-        dal.alterar(endereco);
+    public boolean editar(Endereco endereco) throws Exception {
+        return dal.alterar(endereco);
     }
 
-    public void remover(Endereco endereco) throws Exception {
-        dal.excluir(endereco.getCodigo());
+    public boolean remover(Endereco endereco) throws Exception {
+        return dal.excluir(endereco.getCodigo());
     }
 
     public List<Endereco> consultar() {
@@ -28,7 +28,7 @@ public class EnderecoBLL {
     }
 
     public Endereco consultaPorId(int id) {
-        return dal.consultaPorId(id);
+        return dal.consultarPorId(id);
     }
     
     public boolean verificarCEPsIguais(String cep){
