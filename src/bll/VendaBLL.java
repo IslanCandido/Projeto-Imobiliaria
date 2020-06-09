@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Vector;
 import model.Cliente;
+import model.FormaPagamento;
 import model.Funcionario;
 import model.Imovel;
 import model.Venda;
@@ -44,8 +45,20 @@ public class VendaBLL {
         return dal.listarFuncionarios();
     }
 
+    public Vector<Imovel> listaImoveisVender(){
+        return dal.listarImoveisVender();
+    }
+    
+    public Vector<Imovel> listaImoveisAlugar(){
+        return dal.listarImoveisAlugar();
+    }
+    
     public Vector<Imovel> listaImoveis(){
         return dal.listarImoveis();
+    }
+    
+    public Vector<FormaPagamento> listarFormasDePagamento(){
+        return dal.listarFormasdePagamento();
     }
     
     public double getPreco(int id){

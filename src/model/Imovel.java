@@ -11,6 +11,7 @@ public class Imovel {
     private int nQuartos;
     private int nSuites;
     private String descricao;
+    private String tipo;
     private double preco;
     private Proprietario idProprietario;
     private String situacao;
@@ -23,7 +24,7 @@ public class Imovel {
         idProprietario = new Proprietario();
     }
 
-    public Imovel(int codigo, Date dtInscricao, Categoria idCategoria, Endereco idEndereco, float metros, int nQuartos, int nSuites, String descricao, double preco, Proprietario idProprietario, String situacao, Date dtBaixa, String motivo) {
+    public Imovel(int codigo, Date dtInscricao, Categoria idCategoria, Endereco idEndereco, float metros, int nQuartos, int nSuites, String descricao, String tipo, double preco, Proprietario idProprietario, String situacao, Date dtBaixa, String motivo) {
         this.codigo = codigo;
         this.dtInscricao = dtInscricao;
         this.idCategoria = idCategoria;
@@ -32,6 +33,7 @@ public class Imovel {
         this.nQuartos = nQuartos;
         this.nSuites = nSuites;
         this.descricao = descricao;
+        this.tipo = tipo;
         this.preco = preco;
         this.idProprietario = idProprietario;
         this.situacao = situacao;
@@ -41,7 +43,7 @@ public class Imovel {
 
     @Override
     public String toString() {
-        return  getDtInscricao()+ " - "+getIdCategoria().getNome()+" : "+ getDescricao();
+        return  getIdCategoria().getNome()+" : "+ getDescricao();
     }    
 
     public int getCodigo() {
@@ -107,7 +109,15 @@ public class Imovel {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+    
+    public String getTipo() {
+        return tipo;
+    }
 
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
     public double getPreco() {
         return preco;
     }
@@ -147,6 +157,8 @@ public class Imovel {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
+
+    
     
     
 }

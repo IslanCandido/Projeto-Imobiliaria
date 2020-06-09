@@ -109,7 +109,7 @@ public class FrmProprietarios extends javax.swing.JFrame {
         txtCpf.setText(proprietario.getCpf());
         txtEmail.setText(proprietario.getEmail());
         txtDataNascimento.setText(convertDate(proprietario.getDataNascimento()));
-        cbxContatos.setSelectedItem(vetorContatos.get(cbxContatos.getSelectedIndex()));
+        cbxContatos.setSelectedItem(proprietario.getIdContato());
     }
 
     private void limparCampos() {

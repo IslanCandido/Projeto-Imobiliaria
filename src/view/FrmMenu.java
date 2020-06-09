@@ -10,6 +10,8 @@ public class FrmMenu extends javax.swing.JFrame {
     FrmImoveis telaImoveis;
     FrmVendas telaVendas;
     FrmProprietarios telaPropietarios;
+    FrmRelatorios telaRelatorios;
+    FrmEstatisticas telaEstatisticas;
 
     public FrmMenu(String nome, String cargo) {
         initComponents();
@@ -164,6 +166,11 @@ public class FrmMenu extends javax.swing.JFrame {
         MenuItemRelatorios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_relatorios.png"))); // NOI18N
         MenuItemRelatorios.setText("Relatórios");
         MenuItemRelatorios.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuItemRelatorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemRelatoriosActionPerformed(evt);
+            }
+        });
         jMenu4.add(MenuItemRelatorios);
 
         jMenuBar1.add(jMenu4);
@@ -174,6 +181,11 @@ public class FrmMenu extends javax.swing.JFrame {
         MenuItemEstatistixas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_estatisticas.png"))); // NOI18N
         MenuItemEstatistixas.setText("Estátisticas");
         MenuItemEstatistixas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuItemEstatistixas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemEstatistixasActionPerformed(evt);
+            }
+        });
         jMenu5.add(MenuItemEstatistixas);
 
         jMenuBar1.add(jMenu5);
@@ -233,6 +245,24 @@ public class FrmMenu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_MenuItemProprietarioActionPerformed
+
+    private void MenuItemRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemRelatoriosActionPerformed
+        if (lblcargo.getText().equals("Diretor")) {
+            telaRelatorios = FrmRelatorios.getTelaRelatorio();
+            telaRelatorios.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_MenuItemRelatoriosActionPerformed
+
+    private void MenuItemEstatistixasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEstatistixasActionPerformed
+        if (lblcargo.getText().equals("Diretor")) {
+            telaEstatisticas = FrmEstatisticas.getTelaEstatistica();
+            telaEstatisticas.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "SEM PERMISSÃO PARA ACESSAR ESSA FUNCIONALIDADE!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_MenuItemEstatistixasActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

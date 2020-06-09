@@ -27,8 +27,8 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
     public boolean adicionar(Imovel imovel) {
         boolean result = false;
         try {
-            PreparedStatement ps = conexao.prepareStatement("INSERT INTO imoveis (imo_preco, imo_dt_inscriçao, imo_metros, imo_qntd_quartos, imo_qntd_suites, imo_situaçao, imo_descriçao, imo_dt_baixa,"
-                    + " imo_motivo_baixa, imo_fk_pro, imo_fk_cat, imo_fk_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = conexao.prepareStatement("INSERT INTO imoveis (imo_preco, imo_dt_inscriçao, imo_metros, imo_qntd_quartos, imo_qntd_suites, imo_situaçao, imo_descriçao, imo_tipo, imo_dt_baixa,"
+                    + " imo_motivo_baixa, imo_fk_pro, imo_fk_cat, imo_fk_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             ps.setDouble(1, imovel.getPreco());
             ps.setDate(2, new java.sql.Date(imovel.getDtInscricao().getTime()));
             ps.setFloat(3, imovel.getMetros());
@@ -36,11 +36,12 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
             ps.setInt(5, imovel.getnSuites());
             ps.setString(6, imovel.getSituacao());
             ps.setString(7, imovel.getDescricao());
-            ps.setDate(8, new java.sql.Date(imovel.getDtBaixa().getTime()));
-            ps.setString(9, imovel.getMotivo());
-            ps.setInt(10, imovel.getIdProprietario().getCodigo());
-            ps.setInt(11, imovel.getIdCategoria().getCodigo());
-            ps.setInt(12, imovel.getIdEndereco().getCodigo());
+            ps.setString(8, imovel.getTipo());
+            ps.setDate(9, new java.sql.Date(imovel.getDtBaixa().getTime()));
+            ps.setString(10, imovel.getMotivo());
+            ps.setInt(11, imovel.getIdProprietario().getCodigo());
+            ps.setInt(12, imovel.getIdCategoria().getCodigo());
+            ps.setInt(13, imovel.getIdEndereco().getCodigo());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO SALVAR DADOS! " + e);
@@ -66,7 +67,7 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
         boolean result = false;
         try {
             PreparedStatement ps = conexao.prepareStatement("UPDATE imoveis SET imo_preco = ?, imo_dt_inscriçao = ?, imo_metros = ?, imo_qntd_quartos = ?, imo_qntd_suites = ?,"
-                    + " imo_situaçao = ?, imo_descriçao = ?, imo_dt_baixa = ?, imo_motivo_baixa = ?, imo_fk_pro = ?, imo_fk_cat = ?, imo_fk_end = ? WHERE imo_id = ?");
+                    + " imo_situaçao = ?, imo_descriçao = ?, imo_tipo = ?, imo_dt_baixa = ?, imo_motivo_baixa = ?, imo_fk_pro = ?, imo_fk_cat = ?, imo_fk_end = ? WHERE imo_id = ?");
 
             ps.setDouble(1, imovel.getPreco());
             ps.setDate(2, new java.sql.Date(imovel.getDtInscricao().getTime()));
@@ -75,12 +76,13 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
             ps.setInt(5, imovel.getnSuites());
             ps.setString(6, imovel.getSituacao());
             ps.setString(7, imovel.getDescricao());
-            ps.setDate(8, new java.sql.Date(imovel.getDtBaixa().getTime()));
-            ps.setString(9, imovel.getMotivo());
-            ps.setInt(10, imovel.getIdProprietario().getCodigo());
-            ps.setInt(11, imovel.getIdCategoria().getCodigo());
-            ps.setInt(12, imovel.getIdEndereco().getCodigo());
-            ps.setInt(13, imovel.getCodigo());
+            ps.setString(8, imovel.getTipo());
+            ps.setDate(9, new java.sql.Date(imovel.getDtBaixa().getTime()));
+            ps.setString(10, imovel.getMotivo());
+            ps.setInt(11, imovel.getIdProprietario().getCodigo());
+            ps.setInt(12, imovel.getIdCategoria().getCodigo());
+            ps.setInt(13, imovel.getIdEndereco().getCodigo());
+            ps.setInt(14, imovel.getCodigo());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO EDITAR DADOS!");
@@ -108,6 +110,7 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
                 imovel.setnSuites(rs.getInt("imo_qntd_suites"));
                 imovel.setSituacao(rs.getString("imo_situaçao"));
                 imovel.setDescricao(rs.getString("imo_descriçao"));
+                imovel.setTipo(rs.getString("imo_tipo"));
                 imovel.setDtBaixa(rs.getDate("imo_dt_baixa"));
                 imovel.setMotivo(rs.getString("imo_motivo_baixa"));
 
@@ -165,6 +168,7 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
                 imovel.setnSuites(rs.getInt("imo_qntd_suites"));
                 imovel.setSituacao(rs.getString("imo_situaçao"));
                 imovel.setDescricao(rs.getString("imo_descriçao"));
+                imovel.setTipo(rs.getString("imo_tipo"));
                 imovel.setDtBaixa(rs.getDate("imo_dt_baixa"));
                 imovel.setMotivo(rs.getString("imo_motivo_baixa"));
 
@@ -221,6 +225,7 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
                 imovel.setnSuites(rs.getInt("imo_qntd_suites"));
                 imovel.setSituacao(rs.getString("imo_situaçao"));
                 imovel.setDescricao(rs.getString("imo_descriçao"));
+                imovel.setTipo(rs.getString("imo_tipo"));
                 imovel.setDtBaixa(rs.getDate("imo_dt_baixa"));
                 imovel.setMotivo(rs.getString("imo_motivo_baixa"));
 
@@ -280,6 +285,7 @@ public class ImovelDAL implements BasicoDAL<Imovel>{
                 imovel.setnSuites(rs.getInt("imo_qntd_suites"));
                 imovel.setSituacao(rs.getString("imo_situaçao"));
                 imovel.setDescricao(rs.getString("imo_descriçao"));
+                imovel.setTipo(rs.getString("imo_tipo"));
                 imovel.setDtBaixa(rs.getDate("imo_dt_baixa"));
                 imovel.setMotivo(rs.getString("imo_motivo_baixa"));
 

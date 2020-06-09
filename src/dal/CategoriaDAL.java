@@ -74,7 +74,7 @@ public class CategoriaDAL implements BasicoDAL<Categoria>{
                 categorias.add(categoria);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR TODOS OS DADOS!" + e);
+            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR TODOS OS DADOS!");
         }
         return categorias;
     }

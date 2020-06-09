@@ -77,6 +77,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         modelo.addColumn("Quartos");
         modelo.addColumn("Suítes");
         modelo.addColumn("Descrição");
+        modelo.addColumn("Tipo");
         modelo.addColumn("Preço");
         modelo.addColumn("Proprietário");
         modelo.addColumn("Situação");
@@ -92,6 +93,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         tblImoveis.getColumnModel().getColumn(8).setPreferredWidth(50);
         tblImoveis.getColumnModel().getColumn(9).setPreferredWidth(50);
         tblImoveis.getColumnModel().getColumn(10).setPreferredWidth(50);
+        tblImoveis.getColumnModel().getColumn(11).setPreferredWidth(50);
     }
 
     private void consultar() {
@@ -111,6 +113,7 @@ public class FrmImoveis extends javax.swing.JFrame {
                     lista.get(i).getnQuartos(),
                     lista.get(i).getnSuites(),
                     lista.get(i).getDescricao(),
+                    lista.get(i).getTipo(),
                     lista.get(i).getPreco(),
                     lista.get(i).getIdProprietario().getNome(),
                     lista.get(i).getSituacao()
@@ -131,6 +134,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         txtNumeroSuites.setText(String.valueOf(imovel.getnSuites()));
         txtPreco.setText(String.valueOf(imovel.getPreco()));
         txtDescricao.setText(imovel.getDescricao());
+        cbxTipoVenda.setSelectedItem(imovel.getTipo());
         cbxProprietarios.setSelectedItem(imovel.getIdProprietario());
         cbxSituacao.setSelectedItem(imovel.getSituacao());
         txtMotivo.setText(imovel.getMotivo());
@@ -152,6 +156,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         txtNumeroSuites.setText("");
         txtPreco.setText("");
         txtDescricao.setText("");
+        cbxTipoVenda.setSelectedIndex(0);
         cbxProprietarios.setSelectedIndex(0);
         cbxSituacao.setSelectedIndex(0);
         txtDataBaixa.setValue("");
@@ -175,6 +180,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         txtDataInscrição.setText(formatador.format(data));
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -216,6 +222,8 @@ public class FrmImoveis extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         cbxProprietarios = new javax.swing.JComboBox<>();
         btnAdicionarEnderecos = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        cbxTipoVenda = new javax.swing.JComboBox<>();
         teladeFundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -260,7 +268,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         cbxCategorias.setBounds(170, 30, 120, 28);
 
         getContentPane().add(cbxEnderecos);
-        cbxEnderecos.setBounds(360, 30, 280, 28);
+        cbxEnderecos.setBounds(360, 30, 330, 28);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText(" Metros");
@@ -270,7 +278,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText(" Nº Suítes");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(280, 60, 60, 20);
+        jLabel5.setBounds(260, 60, 60, 20);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText(" NºQuartos");
@@ -291,7 +299,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNumeroSuites);
-        txtNumeroSuites.setBounds(280, 80, 90, 28);
+        txtNumeroSuites.setBounds(260, 80, 70, 28);
 
         txtNumeroQuartos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -299,12 +307,12 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNumeroQuartos);
-        txtNumeroQuartos.setBounds(160, 80, 90, 28);
+        txtNumeroQuartos.setBounds(160, 80, 70, 28);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText(" Descrição");
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(400, 60, 60, 20);
+        jLabel7.setBounds(360, 60, 60, 20);
 
         txtMotivo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -312,7 +320,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtMotivo);
-        txtMotivo.setBounds(600, 130, 220, 28);
+        txtMotivo.setBounds(600, 130, 270, 28);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText(" Situação");
@@ -353,7 +361,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDescricao);
-        txtDescricao.setBounds(400, 80, 420, 28);
+        txtDescricao.setBounds(360, 80, 370, 28);
 
         tblImoveis.setModel(modelo);
         tblImoveis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -365,7 +373,7 @@ public class FrmImoveis extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblImoveis);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 170, 840, 180);
+        jScrollPane2.setBounds(10, 170, 890, 180);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_salvar.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -375,7 +383,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(530, 360, 55, 41);
+        btnSalvar.setBounds(580, 360, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_excluir.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -385,7 +393,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(600, 360, 55, 41);
+        btnExcluir.setBounds(650, 360, 55, 41);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_editar.png"))); // NOI18N
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -395,7 +403,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEditar);
-        btnEditar.setBounds(670, 360, 55, 41);
+        btnEditar.setBounds(720, 360, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -405,7 +413,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(740, 360, 55, 41);
+        btnLimpar.setBounds(790, 360, 55, 41);
 
         btnAdicionarCategoria.setText("+");
         btnAdicionarCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -425,12 +433,12 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarProprietario);
-        btnAdicionarProprietario.setBounds(640, 30, 41, 28);
+        btnAdicionarProprietario.setBounds(690, 30, 41, 28);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel11.setText(" Preço");
         getContentPane().add(jLabel11);
-        jLabel11.setBounds(710, 10, 50, 20);
+        jLabel11.setBounds(760, 10, 50, 20);
 
         txtPreco.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -438,12 +446,12 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtPreco);
-        txtPreco.setBounds(710, 30, 90, 28);
+        txtPreco.setBounds(760, 30, 90, 28);
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel12.setText(" R$");
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(800, 30, 20, 30);
+        jLabel12.setBounds(850, 30, 20, 30);
 
         cbxSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Disponivel", "Indisponivel" }));
         cbxSituacao.addItemListener(new java.awt.event.ItemListener() {
@@ -465,7 +473,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostrarDisponiveis);
-        btnMostrarDisponiveis.setBounds(20, 360, 150, 40);
+        btnMostrarDisponiveis.setBounds(40, 360, 150, 40);
 
         btnMostrarIndisponiveis.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnMostrarIndisponiveis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_indisponivel.png"))); // NOI18N
@@ -478,7 +486,7 @@ public class FrmImoveis extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostrarIndisponiveis);
-        btnMostrarIndisponiveis.setBounds(180, 360, 150, 40);
+        btnMostrarIndisponiveis.setBounds(200, 360, 150, 40);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel13.setText("Proprietário");
@@ -498,11 +506,20 @@ public class FrmImoveis extends javax.swing.JFrame {
         getContentPane().add(btnAdicionarEnderecos);
         btnAdicionarEnderecos.setBounds(260, 130, 41, 28);
 
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel14.setText("Tipo");
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(760, 60, 24, 20);
+
+        cbxTipoVenda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Vender", "Alugar" }));
+        getContentPane().add(cbxTipoVenda);
+        cbxTipoVenda.setBounds(760, 80, 110, 28);
+
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, 0, 910, 450);
+        teladeFundo.setBounds(0, 0, 930, 450);
 
-        setSize(new java.awt.Dimension(868, 438));
+        setSize(new java.awt.Dimension(921, 438));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -573,6 +590,7 @@ public class FrmImoveis extends javax.swing.JFrame {
                     lista.get(i).getnQuartos(),
                     lista.get(i).getnSuites(),
                     lista.get(i).getDescricao(),
+                    lista.get(i).getTipo(),
                     lista.get(i).getPreco(),
                     lista.get(i).getIdProprietario().getNome(),
                     lista.get(i).getSituacao()
@@ -597,9 +615,10 @@ public class FrmImoveis extends javax.swing.JFrame {
             imovel.setSituacao(cbxSituacao.getSelectedItem().toString());
             imovel.setnQuartos(Integer.parseInt(txtNumeroQuartos.getText()));
             imovel.setnSuites(Integer.parseInt(txtNumeroSuites.getText()));
-
+            imovel.setTipo(cbxTipoVenda.getSelectedItem().toString());
+            
             if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
-                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione") || cbxTipoVenda.getSelectedItem().equals("Selecione")
                     || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -625,7 +644,7 @@ public class FrmImoveis extends javax.swing.JFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         try {
             if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
-                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione") || cbxTipoVenda.getSelectedItem().equals("Selecione")
                     || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -656,9 +675,10 @@ public class FrmImoveis extends javax.swing.JFrame {
             imovel.setSituacao(cbxSituacao.getSelectedItem().toString());
             imovel.setnQuartos(Integer.parseInt(txtNumeroQuartos.getText()));
             imovel.setnSuites(Integer.parseInt(txtNumeroSuites.getText()));
+            imovel.setTipo(cbxTipoVenda.getSelectedItem().toString());
 
             if (txtDescricao.getText().isEmpty() || txtDataInscrição.getText().isEmpty() || txtMetros.getText().isEmpty()
-                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione")
+                    || txtPreco.getText().isEmpty() || cbxSituacao.getSelectedItem().equals("Selecione") || cbxTipoVenda.getSelectedItem().equals("Selecione")
                     || txtNumeroQuartos.getText().isEmpty() || txtNumeroSuites.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -710,6 +730,7 @@ public class FrmImoveis extends javax.swing.JFrame {
                     lista.get(i).getnQuartos(),
                     lista.get(i).getnSuites(),
                     lista.get(i).getDescricao(),
+                    lista.get(i).getTipo(),
                     lista.get(i).getPreco(),
                     lista.get(i).getIdProprietario().getNome(),
                     lista.get(i).getSituacao(),
@@ -791,7 +812,7 @@ public class FrmImoveis extends javax.swing.JFrame {
     private void txtPrecoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecoKeyTyped
         Character ch = evt.getKeyChar();
         int comprimentoDeCampo = txtPreco.getText().length();
-        if (comprimentoDeCampo >= 6) {
+        if (comprimentoDeCampo > 6) {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "LIMITE DE 6 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
@@ -873,11 +894,13 @@ public class FrmImoveis extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxEnderecos;
     private javax.swing.JComboBox<String> cbxProprietarios;
     private javax.swing.JComboBox<String> cbxSituacao;
+    private javax.swing.JComboBox<String> cbxTipoVenda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

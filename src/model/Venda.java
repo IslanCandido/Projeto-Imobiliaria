@@ -3,26 +3,35 @@ package model;
 import java.sql.Date;
 
 public class Venda {
+
     private int codigo;
     private Date dataVenda;
     private Funcionario idFuncionario;
     private Imovel idImovel;
     private Cliente idCliente;
+    private FormaPagamento idFormaPagamento;
     private double valor;
     private int percentualComissao;
+    private int mesesPagos;
 
     public Venda() {
+        idFuncionario = new Funcionario();
+        idImovel = new Imovel();
+        idCliente = new Cliente();
+        idFormaPagamento = new FormaPagamento();
     }
 
-    public Venda(int codigo, Date dataVenda, Funcionario idFuncionario, Imovel idImovel, Cliente idCliente, double valor, int percentualComissao) {
+    public Venda(int codigo, Date dataVenda, Funcionario idFuncionario, Imovel idImovel, Cliente idCliente, FormaPagamento idFormaPagamento, double valor, int percentualComissao, int mesesPagos) {
         this.codigo = codigo;
         this.dataVenda = dataVenda;
         this.idFuncionario = idFuncionario;
         this.idImovel = idImovel;
         this.idCliente = idCliente;
+        this.idFormaPagamento = idFormaPagamento;
         this.valor = valor;
         this.percentualComissao = percentualComissao;
-    }  
+        this.mesesPagos = mesesPagos;
+    }
 
     public int getCodigo() {
         return codigo;
@@ -64,6 +73,14 @@ public class Venda {
         this.idCliente = idCliente;
     }
 
+    public FormaPagamento getIdFormaPagamento() {
+        return idFormaPagamento;
+    }
+
+    public void setIdFormaPagamento(FormaPagamento idFormaPagamento) {
+        this.idFormaPagamento = idFormaPagamento;
+    }
+
     public double getValor() {
         return valor;
     }
@@ -79,6 +96,14 @@ public class Venda {
     public void setPercentualComissao(int percentualComissao) {
         this.percentualComissao = percentualComissao;
     }
-    
-    
+
+    public int getMesesPagos() {
+        return mesesPagos;
+    }
+
+    public void setMesesPagos(int mesesPagos) {
+        this.mesesPagos = mesesPagos;
+    }
+
+   
 }
