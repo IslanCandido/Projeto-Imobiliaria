@@ -93,6 +93,7 @@ public class VendaDAL implements BasicoDAL<Venda> {
                     + "inner join clientes c on v.ven_fk_cli = c.cli_id \n"
                     + "inner join funcionarios f on v.ven_fk_fun = f.fun_id \n"
                     + "inner join imoveis i on v.ven_fk_imo = i.imo_id\n"
+                    + "inner join categorias ct on i.imo_fk_cat = ct.cat_id \n"
                     + "inner join pagamentos p on v.ven_fk_pag = p.pag_id");
 
             while (rs.next()) {
@@ -138,8 +139,13 @@ public class VendaDAL implements BasicoDAL<Venda> {
                 imovel.setDtBaixa(rs.getDate("imo_dt_baixa"));
                 imovel.setMotivo(rs.getString("imo_motivo_baixa"));
                 imovel.getIdProprietario();
-                imovel.getIdCategoria();
                 imovel.getIdEndereco();
+                
+                Categoria categoria = new Categoria();
+                categoria.setCodigo(rs.getInt("cat_id"));
+                categoria.setNome(rs.getString("cat_nome"));
+                
+                imovel.setIdCategoria(categoria);
 
                 FormaPagamento formaPagamento = new FormaPagamento();
                 formaPagamento.setCodigo(rs.getInt("pag_id"));
@@ -303,7 +309,7 @@ public class VendaDAL implements BasicoDAL<Venda> {
                 funcionarios.add(funcionario);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR FUNCIONÁRIOS! "+e);
+            JOptionPane.showMessageDialog(null, "ERRO AO MOSTRAR FUNCIONÁRIOS! " + e);
         }
         return funcionarios;
     }
@@ -423,7 +429,7 @@ public class VendaDAL implements BasicoDAL<Venda> {
         }
         return imoveisAlugar;
     }
-    
+
     public Vector<Imovel> listarImoveis() {
         Vector<Imovel> imoveisAlugar = new Vector<Imovel>();
         try {

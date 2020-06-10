@@ -29,7 +29,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
         criarTabela();
         iniciar();
     }
-    
+
     private Date CriarNovaData(String data) {
         if (data == null) {
             return null;
@@ -44,7 +44,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
         return a;
     }
 
-    private void iniciar(){
+    private void iniciar() {
         txtTipo.setVisible(false);
         lblTipoRelatorio.setVisible(false);
         txtDatas.setVisible(false);
@@ -217,32 +217,75 @@ public class FrmRelatorios extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "SELECIONE UM TIPO DE RELATÓRIO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 1) {
-                consultar(relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()));
-                
+                if (relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 2) {
-                consultar(relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())));
+                if (relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtDatas.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 3) {
-                consultar(relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()));
+                if (relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 4) {
-
+                if (relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 5) {
-                consultar(relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()));
+                if (relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 6) {
-                consultar(relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()));
+                if (relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 7) {
-                consultar(relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()));
+                if (relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtTipo.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 8) {
-
+                if (relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())).size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                    txtDatas.setText("");
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())));
+                }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 9) {
-                consultar(relatorioBLL.relatorioImoveisCadastrados());
+                if (relatorioBLL.relatorioImoveisCadastrados().size() <= 0) {
+                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    consultar(relatorioBLL.relatorioImoveisCadastrados());
+                }
             }
 
         } catch (Exception e) {
@@ -270,7 +313,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Cidade");
             limpar();
         }
@@ -279,7 +322,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(true);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Data de Inscrição");
             limpar();
         }
@@ -288,7 +331,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Categoria");
             limpar();
         }
@@ -297,7 +340,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("CPF do corretor");
             limpar();
         }
@@ -306,9 +349,9 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Situação");
-            
+
             limpar();
         }
         if (cbxTipoRelatorio.getSelectedIndex() == 6) {
@@ -316,7 +359,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Motivo de baixa");
             limpar();
         }
@@ -325,7 +368,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("CPF do cliente");
             limpar();
         }
@@ -334,7 +377,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtDatas.setVisible(true);
             lblTipoRelatorio.setVisible(true);
             btnGerarRelatorio.setVisible(true);
-            
+
             lblTipoRelatorio.setText("Data de venda");
             limpar();
         }
@@ -342,7 +385,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtTipo.setVisible(false);
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(false);
-            btnGerarRelatorio.setVisible(true);  
+            btnGerarRelatorio.setVisible(true);
             limpar();
         }
     }//GEN-LAST:event_cbxTipoRelatorioItemStateChanged

@@ -46,7 +46,7 @@ public class FrmEstatisticas extends javax.swing.JFrame {
         jScrollPane2.setBounds(10, 160, 840, 260);
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione um tipo de estatística", "Estatística de imóveis por venda (mensal e anual)", "Estatísticas de comissões recebidas por corretor" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione um tipo de estatística", "Estatística de imóveis por venda mensal", "Estatística de imóveis por venda  anual", "Estatísticas de comissões recebidas por corretor" }));
         getContentPane().add(jComboBox1);
         jComboBox1.setBounds(30, 20, 340, 40);
 

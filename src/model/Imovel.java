@@ -43,7 +43,7 @@ public class Imovel {
 
     @Override
     public String toString() {
-        return  getIdCategoria().getNome()+" : "+ getDescricao();
+        return  getIdCategoria().getNome()+" - "+getDescricao();
     }    
 
     public int getCodigo() {

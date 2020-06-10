@@ -211,7 +211,9 @@ public class RelatoriosDAL {
         List<Imovel> imoveis = new ArrayList<>();
         try {
             PreparedStatement ps = conexao.prepareStatement("select * from imoveis i\n"
+                    + "inner join proprietarios p on i.imo_fk_pro = p.pro_id \n"
                     + "inner join categorias c on i.imo_fk_cat = c.cat_id\n"
+                    + "inner join enderecos e on i.imo_fk_end = e.end_id\n"
                     + "inner join vendas v on v.ven_fk_imo = i.imo_id\n"
                     + "inner join funcionarios f on v.ven_fk_fun = f.fun_id\n"
                     + "where f.fun_cpf = ?");
@@ -255,6 +257,31 @@ public class RelatoriosDAL {
                 endereco.setBairro(rs.getString("end_bairro"));
                 endereco.setComplemento(rs.getString("end_complemento"));
 
+                Venda venda = new Venda();
+                venda.setCodigo(rs.getInt("ven_id"));
+                venda.setValor(rs.getDouble("ven_valor_venda"));
+                venda.setDataVenda(rs.getDate("ven_dt_venda"));
+                venda.setPercentualComissao(rs.getInt("ven_percentual_comissao"));
+                venda.setMesesPagos(rs.getInt("ven_meses_pagos"));
+                venda.getIdCliente();
+                venda.getIdImovel();
+                venda.getIdFormaPagamento();
+                
+                Funcionario funcionario = new Funcionario();
+                funcionario.setCodigo(rs.getInt("fun_id"));
+                funcionario.setNome(rs.getString("fun_nome"));
+                funcionario.setCpf(rs.getString("fun_cpf"));
+                funcionario.setEmail(rs.getString("fun_email"));
+                funcionario.setDataNascimento(rs.getDate("fun_dt_nascimento"));
+                funcionario.setPis(rs.getString("fun_pis"));
+                funcionario.setnContrato(rs.getString("fun_n_contrato"));
+                funcionario.setSenha(rs.getString("fun_senha"));
+                funcionario.getIdEndereco();
+                funcionario.getIdContato();
+                funcionario.getIdCargo();
+                
+                venda.setIdFuncionario(funcionario);
+                
                 imovel.setIdProprietario(proprietario);
                 imovel.setIdCategoria(categoria);
                 imovel.setIdEndereco(endereco);
@@ -395,7 +422,7 @@ public class RelatoriosDAL {
                     + "inner join categorias c on i.imo_fk_cat = c.cat_id\n"
                     + "inner join enderecos e on i.imo_fk_end = e.end_id\n"
                     + "inner join vendas v on v.ven_fk_imo = i.imo_id\n"
-                    + "inner join clientes cl on v.ven_fk_cli = cl.cli_id"
+                    + "inner join clientes cl on v.ven_fk_cli = cl.cli_id\n"
                     + "where cl.cli_cpf = ?");
 
             ps.setString(1, cpfCliente);
@@ -443,19 +470,9 @@ public class RelatoriosDAL {
                 venda.setDataVenda(rs.getDate("ven_dt_venda"));
                 venda.setPercentualComissao(rs.getInt("ven_percentual_comissao"));
                 venda.setMesesPagos(rs.getInt("ven_meses_pagos"));
-
-                Funcionario funcionario = new Funcionario();
-                funcionario.setCodigo(rs.getInt("fun_id"));
-                funcionario.setNome(rs.getString("fun_nome"));
-                funcionario.setCpf(rs.getString("fun_cpf"));
-                funcionario.setEmail(rs.getString("fun_email"));
-                funcionario.setDataNascimento(rs.getDate("fun_dt_nascimento"));
-                funcionario.setPis(rs.getString("fun_pis"));
-                funcionario.setnContrato(rs.getString("fun_n_contrato"));
-                funcionario.setSenha(rs.getString("fun_senha"));
-                funcionario.getIdCargo();
-                funcionario.getIdContato();
-                funcionario.getIdEndereco();
+                venda.getIdFuncionario();
+                venda.getIdImovel();
+                venda.getIdFormaPagamento();
 
                 Cliente cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cli_id"));
@@ -466,15 +483,8 @@ public class RelatoriosDAL {
                 cliente.getIdContato();
                 cliente.getIdEndereco();
 
-                FormaPagamento formaPagamento = new FormaPagamento();
-                formaPagamento.setCodigo(rs.getInt("pag_id"));
-                formaPagamento.setFormaPagamento(rs.getString("pag_forma_pagamento"));
-
                 venda.setIdCliente(cliente);
-                venda.setIdFuncionario(funcionario);
-                venda.setIdImovel(imovel);
-                venda.setIdFormaPagamento(formaPagamento);
-                
+
                 imovel.setIdProprietario(proprietario);
                 imovel.setIdCategoria(categoria);
                 imovel.setIdEndereco(endereco);
@@ -490,9 +500,15 @@ public class RelatoriosDAL {
     public List<Imovel> mostrarImoveisPorDataVenda(Date dataVenda) {
         List<Imovel> imoveis = new ArrayList<>();
         try {
-            PreparedStatement ps = conexao.prepareStatement("");
+            PreparedStatement ps = conexao.prepareStatement("select * from imoveis i\n"
+                    + "inner join proprietarios p on i.imo_fk_pro = p.pro_id\n"
+                    + "inner join enderecos e on i.imo_fk_end = e.end_id \n"
+                    + "inner join categorias c on i.imo_fk_cat = c.cat_id\n"
+                    + "inner join vendas v on v.ven_fk_imo = i.imo_id\n"
+                    + "WHERE v.ven_dt_venda BETWEEN ? AND ?");
 
             ps.setDate(1, dataVenda);
+            ps.setDate(2, dataVenda);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -518,10 +534,6 @@ public class RelatoriosDAL {
                 proprietario.setNome(rs.getString("pro_nome"));
                 proprietario.getIdContato();
 
-                Categoria categoria = new Categoria();
-                categoria.setCodigo(rs.getInt("cat_id"));
-                categoria.setNome(rs.getString("cat_nome"));
-
                 Endereco endereco = new Endereco();
                 endereco.setCodigo(rs.getInt("end_id"));
                 endereco.setLogradouro(rs.getString("end_logradouro"));
@@ -531,9 +543,24 @@ public class RelatoriosDAL {
                 endereco.setBairro(rs.getString("end_bairro"));
                 endereco.setComplemento(rs.getString("end_complemento"));
 
+                Categoria categoria = new Categoria();
+                categoria.setCodigo(rs.getInt("cat_id"));
+                categoria.setNome(rs.getString("cat_nome"));
+
                 imovel.setIdProprietario(proprietario);
                 imovel.setIdCategoria(categoria);
                 imovel.setIdEndereco(endereco);
+
+                Venda venda = new Venda();
+                venda.setCodigo(rs.getInt("ven_id"));
+                venda.setValor(rs.getDouble("ven_valor_venda"));
+                venda.setDataVenda(rs.getDate("ven_dt_venda"));
+                venda.setPercentualComissao(rs.getInt("ven_percentual_comissao"));
+                venda.setMesesPagos(rs.getInt("ven_meses_pagos"));
+                venda.getIdCliente();
+                venda.getIdFuncionario();
+                venda.getIdImovel();
+                venda.getIdFormaPagamento();
 
                 imoveis.add(imovel);
             }

@@ -140,7 +140,6 @@ public class FrmImoveis extends javax.swing.JFrame {
         txtMotivo.setText(imovel.getMotivo());
         if (cbxSituacao.getSelectedItem().equals("Disponivel")) {
             txtDataBaixa.setText("00/00/0000");
-            
         } else {
             txtDataBaixa.setText(convertDate(imovel.getDtBaixa()));
         }

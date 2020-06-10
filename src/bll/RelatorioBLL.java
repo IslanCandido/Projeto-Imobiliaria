@@ -41,9 +41,9 @@ public class RelatorioBLL {
         return dal.mostrarImoveisPorCliente(cpfCliente);
     }
     
-    /*public List<Imovel> relatorioImoveisPorDataVenda(Date dataVenda){
+    public List<Imovel> relatorioImoveisPorDataVenda(Date dataVenda){
         return dal.mostrarImoveisPorDataVenda(dataVenda);
-    }*/
+    }
     
     public List<Imovel> relatorioImoveisCadastrados(){
         return dal.mostrarImoveisCadastrados();

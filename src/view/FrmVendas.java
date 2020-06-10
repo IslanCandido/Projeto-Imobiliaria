@@ -158,7 +158,7 @@ public class FrmVendas extends javax.swing.JFrame {
                     lista.get(i).getDataVenda(),
                     lista.get(i).getIdFuncionario().getNome(),
                     lista.get(i).getIdCliente().getNome(),
-                    lista.get(i).getIdImovel().toString(),
+                    lista.get(i).getIdImovel().getIdCategoria().getNome(),
                     lista.get(i).getValor(),
                     lista.get(i).getIdFormaPagamento().getFormaPagamento(),
                     lista.get(i).getPercentualComissao(),
@@ -177,7 +177,6 @@ public class FrmVendas extends javax.swing.JFrame {
         txtDataVenda.setText(convertDate(venda.getDataVenda()));
         cbxClientes.setSelectedItem(venda.getIdCliente());
         cbxFuncionarios.setSelectedItem(venda.getIdFuncionario());
-        cbxImoveis.setSelectedItem(venda.getIdImovel());
         cbxFormasDePagamento.setSelectedItem(venda.getIdFormaPagamento());
         txtMesesPagos.setText(String.valueOf(venda.getMesesPagos()));
     }
@@ -280,12 +279,12 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Comissão");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(500, 60, 110, 20);
+        jLabel1.setBounds(560, 60, 110, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Valor");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(500, 160, 40, 20);
+        jLabel2.setBounds(560, 160, 40, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText(" Cliente");
@@ -303,10 +302,10 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel5.setBounds(200, 60, 80, 20);
 
         getContentPane().add(cbxFuncionarios);
-        cbxFuncionarios.setBounds(200, 80, 270, 28);
+        cbxFuncionarios.setBounds(200, 80, 330, 28);
 
         getContentPane().add(cbxClientes);
-        cbxClientes.setBounds(40, 180, 260, 28);
+        cbxClientes.setBounds(40, 180, 320, 28);
 
         cbxImoveis.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -314,11 +313,11 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(cbxImoveis);
-        cbxImoveis.setBounds(40, 130, 390, 28);
+        cbxImoveis.setBounds(40, 130, 450, 28);
         getContentPane().add(txtValor);
-        txtValor.setBounds(500, 180, 150, 28);
+        txtValor.setBounds(560, 180, 150, 28);
         getContentPane().add(txtComissao);
-        txtComissao.setBounds(500, 80, 150, 28);
+        txtComissao.setBounds(560, 80, 150, 28);
 
         tblVendas.setModel(modelo);
         tblVendas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -330,7 +329,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblVendas);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 230, 690, 160);
+        jScrollPane2.setBounds(10, 230, 750, 160);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda_realizada.png"))); // NOI18N
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -340,7 +339,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(420, 400, 55, 41);
+        btnSalvar.setBounds(470, 400, 55, 41);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_venda_cancelada.png"))); // NOI18N
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -350,7 +349,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnExcluir);
-        btnExcluir.setBounds(490, 400, 55, 41);
+        btnExcluir.setBounds(540, 400, 55, 41);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -360,7 +359,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(560, 400, 55, 41);
+        btnLimpar.setBounds(610, 400, 55, 41);
 
         btnAdicionarCliente.setText("+");
         btnAdicionarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -370,7 +369,7 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarCliente);
-        btnAdicionarCliente.setBounds(300, 180, 41, 28);
+        btnAdicionarCliente.setBounds(360, 180, 41, 28);
 
         btnAdicionarImovel.setText("+");
         btnAdicionarImovel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -380,12 +379,12 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarImovel);
-        btnAdicionarImovel.setBounds(430, 130, 41, 28);
+        btnAdicionarImovel.setBounds(490, 130, 41, 28);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText(" R$");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(650, 180, 20, 30);
+        jLabel6.setBounds(710, 180, 20, 30);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText(" Data de Venda");
@@ -413,15 +412,15 @@ public class FrmVendas extends javax.swing.JFrame {
         lblPorcentagem.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblPorcentagem.setText(" %");
         getContentPane().add(lblPorcentagem);
-        lblPorcentagem.setBounds(650, 80, 20, 30);
+        lblPorcentagem.setBounds(710, 80, 20, 30);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText("Forma de pagamento");
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(500, 110, 121, 20);
+        jLabel8.setBounds(560, 110, 121, 20);
 
         getContentPane().add(cbxFormasDePagamento);
-        cbxFormasDePagamento.setBounds(500, 130, 130, 28);
+        cbxFormasDePagamento.setBounds(560, 130, 130, 28);
 
         btnAdicionarFormaPagamento.setText("+");
         btnAdicionarFormaPagamento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -431,15 +430,15 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdicionarFormaPagamento);
-        btnAdicionarFormaPagamento.setBounds(630, 130, 41, 28);
+        btnAdicionarFormaPagamento.setBounds(690, 130, 41, 28);
         getContentPane().add(txtMesesPagos);
-        txtMesesPagos.setBounds(370, 180, 100, 28);
+        txtMesesPagos.setBounds(430, 180, 100, 28);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel9.setText("Meses Pagos");
         jLabel9.setToolTipText("");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(370, 160, 80, 20);
+        jLabel9.setBounds(430, 160, 80, 20);
 
         cbxTipodeVenda.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         cbxTipodeVenda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Venda", "Aluguel" }));
@@ -453,9 +452,9 @@ public class FrmVendas extends javax.swing.JFrame {
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
-        teladeFundo.setBounds(0, -10, 740, 520);
+        teladeFundo.setBounds(0, -10, 830, 490);
 
-        setSize(new java.awt.Dimension(715, 480));
+        setSize(new java.awt.Dimension(775, 480));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
