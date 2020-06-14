@@ -52,6 +52,7 @@ public class FrmVendas extends javax.swing.JFrame {
     }
 
     private void iniciar() {
+        cbxTipodeVenda.setSelectedIndex(0);
         txtComissao.setEnabled(false);
         txtDataVenda.setEnabled(false);
         txtValor.setEnabled(false);
@@ -132,7 +133,6 @@ public class FrmVendas extends javax.swing.JFrame {
         modelo.addColumn("Valor");
         modelo.addColumn("Forma de Pagamento");
         modelo.addColumn("Comissão");
-        modelo.addColumn("Meses Pagos");
 
         tblVendas.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblVendas.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -142,7 +142,6 @@ public class FrmVendas extends javax.swing.JFrame {
         tblVendas.getColumnModel().getColumn(5).setPreferredWidth(50);
         tblVendas.getColumnModel().getColumn(6).setPreferredWidth(50);
         tblVendas.getColumnModel().getColumn(7).setPreferredWidth(50);
-        tblVendas.getColumnModel().getColumn(8).setPreferredWidth(50);
     }
 
     private void consultar() {
@@ -161,8 +160,7 @@ public class FrmVendas extends javax.swing.JFrame {
                     lista.get(i).getIdImovel().getIdCategoria().getNome(),
                     lista.get(i).getValor(),
                     lista.get(i).getIdFormaPagamento().getFormaPagamento(),
-                    lista.get(i).getPercentualComissao(),
-                    lista.get(i).getMesesPagos()
+                    lista.get(i).getPercentualComissao()
                 });
             }
         } else {
@@ -225,8 +223,14 @@ public class FrmVendas extends javax.swing.JFrame {
             return valor * meses;
         } else{
             return valor;
-        }
-        
+        }   
+    }
+    
+    private void imovel(){
+        venda.setIdImovel(vetorImoveis.get(cbxImoveis.getSelectedIndex()));
+        int id = venda.getIdImovel().getCodigo();
+        txtValor.setText(String.valueOf(df.format(vendaBll.getPreco(id))));
+        txtValor.setEnabled(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -441,7 +445,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel9.setBounds(430, 160, 80, 20);
 
         cbxTipodeVenda.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        cbxTipodeVenda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Venda", "Aluguel" }));
+        cbxTipodeVenda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione o tipo de venda", "Venda", "Aluguel" }));
         cbxTipodeVenda.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbxTipodeVendaItemStateChanged(evt);
@@ -627,6 +631,7 @@ public class FrmVendas extends javax.swing.JFrame {
     private void cbxTipodeVendaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxTipodeVendaItemStateChanged
         if (cbxTipodeVenda.getSelectedIndex() == 1) {
             liberar();
+            imovel();
             txtMesesPagos.setEnabled(false);
             cbxTipodeVenda.setEnabled(false);
             txtMesesPagos.setText("0");
@@ -636,6 +641,7 @@ public class FrmVendas extends javax.swing.JFrame {
         }
         if (cbxTipodeVenda.getSelectedIndex() == 2) {
             liberar();
+            imovel();
             cbxTipodeVenda.setEnabled(false);
 
             vetorImoveis = vendaBll.listaImoveisAlugar();

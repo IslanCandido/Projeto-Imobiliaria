@@ -54,7 +54,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
     private void criarTabela() {
         tblRelatorios = new JTable(modelo);
         modelo.addColumn("Código");
-        modelo.addColumn("Data Inscrição");
+        modelo.addColumn("Data");
         modelo.addColumn("Categoria");
         modelo.addColumn("Endereço");
         modelo.addColumn("Metros");
@@ -110,7 +110,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
 
     private void limpar() {
         txtTipo.setText("");
-        txtDatas.setText("");
+        txtDatas.setValue("");
         modelo.setNumRows(0);
     }
 
@@ -131,6 +131,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Emitir relatórios");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         tblRelatorios.setModel(modelo);
@@ -143,7 +144,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblRelatorios);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 140, 980, 270);
+        jScrollPane2.setBounds(10, 90, 950, 280);
 
         cbxTipoRelatorio.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         cbxTipoRelatorio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione um tipo de relatório", "Relatório de imóveis por cidade", "Relatório de imóveis por periodo", "Relatório de imóveis por categoria", "Relatório de imóveis vendido por corretor", "Relatório de imóveis por situação", "Relatório de imóveis por motivo de baixa", "Relatório de imóveis vendidos por cliente", "Relatório de imóveis vendidos por período", "Relatório de imóveis cadastrados no sistema" }));
@@ -153,7 +154,7 @@ public class FrmRelatorios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(cbxTipoRelatorio);
-        cbxTipoRelatorio.setBounds(80, 10, 380, 40);
+        cbxTipoRelatorio.setBounds(100, 20, 400, 40);
 
         btnGerarRelatorio.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnGerarRelatorio.setText("Gerar");
@@ -163,9 +164,9 @@ public class FrmRelatorios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnGerarRelatorio);
-        btnGerarRelatorio.setBounds(390, 90, 70, 30);
+        btnGerarRelatorio.setBounds(760, 30, 70, 30);
         getContentPane().add(txtTipo);
-        txtTipo.setBounds(210, 90, 170, 30);
+        txtTipo.setBounds(540, 30, 200, 30);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_limpar.png"))); // NOI18N
         btnLimpar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -175,11 +176,11 @@ public class FrmRelatorios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnLimpar);
-        btnLimpar.setBounds(860, 80, 55, 41);
+        btnLimpar.setBounds(900, 40, 55, 41);
 
         lblTipoRelatorio.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         getContentPane().add(lblTipoRelatorio);
-        lblTipoRelatorio.setBounds(210, 70, 170, 20);
+        lblTipoRelatorio.setBounds(540, 10, 170, 20);
 
         try {
             txtDatas.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -197,13 +198,13 @@ public class FrmRelatorios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtDatas);
-        txtDatas.setBounds(210, 90, 170, 28);
+        txtDatas.setBounds(540, 30, 200, 28);
 
         teladeFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/fundo_tela.jpg"))); // NOI18N
         getContentPane().add(teladeFundo);
         teladeFundo.setBounds(0, 0, 1020, 480);
 
-        setSize(new java.awt.Dimension(1019, 466));
+        setSize(new java.awt.Dimension(979, 425));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -217,77 +218,101 @@ public class FrmRelatorios extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "SELECIONE UM TIPO DE RELATÓRIO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 1) {
-                if (relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorCidade(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 2) {
-                if (relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtDatas.setText("");
+                if (txtDatas.getValue().toString().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())));
+                    if (relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorDataInscricao(CriarNovaData(txtDatas.getText())));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 3) {
-                if (relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorCategoria(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 4) {
-                if (relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorCorretor(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 5) {
-                if (relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorSituacao(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 6) {
-                if (relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorMotivoBaixa(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 7) {
-                if (relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtTipo.setText("");
+                if (txtTipo.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()));
+                    if (relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorCliente(txtTipo.getText()));
+                    }
                 }
             }
             if (cbxTipoRelatorio.getSelectedIndex() == 8) {
-                if (relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())).size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                    txtDatas.setText("");
+                if (txtDatas.getValue().toString().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "CAMPO EM BRANCO!", "Atenção!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    consultar(relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())));
+                    if (relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())).size() <= 0) {
+                        JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                        limpar();
+                    } else {
+                        consultar(relatorioBLL.relatorioImoveisPorDataVenda(CriarNovaData(txtDatas.getText())));
+                    }
                 }
             }
-            if (cbxTipoRelatorio.getSelectedIndex() == 9) {
-                if (relatorioBLL.relatorioImoveisCadastrados().size() <= 0) {
-                    JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    consultar(relatorioBLL.relatorioImoveisCadastrados());
-                }
-            }
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "ERRO AO GERAR RELATÓRIO!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
         }
@@ -385,8 +410,14 @@ public class FrmRelatorios extends javax.swing.JFrame {
             txtTipo.setVisible(false);
             txtDatas.setVisible(false);
             lblTipoRelatorio.setVisible(false);
-            btnGerarRelatorio.setVisible(true);
-            limpar();
+            btnGerarRelatorio.setVisible(false);
+
+            if (relatorioBLL.relatorioImoveisCadastrados().size() <= 0) {
+                JOptionPane.showMessageDialog(rootPane, "NENHUM DADO ENCONTRADO PARA ESSE TIPO DE CONSULTA!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+                limpar();
+            } else {
+                consultar(relatorioBLL.relatorioImoveisCadastrados());
+            }
         }
     }//GEN-LAST:event_cbxTipoRelatorioItemStateChanged
 

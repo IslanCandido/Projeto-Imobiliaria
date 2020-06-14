@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import model.Categoria;
 import model.Cliente;
 import model.Endereco;
-import model.FormaPagamento;
 import model.Funcionario;
 import model.Imovel;
 import model.Proprietario;
