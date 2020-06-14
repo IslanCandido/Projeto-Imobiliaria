@@ -318,8 +318,20 @@ public class FrmVendas extends javax.swing.JFrame {
         });
         getContentPane().add(cbxImoveis);
         cbxImoveis.setBounds(40, 130, 450, 28);
+
+        txtValor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtValorKeyTyped(evt);
+            }
+        });
         getContentPane().add(txtValor);
         txtValor.setBounds(560, 180, 150, 28);
+
+        txtComissao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtComissaoKeyTyped(evt);
+            }
+        });
         getContentPane().add(txtComissao);
         txtComissao.setBounds(560, 80, 150, 28);
 
@@ -435,6 +447,12 @@ public class FrmVendas extends javax.swing.JFrame {
         });
         getContentPane().add(btnAdicionarFormaPagamento);
         btnAdicionarFormaPagamento.setBounds(690, 130, 41, 28);
+
+        txtMesesPagos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMesesPagosKeyTyped(evt);
+            }
+        });
         getContentPane().add(txtMesesPagos);
         txtMesesPagos.setBounds(430, 180, 100, 28);
 
@@ -648,6 +666,47 @@ public class FrmVendas extends javax.swing.JFrame {
             cbxImoveis.setModel(new DefaultComboBoxModel(vetorImoveis));
         }
     }//GEN-LAST:event_cbxTipodeVendaItemStateChanged
+
+    private void txtValorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorKeyTyped
+        char validar = evt.getKeyChar();
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtValorKeyTyped
+
+    private void txtMesesPagosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMesesPagosKeyTyped
+        Character ch = evt.getKeyChar();
+        int comprimentoDeCampo = txtMesesPagos.getText().length();
+        if (comprimentoDeCampo >= 2) {
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 2 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        char validar = evt.getKeyChar();
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtMesesPagosKeyTyped
+
+    private void txtComissaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtComissaoKeyTyped
+        Character ch = evt.getKeyChar();
+        int comprimentoDeCampo = txtComissao.getText().length();
+        if (comprimentoDeCampo >= 2) {
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "LIMITE DE 2 DIGITOS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        char validar = evt.getKeyChar();
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "DIGITE SOMENTE NUMEROS!", "Atenção!!!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_txtComissaoKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
