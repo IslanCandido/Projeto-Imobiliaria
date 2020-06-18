@@ -12,6 +12,7 @@ public class FrmMenu extends javax.swing.JFrame {
     FrmProprietarios telaPropietarios;
     FrmRelatorios telaRelatorios;
     FrmEstatisticas telaEstatisticas;
+    FrmLogin telaLogin;
 
     public FrmMenu(String nome, String cargo) {
         initComponents();
@@ -176,6 +177,7 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenuBar1.add(jMenu4);
 
         jMenu5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/cadastrar_estatisticas.png"))); // NOI18N
+        jMenu5.setText("       ");
         jMenu5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         MenuItemEstatistixas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/imagens/icone_estatisticas.png"))); // NOI18N

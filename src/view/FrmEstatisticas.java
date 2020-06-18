@@ -130,18 +130,18 @@ public class FrmEstatisticas extends javax.swing.JFrame {
         lblTituloResultado.setVisible(false);
         lblTotalDeVendas.setVisible(false);
         lblResult.setVisible(false);
-        jLabel1.setVisible(true);
-        jLabel2.setVisible(true);
-        jLabel3.setVisible(true);
-        jLabel4.setVisible(true);
-        jLabel5.setVisible(true);
-        jLabel6.setVisible(true);
-        jLabel7.setVisible(true);
-        jLabel8.setVisible(true);
-        jLabel9.setVisible(true);
-        jLabel10.setVisible(true);
-        jLabel11.setVisible(true);
-        jLabel12.setVisible(true);
+        jLabel1.setVisible(false);
+        jLabel2.setVisible(false);
+        jLabel3.setVisible(false);
+        jLabel4.setVisible(false);
+        jLabel5.setVisible(false);
+        jLabel6.setVisible(false);
+        jLabel7.setVisible(false);
+        jLabel8.setVisible(false);
+        jLabel9.setVisible(false);
+        jLabel10.setVisible(false);
+        jLabel11.setVisible(false);
+        jLabel12.setVisible(false);
     }
 
     private float calculoPorcentagem(int valor, int total) {
@@ -552,6 +552,25 @@ public class FrmEstatisticas extends javax.swing.JFrame {
             txtCorretor.setVisible(false);
             txtAnodoMes.setVisible(false);
             lblAno.setVisible(false);
+            lblPorcentagem.setVisible(false);
+            lblResultadoPorcentagem.setVisible(false);
+            lblResultadoTitulo.setVisible(false);
+            lblResultadoVendas.setVisible(false);
+            lblTituloResultado.setVisible(false);
+            lblTotalDeVendas.setVisible(false);
+            lblResult.setVisible(false);
+            jLabel1.setVisible(false);
+            jLabel2.setVisible(false);
+            jLabel3.setVisible(false);
+            jLabel4.setVisible(false);
+            jLabel5.setVisible(false);
+            jLabel6.setVisible(false);
+            jLabel7.setVisible(false);
+            jLabel8.setVisible(false);
+            jLabel9.setVisible(false);
+            jLabel10.setVisible(false);
+            jLabel11.setVisible(false);
+            jLabel12.setVisible(false);
 
             lblTituloResultado.setText("Vendas do ano");
             lblTitulo.setText(" Ano: ");
@@ -565,6 +584,25 @@ public class FrmEstatisticas extends javax.swing.JFrame {
             txtCorretor.setVisible(true);
             txtAnodoMes.setVisible(false);
             lblAno.setVisible(false);
+            lblPorcentagem.setVisible(false);
+            lblResultadoPorcentagem.setVisible(false);
+            lblResultadoTitulo.setVisible(false);
+            lblResultadoVendas.setVisible(false);
+            lblTituloResultado.setVisible(false);
+            lblTotalDeVendas.setVisible(false);
+            lblResult.setVisible(false);
+            jLabel1.setVisible(false);
+            jLabel2.setVisible(false);
+            jLabel3.setVisible(false);
+            jLabel4.setVisible(false);
+            jLabel5.setVisible(false);
+            jLabel6.setVisible(false);
+            jLabel7.setVisible(false);
+            jLabel8.setVisible(false);
+            jLabel9.setVisible(false);
+            jLabel10.setVisible(false);
+            jLabel11.setVisible(false);
+            jLabel12.setVisible(false);
 
             lblTituloResultado.setText("Vendas corretor");
             lblTitulo.setText(" Corretor: ");

@@ -187,7 +187,7 @@ public class FrmLogin extends javax.swing.JFrame {
             dispose();
         } else {
             JOptionPane.showMessageDialog(rootPane, "SENHA INVALIDA!", "Atenção!", JOptionPane.WARNING_MESSAGE);
-            txtSenha.setText("");
+            txtSenhaAdmin.setText("");
         }
     }//GEN-LAST:event_btnAdministradorActionPerformed
 
